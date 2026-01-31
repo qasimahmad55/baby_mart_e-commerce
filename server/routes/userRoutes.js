@@ -15,7 +15,8 @@ router
     .delete(protect, admin, deleteUser)
 
 router.route("/:id/addresses").post(protect, addAddress)
-router.route("/:id/addresses/:addressId")
+router
+    .route("/:id/addresses/:addressId")
     .put(protect, updateAddress)
     .delete(protect, deleteAddress)
 

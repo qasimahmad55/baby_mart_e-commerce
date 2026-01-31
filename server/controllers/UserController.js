@@ -107,9 +107,9 @@ const addAddress = asyncHandler(async (req, res) => {
         throw new Error("Not authorized to modify this user's addresses")
     }
 
-    const { street, city, country, postalcode, isDefault } = req.body
+    const { street, city, country, postalCode, isDefault } = req.body
 
-    if (!street || !city || !country || !postalcode) {
+    if (!street || !city || !country || !postalCode) {
         res.status(400)
         throw new Error("All addresses fields are required")
     }
@@ -122,11 +122,11 @@ const addAddress = asyncHandler(async (req, res) => {
 
     if (user.addresses.length === 0) {
         user.addresses.push({
-            street, city, country, postalcode, isDefault: true
+            street, city, country, postalCode, isDefault: true
         })
     } else {
         user.addresses.push({
-            street, city, country, postalcode, isDefault: isDefault || false
+            street, city, country, postalCode, isDefault: isDefault || false
         })
     }
 
@@ -141,9 +141,75 @@ const addAddress = asyncHandler(async (req, res) => {
 
 })
 const updateAddress = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id)
+    if (!user) {
+        res.status(404)
+        throw new Error("User not found")
+    }
+    //only allow user to modify their own addresses or admin
+    if (user._id.toString() !== req.user._id.toString() && req.user.role !== "admin") {
+        res.status(400)
+        throw new Error("Not authorized to modify this user's addresses")
+    }
+    const address = user.addresses.id(req.params.addressId)
+    if (!address) {
+        res.status(400)
+        throw new Error("Address not found")
+    }
+
+    const { street, city, country, postalCode, isDefault } = req.body
+    if (street) address.street = street
+    if (city) address.city = city
+    if (country) address.country = country
+    if (postalCode) address.postalCode = postalCode
+
+    if (isDefault) {
+        user.addresses.forEach((addr) => {
+            addr.isDefault = false
+        })
+        address.isDefault = true
+    }
+
+    await user.save()
+    res.json({
+        success: true,
+        addresses: user.addresses,
+        message: "Address updated successfully"
+    })
 
 })
 const deleteAddress = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id)
+    if (!user) {
+        res.status(404)
+        throw new Error("User not found")
+    }
+    //only allow user to modify their own addresses or admin
+    if (user._id.toString() !== req.user._id.toString() && req.user.role !== "admin") {
+        res.status(400)
+        throw new Error("Not authorized to modify this user's addresses")
+    }
+    const address = user.addresses.id(req.params.addressId)
+    if (!address) {
+        res.status(400)
+        throw new Error("Address not found")
+    }
+    //if deleting default address, make the first remaining address default
+    const wasDefault = address.isDefault
+
+    user.addresses.pull(req.params.addressId)
+
+    if (wasDefault && user.addresses.length > 0) {
+        user.addresses[0].isDefault = true
+    }
+    
+    await user.save()
+
+    res.json({
+        success: true,
+        addresses: user.addresses,
+        message: "Address deleted successfully"
+    })
 
 })
 export { getUsers, createUser, getUserById, updateUser, deleteUser, addAddress, updateAddress, deleteAddress }
