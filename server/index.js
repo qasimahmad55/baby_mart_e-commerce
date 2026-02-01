@@ -8,6 +8,8 @@ import swaggerUi from 'swagger-ui-express'
 import specs from "./config/swagger.js";
 import userRoutes from "./routes/userRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
+import brandRoutes from "./routes/brandRoutes.js";
+import categoryRoutes from "./routes/categoryRoute.js";
 
 // Load env vars
 dotenv.config();
@@ -62,6 +64,8 @@ app.use(express.urlencoded({ limit: "10mb", extended: true }));
 // Routes
 app.use("/api/auth", authRoutes)
 app.use("/api/users", userRoutes)
+app.use("/api/categories", categoryRoutes)
+app.use("/api/brands", brandRoutes)
 app.use("/api/products", productRoutes)
 
 // API Documentation
