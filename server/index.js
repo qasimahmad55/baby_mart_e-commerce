@@ -10,6 +10,7 @@ import userRoutes from "./routes/userRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import brandRoutes from "./routes/brandRoutes.js";
 import categoryRoutes from "./routes/categoryRoute.js";
+import statsRoutes from "./routes/statsRoutes.js";
 
 // Load env vars
 dotenv.config();
@@ -67,6 +68,12 @@ app.use("/api/users", userRoutes)
 app.use("/api/categories", categoryRoutes)
 app.use("/api/brands", brandRoutes)
 app.use("/api/products", productRoutes)
+app.use("/api/stats", statsRoutes)
+app.use("/api/orders",)
+app.use("/api/wishlist",)
+app.use("/api/cart",)
+app.use("/api/analytics",)
+app.use("/api/payment",)
 
 // API Documentation
 app.use("/api/docs",
