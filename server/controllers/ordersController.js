@@ -175,7 +175,7 @@ const getAllOrdersAdmin = asyncHandler(async (req, res) => {
         } else if (paymentStatus === "pending") {
             filter.status = "pending"
         } else if (paymentStatus === "failed") {
-            FileReader.status = "cancelled"
+            filter.status = "cancelled"
         }
     }
 
@@ -193,8 +193,47 @@ const getAllOrdersAdmin = asyncHandler(async (req, res) => {
     const transformedOrders = orders.map((order) => ({
         _id: order._id,
         orderId: `ORD-${order._id.toString().slice(-6).toUpperCase()}`,
-        
+        user: {
+            _id: order.userId._id,
+            name: order.userId.name,
+            email: order.userId.email,
+        },
+        items: order.items.map((item) => ({
+            product: {
+                _id: item.productId._id,
+                name: item.productId.name,
+                price: item.productId.price,
+                image: item.productId.image,
+            },
+            quantity: item.quantity,
+            price: item.price,
+        })),
+        totalAmount: order.total,
+        status: order.status,
+        paymentStatus:
+            order.status === "paid" || order.status === "completed"
+                ? "paid"
+                : order.status === "cancelled"
+                    ? "failed"
+                    : "pending",
+        shippingAddress: order.shippingAddress || {
+            street: "N/A",
+            city: "N/A",
+            state: "N/A",
+            zipCode: "N/A",
+            country: "N/A",
+        },
+        createdAt: order.createdAt,
+        updatedAt: order.updatedAt,
+
     }));
+
+    res.json({
+        orders: transformedOrders,
+        total,
+        totalPages,
+        currentPage: page,
+    })
 })
 
 export { getOrders, getOrderById, createOrderFromCart, updateOrderStatus, delteOrder, getAllOrdersAdmin }
