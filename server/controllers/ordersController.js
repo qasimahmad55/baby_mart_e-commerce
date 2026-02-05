@@ -137,7 +137,7 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
         mesaage: `Order status updated to ${status}`
     })
 })
-const delteOrder = asyncHandler(async (req, res) => {
+const deleteOrder = asyncHandler(async (req, res) => {
     const order = await Order.findById(req.params.id)
     if (!order) {
         res.status(404);
@@ -236,4 +236,4 @@ const getAllOrdersAdmin = asyncHandler(async (req, res) => {
     })
 })
 
-export { getOrders, getOrderById, createOrderFromCart, updateOrderStatus, delteOrder, getAllOrdersAdmin }
+export { getOrders, getOrderById, createOrderFromCart, updateOrderStatus, deleteOrder, getAllOrdersAdmin }

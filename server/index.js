@@ -71,10 +71,7 @@ app.use("/api/brands", brandRoutes)
 app.use("/api/products", productRoutes)
 app.use("/api/stats", statsRoutes)
 app.use("/api/orders", orderRoutes)
-app.use("/api/wishlist",)
-app.use("/api/cart",)
-app.use("/api/analytics",)
-app.use("/api/payment",)
+
 
 // API Documentation
 app.use("/api/docs",
