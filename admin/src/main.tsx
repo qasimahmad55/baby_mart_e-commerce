@@ -1,10 +1,37 @@
-import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
-
+import { createBrowserRouter, RouterProvider } from 'react-router'
+import Login from './pages/Login.tsx'
+import Register from './pages/Register.tsx'
+import Dashboard from './pages/Dashboard.tsx'
+import Account from './pages/Account.tsx'
+import { Users } from 'lucide-react'
+import Orders from './pages/Orders.tsx'
+import Invoices from './pages/Invoices.tsx'
+import Products from './pages/Products.tsx'
+import Banenrs from './pages/Banenrs.tsx'
+import Categories from './pages/Categories.tsx'
+import Brands from './pages/Brands.tsx'
+const router = createBrowserRouter([
+  { path: "/login", element: < Login /> },
+  { path: "/register", element: <Register /> },
+  {
+    path: "/",
+    element: <App />,
+    children: [
+      { index: true, path: "/dashboard", element: <Dashboard /> },
+      { path: "/dashboard/account", element: <Account /> },
+      { path: "/dashboard/users", element: <Users /> },
+      { path: "/dashboard/orders", element: < Orders /> },
+      { path: "/dashboard/invoices", element: <Invoices /> },
+      { path: "/dashboard/products", element: <Products /> },
+      { path: "/dashboard/banners", element: <Banenrs /> },
+      { path: "/dashboard/categories", element: <Categories /> },
+      { path: "/dashboard/brands", element: <Brands /> },
+    ],
+  }
+])
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
+  <RouterProvider router={router} />
 )
