@@ -13,7 +13,7 @@ export const getAdminApiConfig = (): AdminApiConfig => {
         throw new Error("vite_api_url is not defined in .env")
     }
 
-    const isProduction = import.meta.env.VITE_APP_ENV === "production" || import.meta.env.PROD === true
+    const isProduction = import.meta.env.VITE_APP_ENV === "production" || import.meta.env.PROD === true 
 
     return {
         baseURL: `${apiUrl}/api`,
@@ -34,10 +34,10 @@ const createApiInstance = (): AxiosInstance => {
     instance.interceptors.request.use(
         (config) => {
             //get token from localStorage
-            const autuhData = localStorage.getItem("auth-storage")
-            if (autuhData) {
+            const authData = localStorage.getItem("auth-storage")
+            if (authData) {
                 try {
-                    const parsedData = JSON.parse(autuhData)
+                    const parsedData = JSON.parse(authData)
                     const token = parsedData.state?.token
                     if (token) {
                         config.headers.Authorization = `Bearer ${token}`

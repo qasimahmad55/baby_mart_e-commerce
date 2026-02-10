@@ -1,3 +1,4 @@
+import { api } from '@/lib/api'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
@@ -35,7 +36,14 @@ const useAuthStore = create<AuthState>()(
             isAuthenticated: false,
             login: async (credentials) => {
                 try {
-                    const response = await 
+                    const response = await api.post('/auth/login', credentials)
+                    if (response.data.token) {
+                        set({
+                            user: response.data,
+                            token: response.data.token,
+                            isAuthenticated: true
+                        })
+                    }
                 } catch (error) {
                     console.error("login error", error)
                     throw error
