@@ -49,11 +49,28 @@ const useAuthStore = create<AuthState>()(
                     throw error
                 }
             },
-            register: async (userData) => { },
-            logout: () => { },
-            checkIsAdmin: () => { }
+            register: async (userData) => {
+                try {
+                    await api.post("/auth/register", userData)
+                } catch (error) {
+                    console.error("Registration error:", error);
+                    throw error;
+                }
+            },
+            logout: () => {
+                set({
+                    user: null,
+                    token: null,
+                    isAuthenticated: false
+                })
+            },
+            checkIsAdmin: () => {
+                const { user } = get();
+                return user?.role === "admin"
+            }
         }),
         {
             name: "auth-storage"
         }))
 
+export default useAuthStore
