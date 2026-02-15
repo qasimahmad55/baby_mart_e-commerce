@@ -25,8 +25,6 @@ function Login() {
     defaultValues: {
       email: "",
       password: ""
-
-      
     }
   })
 
