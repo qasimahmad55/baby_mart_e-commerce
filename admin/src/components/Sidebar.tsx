@@ -1,15 +1,79 @@
 import { cn } from '@/lib/utils'
 import { AnimatePresence, motion } from 'motion/react'
 import { Button } from './ui/button'
-import { ChevronLeft, ChevronRight, LogOut } from 'lucide-react'
+import { Bookmark, ChevronLeft, ChevronRight, FileText, Layers, LayoutDashboard, LogOut, Package, ShoppingBag, Tag, User, Users } from 'lucide-react'
 import useAuthStore from '@/store/useAuthstore'
+import type React from 'react'
+import { NavLink, useLocation } from 'react-router'
+
+
+
 type sidebarProps = {
   open: boolean,
   setOpen: (open: boolean) => void
 }
 
+type navItemProps = {
+  to: string,
+  icon: React.ReactNode,
+  label: string,
+  open: boolean,
+  end?: boolean,
+  pathName: string
+}
+
+const navigationItems = [
+  {
+    to: "/dashboard",
+    icon: <LayoutDashboard size={20} />,
+    label: "Dashboard",
+    end: true,
+  },
+  {
+    to: "/dashboard/account",
+    icon: <User size={20} />,
+    label: "Account",
+  },
+  {
+    to: "/dashboard/users",
+    icon: <Users size={20} />,
+    label: "Users",
+  },
+  {
+    to: "/dashboard/orders",
+    icon: <Package size={20} />,
+    label: "Orders",
+  },
+  {
+    to: "/dashboard/invoices",
+    icon: <FileText size={20} />,
+    label: "Invoices",
+  },
+  {
+    to: "/dashboard/banners",
+    icon: <Layers size={20} />,
+    label: "Banners",
+  },
+  {
+    to: "/dashboard/products",
+    icon: <ShoppingBag size={20} />,
+    label: "Products",
+  },
+  {
+    to: "/dashboard/categories",
+    icon: <Tag size={20} />,
+    label: "Categories",
+  },
+  {
+    to: "/dashboard/brands",
+    icon: <Bookmark size={20} />,
+    label: "Brands",
+  },
+];
+
 function Sidebar({ open, setOpen }: sidebarProps) {
   const { user, logout } = useAuthStore()
+  const { pathname } = useLocation()
   return (
     <motion.aside
       initial={{ width: open ? 256 : 80 }}
@@ -55,7 +119,17 @@ function Sidebar({ open, setOpen }: sidebarProps) {
 
       {/* Sidebar menu */}
       <div className='flex flex-col gap-1 flex-1 p-3 bg-gradient-to-b text-white from-slate-900/50 to-slate-800/50'>
-        SideBar items
+        {navigationItems?.map((item) => (
+          <NavItem
+            key={item?.to}
+            to={item.to}
+            icon={item.icon}
+            label={item.label}
+            open={open}
+            end={item.end}
+            pathName={pathname}
+          />
+        ))}
       </div>
       {/* Logout Button */}
       <div className="p-4 border-t border-slate-600/50 bg-gradient-to-r from-slate-800 via-slate-700 to-slate-800">
@@ -89,7 +163,10 @@ function Sidebar({ open, setOpen }: sidebarProps) {
           </AnimatePresence>
         </motion.div>
         <motion.div>
-          <Button>
+          <Button variant={"outline"} size={open ? "default" : "icon"}
+            className="w-full border-red-500/30 hover:bg-red-600/20 hover:border-red-400/50 text-red-400 hover:text-red-300 transition-colors bg-red-600/10 backdrop-blur-sm"
+            onClick={logout}
+          >
             <LogOut
               size={16} className={cn("mr-2", !open && "mr-0")}
             />
@@ -99,6 +176,26 @@ function Sidebar({ open, setOpen }: sidebarProps) {
       </div>
 
     </motion.aside>
+  )
+}
+
+function NavItem({ to, icon, label, open, end, pathName }: (navItemProps)) {
+  return (
+    <NavLink
+      to={to}
+      end={end}
+      className={cn(
+        "flex items-center p-3 rounded-xl text-sm font-medium hoverEffect gap-3 overflow-hidden text-white/80 hover:bg-gradient-to-r hover:from-slate-700/50 hover:to-slate-600/50 hover:text-white hover:shadow-lg hover:backdrop-blur-sm",
+        pathName === to
+          ?
+          "bg-gradient-to-r from-[#29beb3]/20 to-[#a96bde]/20 text-white shadow-lg shadow-[#29beb3]/20 scale-105 ring-1 ring-[#29beb3]/30 border border-white/10 backdrop-blur-sm"
+          :
+          "text-slate-300 hover:scale-102"
+      )}
+    >
+      <span>{icon}</span>
+      {open && label}
+    </NavLink>
   )
 }
 
