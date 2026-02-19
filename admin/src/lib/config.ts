@@ -13,7 +13,7 @@ export const getAdminApiConfig = (): AdminApiConfig => {
         throw new Error("vite_api_url is not defined in .env")
     }
 
-    const isProduction = import.meta.env.VITE_APP_ENV === "production" || import.meta.env.PROD === true 
+    const isProduction = import.meta.env.VITE_APP_ENV === "production" || import.meta.env.PROD === true
 
     return {
         baseURL: `${apiUrl}/api`,
@@ -28,7 +28,7 @@ const createApiInstance = (): AxiosInstance => {
         baseURL,
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
-        timeout: 60000
+        timeout: 90000
     })
 
     instance.interceptors.request.use(

@@ -1,7 +1,6 @@
 import useAuthStore from "@/store/useAuthstore"
 import { Button } from "./ui/button"
 import { Bell } from "lucide-react"
-import type { size } from "zod"
 
 function Header() {
   const { user } = useAuthStore()

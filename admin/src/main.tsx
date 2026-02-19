@@ -6,13 +6,13 @@ import Login from './pages/Login.tsx'
 import Register from './pages/Register.tsx'
 import Dashboard from './pages/Dashboard.tsx'
 import Account from './pages/Account.tsx'
-import { Users } from 'lucide-react'
 import Orders from './pages/Orders.tsx'
 import Invoices from './pages/Invoices.tsx'
 import Products from './pages/Products.tsx'
-import Banenrs from './pages/Banenrs.tsx'
+import Banenrs from './pages/Banners.tsx'
 import Categories from './pages/Categories.tsx'
 import Brands from './pages/Brands.tsx'
+import UsersPage from './pages/Users.tsx'
 const router = createBrowserRouter([
   { path: "/login", element: < Login /> },
   { path: "/register", element: <Register /> },
@@ -22,7 +22,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, path: "/dashboard", element: <Dashboard /> },
       { path: "/dashboard/account", element: <Account /> },
-      { path: "/dashboard/users", element: <Users /> },
+      { path: "/dashboard/users", element: <UsersPage /> },
       { path: "/dashboard/orders", element: < Orders /> },
       { path: "/dashboard/invoices", element: <Invoices /> },
       { path: "/dashboard/products", element: <Products /> },
