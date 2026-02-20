@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
 function UsersPage() {
-
   
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
