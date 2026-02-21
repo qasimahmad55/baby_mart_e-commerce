@@ -10,6 +10,16 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import UserSkeleton from '@/components/skeletons/UserSkeleton';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { userSchema } from '@/lib/validation';
+import type z from 'zod';
+import ImageUpload from '@/components/ui/ImageUpload';
+
+type FormData = z.infer<typeof userSchema>
 
 function UsersPage() {
 
@@ -33,6 +43,17 @@ function UsersPage() {
   const { checkIsAdmin } = useAuthStore();
   const isAdmin = checkIsAdmin();
 
+  const formAdd = useForm<FormData>({
+    resolver: zodResolver(userSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      role: "user",
+      avatar: ""
+    }
+  })
+
 
   const fetchUser = async () => {
     setLoading(true)
@@ -53,13 +74,14 @@ function UsersPage() {
     }
   }
   const handleRefresh = async () => {
+    setLoading(true)
     setRefreshing(true)
     try {
       const response = await axiosPrivate.get("/users")
       // console.log(response);
 
       if (response?.data) {
-        setUsers(response?.data?.usres)
+        setUsers(response?.data?.users)
         setTotal(response.data?.users.length)
       }
     } catch (error) {
@@ -67,12 +89,21 @@ function UsersPage() {
       toast.error("Failed to load Users")
     } finally {
       setRefreshing(false)
+      setLoading(false)
     }
   }
 
   useEffect(() => {
     fetchUser()
   }, [])
+
+  const filteredUsers = users.filter((user) => {
+    const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) || user.email.toLowerCase().includes(searchTerm.toLowerCase())
+
+    const matchesRole = roleFilter === "all" || user.role === roleFilter
+
+    return matchesSearch && matchesRole
+  })
 
   const getRoleColor = (role: string) => {
     switch (role) {
@@ -85,6 +116,14 @@ function UsersPage() {
       default:
         return "bg-gray-100 text-gray-800";
     }
+  }
+
+  const handleAddUser = async () => {
+
+  }
+
+  if (loading) {
+    return <UserSkeleton isAdmin={isAdmin} />
   }
 
   return (
@@ -113,7 +152,7 @@ function UsersPage() {
           </Button>
           {isAdmin && (
             <Button
-              // onClick={() => setIsAddModalOpen(true)}
+              onClick={() => setIsAddModalOpen(true)}
               className="bg-blue-600 hover:bg-blue-700"
             >
               <Plus className="mr-2 h-4 w-4" />
@@ -164,8 +203,8 @@ function UsersPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {users?.length > 0 ? (
-              users?.map((user) => (
+            {filteredUsers?.length > 0 ? (
+              filteredUsers?.map((user) => (
                 <TableRow key={user?._id}>
                   <TableCell>
                     <div
@@ -255,6 +294,176 @@ function UsersPage() {
         </Table>
       </div>
       {/* add user model */}
+      <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+        <DialogContent className="sm:max-w-[550px] max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>
+              Add User
+            </DialogTitle>
+            <DialogDescription>
+              Create a new user account
+            </DialogDescription>
+          </DialogHeader>
+          <Form {...formAdd}>
+            <form onSubmit={formAdd.handleSubmit(handleAddUser)}
+              className='space-y-6 mt-4'
+            >
+              <FormField
+                control={formAdd.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-700 font-medium">
+                      Name
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled={formLoading}
+                        className="border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500 text-xs" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={formAdd.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-700 font-medium">
+                      Email
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        {...field}
+                        disabled={formLoading}
+                        className="border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500 text-xs" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={formAdd.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-700 font-medium">
+                      Password
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        {...field}
+                        disabled={formLoading}
+                        className="border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500 text-xs" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={formAdd.control}
+                name="role"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-700 font-medium">
+                      Role
+                    </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      disabled={formLoading}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 w-full">
+                          <SelectValue placeholder="Select a role" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="user">User</SelectItem>
+                        <SelectItem value="admin">Admin</SelectItem>
+                        <SelectItem value="deliveryman">
+                          Delivery Person
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage className="text-red-500 text-xs" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={formAdd.control}
+                name="avatar"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-700 font-medium">
+                      Avatar
+                    </FormLabel>
+                    <FormControl>
+                      <ImageUpload
+                        value={field.value ?? ""}
+                        onChange={field.onChange}
+                        disabled={formLoading}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500 text-xs" />
+                  </FormItem>
+                )}
+              />
+              <DialogFooter className="mt-6 flex justify-end gap-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsAddModalOpen(false)}
+                  disabled={formLoading}
+                  className="border-gray-300 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={formLoading}
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md transition-colors duration-200"
+                >
+                  {formLoading ? (
+                    <>
+                      <svg
+                        className="animate-spin h-5 w-5 mr-2 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v8H4z"
+                        />
+                      </svg>
+                      Creating...
+                    </>
+                  ) : (
+                    "Create User"
+                  )}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
       {/* edit user model */}
       {/*  delete user model*/}
 
