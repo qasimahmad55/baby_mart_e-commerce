@@ -2,12 +2,17 @@ import React, { useEffect, useState } from 'react'
 import type { User } from '@/lib/type';
 import useAuthStore from '@/store/useAuthstore';
 import { useAxiosPrivate } from '@/hooks/useAxiosPrivate';
-import { Plus, RefreshCw, Users } from 'lucide-react';
+import { Edit, Eye, Plus, RefreshCw, Search, Trash, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 function UsersPage() {
-  
+
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -33,19 +38,54 @@ function UsersPage() {
     setLoading(true)
     try {
       const response = await axiosPrivate.get("/users")
-      console.log("res", response);
+      // console.log(response);
 
+      if (response?.data) {
+        setUsers(response?.data?.users)
+        setTotal(response.data?.users.length)
+      }
     } catch (error) {
       console.error("Failed to load Users", error)
       toast.error("Failed to load Users")
     } finally {
       setLoading(false)
+
+    }
+  }
+  const handleRefresh = async () => {
+    setRefreshing(true)
+    try {
+      const response = await axiosPrivate.get("/users")
+      // console.log(response);
+
+      if (response?.data) {
+        setUsers(response?.data?.usres)
+        setTotal(response.data?.users.length)
+      }
+    } catch (error) {
+      console.error("Failed to load Users", error)
+      toast.error("Failed to load Users")
+    } finally {
+      setRefreshing(false)
     }
   }
 
   useEffect(() => {
     fetchUser()
   }, [])
+
+  const getRoleColor = (role: string) => {
+    switch (role) {
+      case "admin":
+        return "bg-red-100 text-red-800";
+      case "deliveryman":
+        return "bg-blue-100 text-blue-800";
+      case "user":
+        return "bg-green-100 text-green-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  }
 
   return (
     <div className='p-5 space-y-5'>
@@ -62,7 +102,7 @@ function UsersPage() {
           </div>
           <Button
             variant="outline"
-            // onClick={handleRefresh}
+            onClick={handleRefresh}
             disabled={refreshing}
             className="border-blue-600 text-blue-600 hover:bg-blue-50"
           >
@@ -83,7 +123,137 @@ function UsersPage() {
         </div>
       </div>
       {/* filters */}
+      <div>
+        <div className='flex items-center gap-4 flex-wrap'>
+          <div className='flex items-center gap-2'>
+            <Search className='h-4 w-4 text-gray-500' />
+            <Input
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder='Search users...'
+              className='w-64'
+            />
+          </div>
+          <Select
+            value={roleFilter}
+            onValueChange={setRoleFilter}
+          >
+            <SelectTrigger className='w-48'>
+              <SelectValue placeholder="Filter by value" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value='all'>All Roles</SelectItem>
+              <SelectItem value='admin'>Admin</SelectItem>
+              <SelectItem value='user'>User</SelectItem>
+              <SelectItem value='deliveryman'>Delivery Person</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
       {/*users table  */}
+      <div className='bg-white rounded-lg shadow-sm border overflow-hidden'>
+        <Table>
+          <TableHeader>
+            <TableRow className='bg-gray-50'>
+              <TableHead className="font-semibold">Avatar</TableHead>
+              <TableHead className="font-semibold">Name</TableHead>
+              <TableHead className="font-semibold">Email</TableHead>
+              <TableHead className="font-semibold">Role</TableHead>
+              <TableHead className="font-semibold">Created At</TableHead>
+              <TableHead className="font-semibold">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {users?.length > 0 ? (
+              users?.map((user) => (
+                <TableRow key={user?._id}>
+                  <TableCell>
+                    <div
+                      className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-semibold shadow-sm overflow-hidden"
+                    >
+                      {user.avatar ? (
+                        <img src={user.avatar} alt={user.name}
+                          className="h-full w-full object-cover"
+                        />
+                      ) :
+                        (
+                          <span className='text-lg'>
+                            {user.name.charAt(0).toUpperCase()}
+                          </span>
+                        )
+                      }
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    {user.name}
+                  </TableCell>
+                  <TableCell>
+                    {user.email}
+                  </TableCell>
+                  <TableCell>
+                    <Badge className={cn("capitalize hover:cursor-pointer", getRoleColor(user.role))}>
+                      {user.role}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    {new Date(user.createdAt).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell>
+                    <div className='flex items-center gap-2'>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        title="View user details"
+                      >
+                        <Eye className='h-4 w-4' />
+                      </Button>
+                      {isAdmin &&
+                        (
+                          <>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              title='Edit user'
+                            >
+                              <Edit className='h-4 w-4' />
+                            </Button>
+
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="text-red-600 hover:text-red-700"
+                              title='Delete user'
+                            >
+                              <Trash className='h-4 w-4' />
+                            </Button>
+
+                          </>
+                        )
+                      }
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={6} className='text-center py-12'>
+                  <div className='flex flex-col items-center gap-4'>
+                    <Users className='h-12 w-12 text-gray-400' />
+                    <div>
+                      <p className='text-lg font-medium text-gray-900'>No Users Found</p>
+                      <p className="text-sm text-gray-500">
+                        {searchTerm || roleFilter !== "all"
+                          ? "Try adjusting your search or filters"
+                          : "Users will appear here when they register"}
+                      </p>
+                    </div>
+                  </div>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
       {/* add user model */}
       {/* edit user model */}
       {/*  delete user model*/}
