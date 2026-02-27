@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { User } from '@/lib/type';
 import useAuthStore from '@/store/useAuthstore';
 import { useAxiosPrivate } from '@/hooks/useAxiosPrivate';
@@ -18,6 +18,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { userSchema } from '@/lib/validation';
 import type z from 'zod';
 import ImageUpload from '@/components/ui/ImageUpload';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { Label } from '@/components/ui/label';
 
 type FormData = z.infer<typeof userSchema>
 
@@ -35,9 +37,9 @@ function UsersPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState<string>("all");
   const [total, setTotal] = useState(0);
-  const [page, setPage] = useState(1);
-  const [perPage] = useState(20);
-  const [totalPages, setTotalPages] = useState(1);
+  // const [page, setPage] = useState(1);
+  // const [perPage] = useState(20);
+  // const [totalPages, setTotalPages] = useState(1);
 
   const axiosPrivate = useAxiosPrivate();
   const { checkIsAdmin } = useAuthStore();
@@ -147,9 +149,23 @@ function UsersPage() {
   }
 
   const handleView = async (user: User) => {
-
+    setSelectedUser(user)
+    setIsViewModalOpen(true)
   }
-
+  const handleDeleteUser = async () => {
+    if (!selectedUser) return
+    try {
+      await axiosPrivate.delete(`/users/${selectedUser._id}`)
+      toast("User deleted successfully")
+      setIsDeleteModalOpen(false)
+      fetchUser()
+    } catch (error) {
+      console.log("Failed to delete user");
+      toast("Failed to delete user")
+    } finally {
+      setIsDeleteModalOpen(false)
+    }
+  }
   const handleEdit = async (user: User) => {
     setSelectedUser(user)
     formEdit.reset({
@@ -161,8 +177,9 @@ function UsersPage() {
     setIsEditModalOpen(true)
   }
 
-  const handleDelete = async (user: User) => {
-
+  const handleDeletePopup = async (user: User) => {
+    setSelectedUser(user)
+    setIsDeleteModalOpen(true)
   }
 
   const handleUpdateUser = async (data: FormData) => {
@@ -323,7 +340,7 @@ function UsersPage() {
                               size="icon"
                               className="text-red-600 hover:text-red-700"
                               title='Delete user'
-                              onClick={() => handleDelete(user)}
+                              onClick={() => handleDeletePopup(user)}
                             >
                               <Trash className='h-4 w-4' />
                             </Button>
@@ -696,9 +713,89 @@ function UsersPage() {
         </DialogContent>
       </Dialog>
       {/*  delete user model*/}
+      <AlertDialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete{" "}
+              <span className="font-semibold">{selectedUser?.name}</span>'s
+              account.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteUser}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      {/* view user modal */}
+      <Dialog open={isViewModalOpen} onOpenChange={setIsViewModalOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>User Details</DialogTitle>
+            <DialogDescription>
+              View complete user information
+            </DialogDescription>
+          </DialogHeader>
+          {selectedUser && (
+            <div className="space-y-6">
+              <div className="flex items-center gap-4">
+                <div className="h-20 w-20 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-semibold shadow-sm overflow-hidden">
+                  {selectedUser.avatar ? (
+                    <img
+                      src={selectedUser.avatar}
+                      alt={selectedUser.name}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-2xl">
+                      {selectedUser.name.charAt(0).toUpperCase()}
+                    </span>
+                  )}
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900">
+                    {selectedUser.name}
+                  </h3>
+                  <p className="text-gray-600">{selectedUser.email}</p>
+                  <Badge
+                    className={cn(
+                      "capitalize mt-2",
+                      getRoleColor(selectedUser.role)
+                    )}
+                  >
+                    {selectedUser.role}
+                  </Badge>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <div>
+                  <Label className="text-sm font-medium text-gray-600">
+                    User ID
+                  </Label>
+                  <p className="text-lg font-semibold">{selectedUser._id}</p>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium text-gray-600">
+                    Created At
+                  </Label>
+                  <p>{new Date(selectedUser.createdAt).toLocaleDateString()}</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
 
     </div>
   )
 }
 
-export default UsersPage
+export default UsersPage 

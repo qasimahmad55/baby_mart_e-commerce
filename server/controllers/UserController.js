@@ -1,5 +1,6 @@
 import asyncHandler from 'express-async-handler'
 import User from '../models/userModel.js'
+import cloudinary from '../config/cloudinary.js'
 
 const getUsers = asyncHandler(async (req, res) => {
     const users = await User.find({}).select('-password')
@@ -66,7 +67,13 @@ const updateUser = asyncHandler(async (req, res) => {
         user.role = req.body.role
     }
     user.addresses = req.body.addresses || user.addresses
-    //avatar
+
+    if (req.body.avatar && req.body.avatar !== user.avatar) {
+        const result = await cloudinary.uploader.upload(req.body.avatar, {
+            folder: "admin-dashboard/avatars"
+        })
+        user.avatar = result.secure_url
+    }
     const updatedUser = await user.save()
 
     res.status(200)
@@ -202,7 +209,7 @@ const deleteAddress = asyncHandler(async (req, res) => {
     if (wasDefault && user.addresses.length > 0) {
         user.addresses[0].isDefault = true
     }
-    
+
     await user.save()
 
     res.json({
