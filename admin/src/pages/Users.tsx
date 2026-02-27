@@ -54,6 +54,17 @@ function UsersPage() {
     }
   })
 
+  const formEdit = useForm<FormData>({
+    resolver: zodResolver(userSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      role: "user",
+      avatar: ""
+    }
+  })
+
 
   const fetchUser = async () => {
     setLoading(true)
@@ -118,8 +129,56 @@ function UsersPage() {
     }
   }
 
-  const handleAddUser = async () => {
+  const handleAddUser = async (data: FormData) => {
+    setFormLoading(true)
+    try {
+      await axiosPrivate.post("/users", data)
+      toast.success("User created successfully!")
+      formAdd.reset()
+      setIsAddModalOpen(false)
+      fetchUser()
+    } catch (error) {
+      console.log("Failed to create user", error);
+      toast.error("Failed to create user")
 
+    } finally {
+      setFormLoading(false)
+    }
+  }
+
+  const handleView = async (user: User) => {
+
+  }
+
+  const handleEdit = async (user: User) => {
+    setSelectedUser(user)
+    formEdit.reset({
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      avatar: user.avatar,
+    })
+    setIsEditModalOpen(true)
+  }
+
+  const handleDelete = async (user: User) => {
+
+  }
+
+  const handleUpdateUser = async (data: FormData) => {
+    if (!selectedUser) return
+    setFormLoading(true)
+    try {
+      await axiosPrivate.put(`/users/${selectedUser._id}`, data)
+      toast("User updated successfully")
+      setIsEditModalOpen(false)
+      fetchUser()
+    } catch (error) {
+      console.log("Failed to update user data", error);
+      toast("Failed to update user")
+    } finally {
+      setFormLoading(false)
+    }
   }
 
   if (loading) {
@@ -243,6 +302,7 @@ function UsersPage() {
                         variant="ghost"
                         size="icon"
                         title="View user details"
+                        onClick={() => handleView(user)}
                       >
                         <Eye className='h-4 w-4' />
                       </Button>
@@ -253,6 +313,7 @@ function UsersPage() {
                               variant="ghost"
                               size="icon"
                               title='Edit user'
+                              onClick={() => handleEdit(user)}
                             >
                               <Edit className='h-4 w-4' />
                             </Button>
@@ -262,6 +323,7 @@ function UsersPage() {
                               size="icon"
                               className="text-red-600 hover:text-red-700"
                               title='Delete user'
+                              onClick={() => handleDelete(user)}
                             >
                               <Trash className='h-4 w-4' />
                             </Button>
@@ -465,6 +527,174 @@ function UsersPage() {
         </DialogContent>
       </Dialog>
       {/* edit user model */}
+      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+        <DialogContent className="sm:max-w-[550px] max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit User</DialogTitle>
+            <DialogDescription>Update user information</DialogDescription>
+          </DialogHeader>
+          <Form {...formEdit}>
+            <form
+              onSubmit={formEdit.handleSubmit(handleUpdateUser)}
+              className="space-y-6 mt-4"
+            >
+              <FormField
+                control={formEdit.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-700 font-medium">
+                      Name
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled={formLoading}
+                        className="border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500 text-xs" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={formEdit.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-700 font-medium">
+                      Email
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        {...field}
+                        disabled={formLoading}
+                        className="border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500 text-xs" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={formEdit.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-700 font-medium">
+                      Password (leave empty to keep current)
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        {...field}
+                        placeholder="Leave empty to keep current password"
+                        disabled={formLoading}
+                        className="border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500 text-xs" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={formEdit.control}
+                name="role"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-700 font-medium">
+                      Role
+                    </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      disabled={formLoading}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
+                          <SelectValue placeholder="Select a role" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="user">User</SelectItem>
+                        <SelectItem value="admin">Admin</SelectItem>
+                        <SelectItem value="deliveryman">
+                          Delivery Person
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage className="text-red-500 text-xs" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={formEdit.control}
+                name="avatar"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-700 font-medium">
+                      Avatar
+                    </FormLabel>
+                    <FormControl>
+                      <ImageUpload
+                        value={field.value ?? ""}
+                        onChange={field.onChange}
+                        disabled={formLoading}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500 text-xs" />
+                  </FormItem>
+                )}
+              />
+              <DialogFooter className="mt-6 flex justify-end gap-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsEditModalOpen(false)}
+                  disabled={formLoading}
+                  className="border-gray-300 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={formLoading}
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md transition-colors duration-200"
+                >
+                  {formLoading ? (
+                    <>
+                      <svg
+                        className="animate-spin h-5 w-5 mr-2 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v8H4z"
+                        />
+                      </svg>
+                      Updating...
+                    </>
+                  ) : (
+                    "Update User"
+                  )}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
       {/*  delete user model*/}
 
     </div>
