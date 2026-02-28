@@ -6,3 +6,10 @@ export interface User {
     role: "admin" | "user" | "deliveryman",
     createdAt: string
 }
+
+export type Brand = {
+    _id: string,
+    name: string,
+    image?: string,
+    createdAt: string
+}
