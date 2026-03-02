@@ -67,7 +67,7 @@ function Categories() {
       setCategories(response?.data?.categories || [])
       setTotal(response?.data?.total || 0)
       setTotalPages(response?.data?.totalPages || 1)
-      
+
     } catch (error) {
       console.log("Failed to fetch categories", error);
       toast("Failed to fetch categories")
@@ -78,7 +78,7 @@ function Categories() {
 
   useEffect(() => {
     fetchCategories()
-  }, [])
+  }, [page, sortOrder])
 
   const handleAddCategory = async (data: FormData) => {
     setFormLoading(true)
@@ -88,6 +88,7 @@ function Categories() {
       formAdd.reset()
       setIsAddModalOpen(false)
       setPage(1)
+      fetchCategories()
     } catch (error: unknown) {
       console.log("Failed to create category", error);
       let errorMesaage = "Failed to create category"
@@ -104,7 +105,104 @@ function Categories() {
     }
   }
 
+  const handlePreviousPage = () => {
+    if (page > 1) {
+      setPage(page - 1)
+    }
+  }
 
+  const handleNextPage = () => {
+    if (page < totalPages) {
+      setPage(page + 1)
+    }
+  }
+
+  const handleEdit = async (category: Category) => {
+    setSelectedCategory(category)
+    formEdit.reset({
+      name: category.name,
+      image: category.image || "",
+      categoryType: category.categoryType
+    })
+    setIsEditModalOpen(true)
+  }
+
+  const handleDelete = async (category: Category) => {
+    setSelectedCategory(category)
+    setIsDeleteModalOpen(true)
+  }
+
+  const handleUpdateCategory = async (data: FormData) => {
+    if (!selectedCategory) return
+
+    setFormLoading(true)
+    try {
+      await axiosPrivate.put(`/categories/${selectedCategory._id}`, data)
+      toast("Category updated successfully")
+      setIsEditModalOpen(false)
+      fetchCategories()
+    } catch (error: unknown) {
+      console.log("Failed to update category");
+      let errorMessage = "Failed to update category"
+
+      if (error instanceof AxiosError && error.response?.data?.message) {
+        errorMessage = error.response.data.message
+      }
+
+      if (errorMessage.includes("already exists")) {
+        formEdit.setError("name", {
+          type: "manual",
+          message: errorMessage
+        })
+      } else {
+        toast(errorMessage)
+      }
+    }
+    finally {
+      setFormLoading(false)
+    }
+  }
+
+  const handleDeleteCategory = async () => {
+    if (!selectedCategory) return
+
+    try {
+      await axiosPrivate.delete(`/categories/${selectedCategory._id}`)
+      toast("Category deleted successfully")
+      setIsDeleteModalOpen(false)
+      setPage(1) //reset paging to page 1
+      fetchCategories()
+    } catch (error) {
+      console.log("Failed to delete category");
+      toast("Failed to delete category")
+    }
+  }
+
+  const handleRefresh = async () => {
+    setRefreshing(true)
+    setLoading(true)
+    try {
+      const repsonse = await axiosPrivate.get("/categories", {
+        params: { page, perPage, sortOrder }
+      })
+      setCategories(repsonse?.data?.categories || [])
+      setTotal(repsonse?.data?.total || 0)
+      setTotalPages(repsonse?.data?.totalPages || 1)
+      toast("Categories refreshed successfully")
+
+    } catch (error) {
+      console.log("Failed to refresh categories", error);
+      toast("Failed to refresh categories")
+    } finally {
+      setRefreshing(false)
+      setLoading(false)
+    }
+  }
+
+  const handleSortChange = (newSortOrder: "asc" | "desc") => {
+    setSortOrder(newSortOrder)
+    setPage(1)
+  }
   return (
     <div className="p-5 space-y-6">
       <div className="flex justify-between items-center">
