@@ -118,7 +118,7 @@ function Sidebar({ open, setOpen }: sidebarProps) {
       </div>
 
       {/* Sidebar menu */}
-      <div className='flex flex-col gap-1 flex-1 p-3 bg-gradient-to-b text-white from-slate-900/50 to-slate-800/50'>
+      <div className='flex flex-col gap-1 flex-1 p-3 bg-gradient-to-b text-white from-slate-900/50 to-slate-800/50 overflow-y-auto'>
         {navigationItems?.map((item) => (
           <NavItem
             key={item?.to}
