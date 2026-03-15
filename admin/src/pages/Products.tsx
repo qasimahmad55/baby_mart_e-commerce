@@ -55,6 +55,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { ImageUpload } from '@/components/ui/ImageUpload';
 import ProductSkeleton from '@/components/skeletons/ProductSkeleton';
 
+
 function Products() {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
