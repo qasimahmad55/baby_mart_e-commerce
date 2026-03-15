@@ -35,3 +35,13 @@ export type Product = {
     brand: Brand,
     createdAt: string
 }
+
+export type Banner = {
+    _id: string;
+    name: string;
+    title: string;
+    startFrom: number;
+    image: string;
+    bannerType: string;
+    createdAt: string;
+};
