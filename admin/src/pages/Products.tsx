@@ -3,7 +3,7 @@ import type { Brand, Category, Product } from '@/lib/type';
 import { productSchema } from '@/lib/validation';
 import useAuthStore from '@/store/useAuthstore';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import type z from 'zod';
@@ -54,8 +54,6 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import ImageUpload from '@/components/ui/ImageUpload';
 import ProductSkeleton from '@/components/skeletons/ProductSkeleton';
-import { AxiosError } from 'axios';
-
 
 function Products() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -108,140 +106,7 @@ function Products() {
     },
   });
 
-
-  const handleRefresh = async () => {
-    setRefreshing(true);
-    try {
-      const response = await axiosPrivate.get("/products", {
-        params: { page, perPage, sortOrder },
-      });
-      setProducts(response?.data?.products || []);
-      setTotal(response?.data?.total || 0);
-      setTotalPages(response?.data?.totalPages || 1);
-      toast("Products refreshed successfully");
-    } catch (error) {
-      console.log("Failed to refresh products", error);
-      toast("Failed to refresh products");
-    } finally {
-      setRefreshing(false);
-    }
-  };
-
-  const handleSortChange = (value: "asc" | "desc") => {
-    setSortOrder(value);
-    setPage(1); // Reset to page 1 when sort order changes
-  };
-
-  const handlePreviousPage = () => {
-    if (page > 1) {
-      setPage(page - 1)
-    }
-  };
-
-  const handleNextPage = () => {
-    if (page < totalPages && page * perPage < total) {
-      setPage(page + 1)
-    }
-  };
-
-  const handleEdit = (product: Product) => {
-    setSelectedProduct(product);
-    formEdit.reset({
-      name: product.name,
-      description: product.description,
-      price: product.price,
-      discountPercentage: product.discountPercentage,
-      stock: product.stock,
-      category: product.category._id,
-      brand: product.brand._id,
-      image: product.image,
-    });
-    setIsEditModalOpen(true);
-  };
-
-  const handleDelete = (product: Product) => {
-    setSelectedProduct(product);
-    setIsDeleteModalOpen(true);
-  };
-
-  const handleAddProduct = async (data: FormData) => {
-    setLoading(true)
-    try {
-      await axiosPrivate.post("/products", {
-        ...data,
-        price: Number(data.price),
-        discountPercentage: Number(data.discountPercentage),
-        stock: Number(data.stock)
-      })
-      setIsAddModalOpen(false)
-      toast("Products created successfully")
-      formAdd.reset()
-      fetchProducts(true)//true will reset page to 1
-
-    } catch (error: unknown) {
-
-      console.log("Failed to create product", error);
-      let errorMessage = "Failed to create product";
-      if (error instanceof AxiosError && error.response?.data?.message) {
-        errorMessage = error.response.data.message;
-      }
-      if (errorMessage.includes("already exists")) {
-        formAdd.setError("name", { type: "manual", message: errorMessage });
-      } else {
-        toast(errorMessage);
-
-      }
-    } finally {
-      setLoading(false)
-    }
-  };
-
-  const handleUpdateProduct = async (data: FormData) => {
-    if (!selectedProduct) return;
-
-    setFormLoading(true);
-    try {
-      await axiosPrivate.put(`/products/${selectedProduct._id}`, {
-        ...data,
-        price: Number(data.price),
-        discountPercentage: Number(data.discountPercentage),
-        stock: Number(data.stock),
-      });
-      setIsEditModalOpen(false);
-      toast("Product updated successfully");
-      fetchProducts();
-    } catch (error: unknown) {
-      console.log("Failed to update product", error);
-      let errorMessage = "Failed to update product";
-      if (error instanceof AxiosError && error.response?.data?.message) {
-        errorMessage = error.response.data.message;
-      }
-      if (errorMessage.includes("already exists")) {
-        formEdit.setError("name", { type: "manual", message: errorMessage });
-      } else {
-        toast(errorMessage);
-      }
-    } finally {
-      setFormLoading(false);
-    }
-  };
-
-  const handleDeleteProduct = async () => {
-    if (!selectedProduct) return;
-
-    try {
-      await axiosPrivate.delete(`/products/${selectedProduct._id}`);
-      toast("Product deleted successfully");
-      setIsDeleteModalOpen(false);
-      fetchProducts(true); // Reset to page 1 and refetch
-    } catch (error) {
-      console.log("Failed to delete product", error);
-      toast("Failed to delete product");
-    }
-  };
-
   const fetchProducts = async (resetPage = false) => {
-
     setLoading(true)
     try {
       const currentPage = resetPage ? 1 : page
@@ -266,38 +131,9 @@ function Products() {
     }
   }
 
-  const fetchCategories = async () => {
-    try {
-      const response = await axiosPrivate.get("/categories", {
-        params: { page: 1, perPage: 100, sortOrder: "asc" }
-      })
-      setCategories(response.data.categories || [])
-    } catch (error) {
-      console.log("Failed to load categories", error);
-      toast("Failed to load categories")
-    }
-  }
-
-  const fetchBrands = async () => {
-    try {
-      const response = await axiosPrivate.get("/brands", {
-        params: { page: 1, perPage: 100, sortOrder: "asc" }
-      })
-      setBrands(response.data.brands || response.data || [])
-    } catch (error) {
-      console.log("failed to fetch brands", error);
-      toast("Failed to load brands")
-
-    }
-  }
   useEffect(() => {
     fetchProducts()
   }, [page, sortOrder])
-
-  useEffect(() => {
-    fetchCategories(),
-      fetchBrands()
-  }, [])
 
   return (
     <div className="p-5 space-y-6">
