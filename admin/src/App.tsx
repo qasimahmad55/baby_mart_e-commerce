@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from "react-router";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
-import { toast, Toaster } from "sonner";
+import {  Toaster } from "sonner";
 import useAuthStore from "./store/useAuthstore";
 import { useState } from "react";
 import { cn } from "./lib/utils";
@@ -22,7 +22,7 @@ function App() {
 
       <div className={cn("flex flex-col flex-1 max-w-[--breakpoint-2xl]", sidebarOpen ? "md:ml-64" : "md:ml-20")}>
         <Header />
-        <main>
+        <main className="flex-1 overflow-auto">
           <Outlet />
         </main>
       </div>

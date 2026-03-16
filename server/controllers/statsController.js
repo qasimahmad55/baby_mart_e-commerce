@@ -65,7 +65,7 @@ const getStats = asyncHandler(async (req, res) => {
             }
         },
         {
-            $unwind: "$barndInfo"
+            $unwind: "$brandInfo"
         },
         {
             $group: {
