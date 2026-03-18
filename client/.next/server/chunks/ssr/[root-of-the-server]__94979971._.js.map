@@ -2,6 +2,5 @@
   "version": 3,
   "sources": [],
   "sections": [
-    {"offset": {"line": 6, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"","debugId":null}},
-    {"offset": {"line": 18, "column": 0}, "map": {"version":3,"sources":["file:///D:/Full%20Stack%20Projects/BabyMart/client/src/app/page.tsx"],"sourcesContent":["export default function Home() {\r\n  return (\r\n    <div>Client application\r\n\r\n      {/* categories section */}\r\n      {/*banner  */}\r\n      {/* productlist */}\r\n      {/* babytravel section */}\r\n      {/* comfyapparel section */}\r\n      {/* feturedservices */}\r\n    </div>\r\n  );\r\n}\r\n"],"names":[],"mappings":";;;;;AAAe,SAAS;IACtB,qBACE,8OAAC;kBAAI;;;;;;AAUT","debugId":null}}]
+    {"offset": {"line": 6, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"","debugId":null}}]
 }
