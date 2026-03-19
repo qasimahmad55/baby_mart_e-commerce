@@ -3,9 +3,7 @@ interface ApiConfig {
     isProduction: boolean;
 }
 
-/**
- * Get API configuration based on environment
- */
+
 export const getApiConfig = (): ApiConfig => {
     // Check if we're in browser or server environment
     const isClient = typeof window !== "undefined";
@@ -30,9 +28,7 @@ export const getApiConfig = (): ApiConfig => {
     };
 };
 
-/**
- * Enhanced fetch function with better error handling
- */
+
 export async function fetchWithConfig<T>(
     endpoint: string,
     options?: RequestInit
@@ -75,9 +71,7 @@ export async function fetchWithConfig<T>(
     }
 }
 
-/**
- * Get authentication headers for API requests
- */
+
 export const getAuthHeaders = (token?: string): Record<string, string> => {
     const headers: Record<string, string> = {
         "Content-Type": "application/json",
@@ -90,9 +84,7 @@ export const getAuthHeaders = (token?: string): Record<string, string> => {
     return headers;
 };
 
-/**
- * Build query string from parameters
- */
+
 export const buildQueryString = (
     params: Record<string, string | number | boolean>
 ): string => {
@@ -108,9 +100,7 @@ export const buildQueryString = (
     return queryString ? `?${queryString}` : "";
 };
 
-/**
- * Common API endpoints
- */
+
 export const API_ENDPOINTS = {
     // Auth
     LOGIN: "/auth/login",
