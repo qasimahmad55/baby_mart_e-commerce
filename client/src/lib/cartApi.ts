@@ -1,5 +1,10 @@
 import authApi from "./authApi";
 
+interface CartApiResponse {
+    cart?: CartItem[];
+    message?: string;
+}
+
 export interface CartItem {
     productId: {
         _id: string;
@@ -28,10 +33,11 @@ export const getUserCart = async (): Promise<CartResponse> => {
     try {
         const response = await authApi.get("/cart");
         if (response.success && response.data) {
+            const data = response.data as CartApiResponse;
             return {
                 success: true,
-                cart: response.data.cart || [],
-                message: response.data.message || "Cart retrieved successfully",
+                cart: data.cart || [],
+                message: data.message || "Cart retrieved successfully",
             };
         } else {
             return {
@@ -58,10 +64,11 @@ export const addToCart = async (
     try {
         const response = await authApi.post("/cart", { productId, quantity });
         if (response.success && response.data) {
+            const data = response.data as CartApiResponse;
             return {
                 success: true,
-                cart: response.data.cart || [],
-                message: response.data.message || "Item added to cart successfully",
+                cart: data.cart || [],
+                message: data.message || "Item added to cart successfully",
             };
         } else {
             return {
@@ -88,10 +95,11 @@ export const updateCartItem = async (
     try {
         const response = await authApi.put("/cart/update", { productId, quantity });
         if (response.success && response.data) {
+            const data = response.data as CartApiResponse;
             return {
                 success: true,
-                cart: response.data.cart || [],
-                message: response.data.message || "Cart item updated successfully",
+                cart: data.cart || [],
+                message: data.message || "Cart item updated successfully",
             };
         } else {
             return {
@@ -117,10 +125,11 @@ export const removeFromCart = async (
     try {
         const response = await authApi.delete(`/cart/${productId}`);
         if (response.success && response.data) {
+            const data = response.data as CartApiResponse;
             return {
                 success: true,
-                cart: response.data.cart || [],
-                message: response.data.message || "Item removed from cart successfully",
+                cart: data.cart || [],
+                message: data.message || "Item removed from cart successfully",
             };
         } else {
             return {
@@ -143,10 +152,11 @@ export const clearCart = async (): Promise<CartResponse> => {
     try {
         const response = await authApi.delete("/cart");
         if (response.success && response.data) {
+            const data = response.data as CartApiResponse;
             return {
                 success: true,
                 cart: [],
-                message: response.data.message || "Cart cleared successfully",
+                message: data.message || "Cart cleared successfully",
             };
         } else {
             return {

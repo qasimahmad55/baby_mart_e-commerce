@@ -1,6 +1,6 @@
 import { Product } from '@/types/types';
-import { create } from 'zustand'
-import { persist, createJSONStorage } from 'zustand/middleware'
+import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
 import { Order } from './orderApi';
 import Cookies from "js-cookie"
 import authApi from './authApi';
@@ -40,7 +40,7 @@ interface CartProductWithQuantity {
     quantity: number;
 }
 
-const mapItemToProduct = (item: CartServerItem): CartProductWithQuantity => (
+const mapCartItemToProduct = (item: CartServerItem): CartProductWithQuantity => (
     {
         product:
         {
@@ -165,7 +165,7 @@ export const useUserStore = create<UserState>()(
         (set, get) => ({
             authUser: null,
             authLoading: false,
-            auth_token: Cookies.get("auth_token" || null),
+            auth_token: Cookies.get("auth_token") ?? null,
             isAuthenticated: !!Cookies.get("auth_token"),
             updateUser: (user) => {
                 set({ authUser: user, isAuthenticated: true })
@@ -177,52 +177,19 @@ export const useUserStore = create<UserState>()(
                         secure: process.env.NODE_ENV === "production",
                         sameSite: "lax"
                     })
-                    set(auth_token: token, isAuthenticated: true)
+                    set({ auth_token: token, isAuthenticated: true })
 
                     setTimeout(() => {
                         loadAllUserData(token)
                     }, 150);
                 } else {
                     Cookies.remove("auth_token")
-                    set({ auth_token: null, isAuthenticated: false, authuser: null })
+                    set({ auth_token: null, isAuthenticated: false, authUser: null })
                 }
             },
-            loadUserData: async (token: string){
+            loadUserData: async (token: string) => {
                 try {
-                    const promises = [
-                        (async () => {
-                            try {
-                                const { getUserWishlist } = await import('./wishlistApi')
-                                const { useWishlistStore } = await import('')
-                                const wishlistResponse = await getUserWishlist(token)
-                                if (wishlistResponse.success) {
-                                    useWishlistStore
-                                        .getState()
-                                        .setWishlistIds(wishlistResponse.wishlist)
-                                }
-                            } catch (error) {
-                                console.warn("Failed to load wishlist on login:", error);
-                            }
-                        })(),
-
-                        (async () => {
-                            try {
-                                const { useCartStore } = await import('')
-                                await useCartStore.getState().syncCartFromServer()
-                            } catch (error) {
-                                console.warn("Failed to load cart on login:", error);
-                            }
-                        })(),
-                        (async () => {
-                            try {
-                                const { useOrderStore } = await import("")
-                                await useOrderStore.getState().loadOrders(token)
-                            } catch (error) {
-                                console.warn("Failed to load orders on login:", error);
-                            }
-                        }),
-                    ];
-                    await Promise.allSettled(promises)
+                    await loadAllUserData(token)
 
                 } catch (error) {
                     console.error("Error loading user data:", error);
@@ -230,25 +197,22 @@ export const useUserStore = create<UserState>()(
             },
             logoutUser: async () => {
                 Cookies.remove("auth_token")
-                set({ authUser: null, authToken: null, isAuthenticated: false })
+                set({ authUser: null, auth_token: null, isAuthenticated: false })
                 //clear wishlist,cart and orders
                 try {
-                    const { useWishlistStore } = await import("")
-                    await useWishlistStore.getState().clearWishlist()
+                    useWishlistStore.getState().clearWishlist()
                 } catch (error) {
                     console.warn("Store: Failed to clear wishlist on logout:", error);
                 }
 
                 try {
-                    const { useCartStore } = await import("")
-                    await useCartStore.getState().clearCartItems([])
+                    useCartStore.getState().setCartItems([])
                 } catch (error) {
                     console.warn("Store: Failed to clear cart on logout:", error);
                 }
 
                 try {
-                    const { useOrderStore } = await import("")
-                    await useOrderStore.getState().clearOrders()
+                    useOrderStore.getState().clearOrders()
                 } catch (error) {
                     console.warn("Store: Failed to clear orders on logout:", error);
                 }
@@ -267,18 +231,17 @@ export const useUserStore = create<UserState>()(
                 }
 
                 try {
-                    const response = await authApi.get("/auth/prfile");
+                    const response = await authApi.get("/auth/profile");
 
                     if (response.data) {
                         set({
-                            authUser: response.data,
+                            authUser: response.data as User,
                             isAuthenticated: true,
                             auth_token: token,
                         });
 
                         try {
                             const { getUserWishlist } = await import("./wishlistApi")
-                            const { useWishlistStore } = await import("")
 
                             const wishlistResponse = await getUserWishlist(token)
                             if (wishlistResponse.success) {
@@ -288,23 +251,21 @@ export const useUserStore = create<UserState>()(
                             }
 
                         } catch (error) {
-                            console.warn("Store: Failed to load wishlist:", wishlistError);
+                            console.warn("Store: Failed to load wishlist:", error);
                         }
                     }
 
                     try {
-                        const { useCartStore } = await import("")
                         await useCartStore.getState().syncCartFromServer()
 
                     } catch (error) {
-                        console.warn("Store: Failed to load cart:", cartError);
+                        console.warn("Store: Failed to load cart:", error);
                     }
 
                     try {
-                        const { useOrderStore } = await import("")
                         await useOrderStore.getState().loadOrders(token)
                     } catch (error) {
-                        console.warn("Store: Failed to load orders:", orderError);
+                        console.warn("Store: Failed to load orders:", error);
                     }
 
                 } catch (error) {
@@ -337,37 +298,325 @@ export const useUserStore = create<UserState>()(
 //cart store
 export const useCartStore = create<CartState>()(
     persist(
-        (set, get) => {
+        (set, get) => ({
             cartItems: [],
-                cartItemsWithQuantities: [],
-                    isLoading: false,
-                        addToCart: async (product, quantity = 1) => {
-                            const { auth_token } = useUserStore.getState()
-                            if (!auth_token) {
-                                throw new Error("Authentication required");
-                            }
-                            set({ isLoading: true })
+            cartItemsWithQuantities: [],
+            isLoading: false,
+            addToCart: async (product, quantity = 1) => {
+                const { auth_token } = useUserStore.getState();
+                if (!auth_token) {
+                    throw new Error("Authentication required");
+                }
+                set({ isLoading: true });
 
-                            try {
-                                const { addToCart } = await import("./cartApi")
-                                const response = await addToCart(auth_token, product._id, quantity)
+                try {
+                    const { addToCart } = await import("./cartApi");
+                    const response = await addToCart(auth_token, product._id, quantity);
 
-                                if (response.success) {
-                                    const cartItemsWithQuantities = response.cart.map(mapItemToProduct)
-                                }
+                    if (response.success) {
+                        const cartItemsWithQuantities = response.cart.map(mapCartItemToProduct);
+                        set({
+                            cartItemsWithQuantities,
+                            cartItems: cartItemsWithQuantities.map((item) => item.product)
+                        });
+                    }
+                } catch (error) {
+                    console.error("Add to cart error:", error);
+                    throw error;
+                } finally {
+                    set({ isLoading: false });
+                }
+            },
+            removeFromCart: async (productId) => {
+                const { auth_token } = useUserStore.getState();
+                if (!auth_token) {
+                    throw new Error("Authentication required");
+                }
+                set({ isLoading: true });
+                try {
+                    const { removeFromCart } = await import("./cartApi");
+                    const response = await removeFromCart(auth_token, productId);
+                    if (response.success) {
+                        const cartItemsWithQuantities = response.cart.map(mapCartItemToProduct);
+                        set({
+                            cartItemsWithQuantities,
+                            cartItems: cartItemsWithQuantities.map((item) => item.product)
+                        });
+                    }
+                } catch (error) {
+                    console.error("Remove from cart error:", error);
+                    throw error;
+                } finally {
+                    set({ isLoading: false });
+                }
+            },
+            updateCartItemQuantity: async (productId, quantity) => {
+                const { auth_token } = useUserStore.getState();
+                if (!auth_token) {
+                    throw new Error("Authentication required");
+                }
+                set({ isLoading: true })
 
-                                set({
-                                    cartItemsWithQuantities,
-                                    cartItems: cartItemsWithQuantities.map((item) => item.product)
-                                })
+                try {
+                    const { updateCartItem } = await import("./cartApi")
+                    const response = await updateCartItem(auth_token, productId, quantity)
 
-                            } catch (error) {
-                                console.error("Add to cart error:", error);
-                                throw error;
-                            } finally {
-                                set({ isLoading: false });
-                            }
-                        }
+                    if (response.success) {
+                        const cartItemsWithQuantities = response.cart.map(mapCartItemToProduct)
+
+                        set({
+                            cartItemsWithQuantities,
+                            cartItems: cartItemsWithQuantities.map((item) => item.product)
+                        })
+                    }
+
+
+                } catch (error) {
+                    console.error("Update cart item error:", error);
+                    throw error;
+                } finally {
+                    set({ isLoading: false })
+                }
+            },
+            clearCart: async () => {
+                const { auth_token } = useUserStore.getState();
+                if (!auth_token) {
+                    throw new Error("Authentication required");
+                }
+
+                set({ isLoading: true })
+
+                try {
+                    const { clearCart } = await import("./cartApi")
+                    const response = await clearCart()
+
+                    if (response.success) {
+
+                        set({
+                            cartItemsWithQuantities: [],
+                            cartItems: [],
+                        })
+                    }
+                } catch (error) {
+                    console.error("Clear cart error:", error);
+                    throw error;
+                } finally {
+                    set({ isLoading: false })
+
+                }
+            },
+
+            setCartItems: (items) => {
+                set({
+                    cartItemsWithQuantities: items,
+                    cartItems: items.map((item) => item.product)
+                })
+            },
+
+            getCartItemQuantity: (productId) => {
+                const state = get()
+                const item = state.cartItemsWithQuantities.find((item) => item.product._id === productId)
+                return item ? item.quantity : 0
+            },
+
+            isInCart: (productId) => {
+                const state = get()
+                return state.cartItems.some((item) => item._id === productId)
+            },
+
+            syncCartFromServer: async () => {
+                const { auth_token } = useUserStore.getState();
+                if (!auth_token) {
+                    set({ cartItems: [], cartItemsWithQuantities: [] });
+                    return;
+                }
+
+                set({ isLoading: true })
+
+                try {
+                    const { getUserCart } = await import("./cartApi")
+                    const response = await getUserCart()
+
+                    if (response.success) {
+                        const cartItemsWithQuantities = response.cart.map(mapCartItemToProduct)
+
+                        set({
+                            cartItemsWithQuantities,
+                            cartItems: cartItemsWithQuantities.map((item) => item.product)
+                        })
+                    }
+                } catch (error) {
+                    console.error("Sync cart from server error:", error);
+                } finally {
+                    set({ isLoading: false })
+
+                }
+            }
+        }),
+        {
+            name: "cart_storage",
+            storage: createJSONStorage(() => localStorage)
+        }
+    )
+);
+//orders store
+export const useOrderStore = create<OrderState>()(
+    persist(
+        (set, get) => ({
+            orders: [],
+            isLoading: false,
+            addOrder: (order) =>
+                set((state) => ({ orders: [...state.orders, order] })),
+            updateOrder: (order) =>
+                set((state) => ({
+                    orders: state.orders.map((o) => (o._id === order._id ? order : o)),
+                })),
+            loadOrders: async (token: string) => {
+                set({ isLoading: true });
+                try {
+                    const { getUserOrders } = await import("./orderApi");
+                    const orders = await getUserOrders(token);
+                    set({ orders, isLoading: false });
+                } catch (error) {
+                    console.error("Failed to load orders:", error);
+                    set({ isLoading: false });
+                }
+            },
+            getOrdersCount: () => get().orders.length,
+            clearOrders: () => set({ orders: [] }),
+        }),
+        {
+            name: "order-storage",
+            storage: createJSONStorage(() => localStorage),
+        }
+    )
+);
+//wishlist store
+export const useWishlistStore = create<WishlistState>()(
+    persist(
+        (set, get) => ({
+            wishlistItems: [],
+            wishlistIds: [],
+            addToWishlist: (product) =>
+                set((state) => {
+                    if (!state.wishlistIds.includes(product._id)) {
+                        return {
+                            wishlistItems: [...state.wishlistItems, product],
+                            wishlistIds: [...state.wishlistIds, product._id],
+                        };
+                    }
+                    return state;
+                }),
+            removeFromWishlist: (productId) =>
+                set((state) => ({
+                    wishlistItems: state.wishlistItems.filter(
+                        (item) => item._id !== productId
+                    ),
+                    wishlistIds: state.wishlistIds.filter((id) => id !== productId),
+                })),
+            setWishlistItems: (products) =>
+                set({
+                    wishlistItems: products,
+                    wishlistIds: products.map((product) => product._id),
+                }),
+            setWishlistIds: (ids) =>
+                set((state) => ({
+                    wishlistIds: ids,
+                    wishlistItems: state.wishlistItems.filter((item) =>
+                        ids.includes(item._id)
+                    ),
+                })),
+            clearWishlist: () => set({ wishlistItems: [], wishlistIds: [] }),
+            isInWishlist: (productId) => {
+                const state = get();
+                return state.wishlistIds.includes(productId);
+            },
+        }),
+        {
+            name: "wishlist-storage",
+            storage: createJSONStorage(() => localStorage),
+        }
+    )
+);
+
+export const loadAllUserData = async (token: string) => {
+    try {
+        const promises = [
+            (async () => {
+                try {
+                    const { getUserWishlist } = await import("./wishlistApi");
+                    const wishlistResponse = await getUserWishlist(token);
+                    if (wishlistResponse.success) {
+                        useWishlistStore
+                            .getState()
+                            .setWishlistIds(wishlistResponse.wishlist);
+                    }
+                } catch (error) {
+                    console.warn("Failed to load wishlist:", error);
+                }
+            })(),
+            (async () => {
+                try {
+                    await useCartStore.getState().syncCartFromServer();
+                } catch (error) {
+                    console.warn("Failed to load cart:", error);
+                }
+            })(),
+            (async () => {
+                try {
+                    await useOrderStore.getState().loadOrders(token);
+                } catch (error) {
+                    console.warn("Failed to load orders:", error);
+                }
+            })(),
+        ];
+
+        await Promise.allSettled(promises);
+    } catch (error) {
+        console.error("Error loading user data:", error);
+    }
+};
+
+//currency Store
+export const useCurrencyStore = create<CurrencyState>()(
+    persist(
+        (set, get) => ({
+            selectedCurrency: "USD",
+            currencies: [
+                { code: "USD", name: "US Dollar", symbol: "$", rate: 1.0 },
+                { code: "EUR", name: "Euro", symbol: "€", rate: 0.85 },
+                { code: "GBP", name: "British Pound", symbol: "£", rate: 0.73 },
+                { code: "JPY", name: "Japanese Yen", symbol: "¥", rate: 110.0 },
+                { code: "CAD", name: "Canadian Dollar", symbol: "C$", rate: 1.25 },
+                { code: "AUD", name: "Australian Dollar", symbol: "A$", rate: 1.35 },
+                { code: "CHF", name: "Swiss Franc", symbol: "CHF", rate: 0.92 },
+                { code: "CNY", name: "Chinese Yuan", symbol: "¥", rate: 6.45 },
+                { code: "INR", name: "Indian Rupee", symbol: "₹", rate: 74.5 },
+                { code: "BDT", name: "Bangladeshi Taka", symbol: "৳", rate: 84.8 },
+                { code: "KRW", name: "South Korean Won", symbol: "₩", rate: 1180.0 },
+                { code: "SGD", name: "Singapore Dollar", symbol: "S$", rate: 1.35 },
+            ],
+
+            setCurrency: (currencyCode: string) => {
+                set({ selectedCurrency: currencyCode })
+            },
+
+            getCurrentCurrency: () => {
+                const state = get()
+                return (
+                    state.currencies.find((c) => c.code === state.selectedCurrency) || state.currencies[0]
+                )
+            },
+            convertPrice: (price: number) => {
+                const state = get()
+                const currency = state.getCurrentCurrency()
+                return price * currency.rate
+            },
+
+        }),
+        {
+            name: "currency-storage",
+            storage: createJSONStorage(() => localStorage)
         }
     )
 )
