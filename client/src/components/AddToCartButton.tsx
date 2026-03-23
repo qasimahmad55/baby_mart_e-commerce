@@ -12,6 +12,9 @@ interface Props {
 }
 
 const AddToCartButton = ({ product, className }: Props) => {
+
+    
+
     const handleAddToCart = () => {
         toast.success("Button clicked")
     }
