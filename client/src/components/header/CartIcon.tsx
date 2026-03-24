@@ -1,14 +1,42 @@
+"use client"
+import { useCartStore } from '@/lib/store'
 import { ShoppingBag } from 'lucide-react'
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 function CartIcon() {
-    return <Link href={"/user/orders"}
-        className="relative hover:text-babyshopSky hoverEffect"
-    >
-        <ShoppingBag size={24} />
-        <span className='absolute -right-2 -top-2 bg-babyshopSky text-babyshopWhite text-[11px] font-medium w-4 h-4 rounded-full flex items-center justify-center'>0</span>
-    </Link>
+    const { cartItemsWithQuantities } = useCartStore()
+    const [mounted, setMounted] = useState(false)
+
+    useEffect(() => {
+        setMounted(true)
+    }, [])
+
+    if (!mounted) {
+        return (
+            <Link
+                href={"/user/cart"}
+                className="relative hover:text-babyshopSky hoverEffect"
+            >
+                <ShoppingBag />
+                <span className="absolute -right-2 -top-2 bg-babyshopSky text-babyshopWhite text-[11px] font-medium w-4 h-4 rounded-full flex items-center justify-center">
+                    0
+                </span>
+            </Link>
+        );
+    }
+    const totalItems = cartItemsWithQuantities.length;
+    return (
+        <Link
+            href={"/user/cart"}
+            className="relative hover:text-babyshopSky hoverEffect"
+        >
+            <ShoppingBag size={24} />
+            <span className="absolute -right-2 -top-2 bg-babyshopSky text-babyshopWhite text-[11px] font-medium w-4 h-4 rounded-full flex items-center justify-center">
+                {totalItems > 99 ? "99+" : totalItems}
+            </span>
+        </Link>
+    );
 }
 
 export default CartIcon

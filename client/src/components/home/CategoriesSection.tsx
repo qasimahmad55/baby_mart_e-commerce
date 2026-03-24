@@ -205,7 +205,7 @@ const CategoriesSection = async () => {
                         <p>2+ Years</p>
                     </Link>
                 </div>
-                /</div>
+                </div>
         </div >
     )
 }

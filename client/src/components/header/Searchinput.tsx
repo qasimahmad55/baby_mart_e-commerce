@@ -1,32 +1,119 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Input } from '../ui/input'
-import { Search, X } from 'lucide-react'
+import { Loader2, Search, Tractor, X } from 'lucide-react'
+import { useDebounce } from 'use-debounce'
+import { Product } from '@/types/types'
+import { fetchData } from '@/lib/api'
+import Link from 'next/link'
+import AddToCartButton from '../AddToCartButton'
+import Image from 'next/image'
+
+interface ProductsResponse {
+    products: Product[];
+    total: number;
+}
 
 function Searchinput() {
 
     const [search, setSearch] = useState("")
-    // const [debouncedSearch] = useDebounce(search, 300);
-    // const [products, setProducts] = useState<Product[]>([]);
-    // const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
-    // const [loading, setLoading] = useState(false);
-    // const [error, setError] = useState<string | null>(null);
-    // const [showResults, setShowResults] = useState(false);
-    // const [showSearch, setShowSearch] = useState(false);
-    // const searchRef = useRef<HTMLDivElement>(null);
-    // const mobileInputRef = useRef<HTMLInputElement>(null);
+    const [debouncedSearch] = useDebounce(search, 300);
+    const [products, setProducts] = useState<Product[]>([]);
+    const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [showResults, setShowResults] = useState(false);
+    const [showSearch, setShowSearch] = useState(false);
+    const searchRef = useRef<HTMLDivElement>(null);
+    const mobileInputRef = useRef<HTMLInputElement>(null);
+
+    const fetchFeaturedProducts = async () => {
+        try {
+            const response = await fetchData<ProductsResponse>("/products?page=1")
+            setFeaturedProducts(response.products)
+
+        } catch (error) {
+            console.error("Error fetching featured products:", error)
+        }
+    }
+
+    useEffect(() => {
+        fetchFeaturedProducts()
+    }, [])
+
+    const fetchProducts = async (searchTerm: string) => {
+        if (!searchTerm.trim()) {
+            setProducts([])
+            return
+        }
+
+        setLoading(true)
+        setError(null)
+
+        try {
+            const response = await fetchData<ProductsResponse>(`/products?page=1&limit=10&search=${encodeURIComponent(searchTerm)}`)
+            setProducts(response.products)
+        } catch (error) {
+            setError("Failed to fetch products. Please try again.");
+            console.error("Error fetching products:", error);
+        } finally {
+            setLoading(false)
+        }
+    }
+    useEffect(() => {
+        fetchProducts(debouncedSearch)
+    }, [debouncedSearch])
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+                setShowResults(false)
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutside)
+        return () => document.removeEventListener("mousedown", handleClickOutside)
 
 
+    }, [])
+
+    useEffect(() => {
+        if (showSearch && mobileInputRef.current) {
+            mobileInputRef.current.focus()
+        }
+    }, [])
+    const toggleMobileSearch = () => {
+        setShowSearch(!showSearch);
+        if (!showSearch) {
+            setSearch("");
+            setShowResults(true);
+        }
+    }
 
     return (
 
-        <div className='relative lg:w-full'>
-            <form className='hidden lg:flex items-center'>
+        <div ref={searchRef} className='relative lg:w-full'>
+            {/* small screen */}
+            <button
+                onClick={toggleMobileSearch}
+                className="lg:hidden mt-1.5 border p-2 rounded-full hover:border-babyshopSky hover:bg-babyshopSky/10 group hoverEffect"
+            >
+                {showSearch ? (
+                    <X className="w-5 h-5 text-babyshopBlack group-hover:text-babyshopRed hoverEffect" />
+                ) : (
+                    <Search className="w-5 h-5 text-babyshopBlack group-hover:text-babyshopRed hoverEffect" />
+                )}
+            </button>
+
+            <form className='hidden lg:flex items-center'
+                onSubmit={(e) => e.preventDefault()}
+            >
                 <Input
                     className="flex-1 rounded-md py-5 focus-visible:ring-0 focus-visible:border-babyshopRed bg-white text-babyshopText placeholder:font-semibold placeholder:tracking-wide pr-16"
                     placeholder='Search Products...'
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
+                    onFocus={() => setShowResults(true)}
                 />
                 {search ?
                     <X
@@ -37,6 +124,129 @@ function Searchinput() {
                         className="absolute right-3 top-3 w-5 h-5 text-babyshopText"
                     />}
             </form>
+
+            {/* mobile search overlay */}
+            {/* desktop search results dropdown */}
+            {showResults && !showSearch && (
+                <div
+                    className='absolute top-full mt-1 left-0 right-0 bg-white rounded-md shadow-lg z-50 max-h-[70vh] overflow-y-auto border border-gray-200 hidden lg:block'
+                >{
+                        loading ? <div className="flex items-center justify-center px-6 gap-2 py-4 text-center">
+                            <Loader2 className="w-5 h-5 animate-spin text-babyshopRed" />
+                            <span className="font-medium text-gray-600">Searching...</span>
+                        </div>
+                            :
+                            products.length > 0 ? (
+                                <div className="py-0">
+                                    <div className="px-4 py-2 bg-gray-50 border-b border-gray-200">
+                                        <p className="text-sm font-medium text-gray-700">
+                                            Search Results ({products.length})
+                                        </p>
+                                        {error && (
+                                            <p className="text-sm font-medium text-babyshopRed">
+                                                {error}
+                                            </p>
+                                        )}
+                                    </div>
+                                    {products.map((product) => (
+                                        <div
+                                            key={product._id}
+                                            className="border-b border-gray-100 last:border-b-0 hover:bg-gray-50 px-4 py-3 flex items-center gap-5 justify-between"
+                                        >
+                                            <div
+                                                className="flex-1"
+                                                onClick={() => {
+                                                    setShowResults(false);
+                                                    setSearch("");
+                                                }}
+                                            >
+                                                <Link
+                                                    href={`/product/${product._id}`}
+                                                    className="flex items-center gap-3"
+                                                >
+                                                    {product.image && (
+                                                        <div className="w-12 h-12 bg-gray-50 rounded shrink-0 overflow-hidden">
+                                                            <Image
+                                                                width={200}
+                                                                height={200}
+                                                                src={product.image}
+                                                                alt={product.name}
+                                                                className="object-contain w-full h-full"
+                                                            />
+                                                        </div>
+                                                    )}
+                                                    <div>
+                                                        <h3 className="text-sm font-medium text-gray-800 line-clamp-1">
+                                                            {product.name}
+                                                        </h3>
+                                                        {product.price && (
+                                                            <p className="text-sm font-semibold text-babyshopSky mt-0.5">
+                                                                ${product.price}
+                                                            </p>
+                                                        )}
+                                                        {(product.category?.name || product.brand?.name) && (
+                                                            <p className="text-sm text-babyshopTextLight">
+                                                                {product.category?.name || "No Category"} -{" "}
+                                                                {product.brand?.name || "No Brand"}
+                                                            </p>
+                                                        )}
+                                                    </div>
+                                                </Link>
+                                            </div>
+                                            <AddToCartButton product={product} />
+                                        </div>
+                                    ))}
+                                    <div className="px-4 py-2 bg-gray-50 border-t border-gray-200">
+                                        <Link
+                                            href={`/shop?search=${encodeURIComponent(search)}`}
+                                            onClick={() => {
+                                                setShowResults(false);
+                                            }}
+                                            className="text-sm text-babyshopSky font-medium hover:underline"
+                                        >
+                                            View all results
+                                        </Link>
+                                    </div>
+                                </div>)
+                                :
+                                <>
+                                    <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
+                                        {!search ? (
+                                            <p className="text-sm font-medium text-gray-700">
+                                                Popular Products
+                                            </p>
+                                        ) : (
+                                            <p className="text-sm font-medium text-gray-700">
+                                                No results for &quot;
+                                                <span className="text-babyshopRed">{search}</span>&quot;
+                                            </p>
+                                        )}
+                                    </div>
+                                    <div >
+                                        {featuredProducts?.length > 0 &&
+                                            featuredProducts?.map((item) => (
+                                                <div
+                                                    key={item?._id}
+                                                    className="border-b border-gray-100 last:border-b-0 hover:bg-gray-50"
+                                                >
+                                                    <button
+                                                        onClick={() => {
+                                                            setSearch(item?.name);
+                                                            setShowResults(true);
+                                                        }}
+                                                        className="flex items-center gap-3 text-left px-4 py-3 hover:cursor-pointer"
+                                                    >
+                                                        <Search className="text-babyshopBlack/60 w-5 h-5" />
+                                                        <h3 className="text-sm font-medium text-gray-800 line-clamp-1">
+                                                            {item?.name}
+                                                        </h3>
+                                                    </button>
+                                                </div>
+                                            ))}
+                                    </div>
+                                </>
+                    }</div>
+            )}
         </div>
     )
 }
