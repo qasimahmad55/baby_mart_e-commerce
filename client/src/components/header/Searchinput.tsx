@@ -190,7 +190,7 @@ function Searchinput() {
                                                         className="flex items-center gap-3"
                                                     >
                                                         {product.image && (
-                                                            <div className="w-12 h-12 bg-gray-50 rounded flex-shrink-0 overflow-hidden">
+                                                            <div className="w-12 h-12 bg-gray-50 rounded shrink-0 overflow-hidden">
                                                                 <Image
                                                                     height={200}
                                                                     width={200}

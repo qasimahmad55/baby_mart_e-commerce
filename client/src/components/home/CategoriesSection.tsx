@@ -157,7 +157,7 @@ const CategoriesSection = async () => {
             {/* Special Offers Section */}
             <div className="mt-6 pt-6 border-t border-gray-200">
                 <p className="font-semibold text-lg mb-3">Special Offers</p>
-                <div className="bg-gradient-to-r from-babyshopSky/10 to-babyshopSky/5 p-3 rounded-md">
+                <div className="bg-linear-to-r from-babyshopSky/10 to-babyshopSky/5 p-3 rounded-md">
                     <div className="flex items-center gap-2 mb-2">
                         <span className="text-babyshopSky">🎉</span>
                         <p className="font-medium text-sm">Free Shipping</p>
@@ -205,7 +205,7 @@ const CategoriesSection = async () => {
                         <p>2+ Years</p>
                     </Link>
                 </div>
-                </div>
+            </div>
         </div >
     )
 }
