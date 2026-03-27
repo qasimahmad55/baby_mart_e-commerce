@@ -52,7 +52,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import ImageUpload from '@/components/ui/ImageUpload';
+import { ImageUpload } from '@/components/ui/ImageUpload';
 import ProductSkeleton from '@/components/skeletons/ProductSkeleton';
 
 function Products() {
@@ -254,10 +254,10 @@ function Products() {
                       <TableCell>
                         <span
                           className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium whitespace-nowrap ${product.stock > 10
-                            ? "bg-green-100 text-green-800"
-                            : product.stock > 0
-                              ? "bg-yellow-100 text-yellow-800"
-                              : "bg-red-100 text-red-800"
+                              ? "bg-green-100 text-green-800"
+                              : product.stock > 0
+                                ? "bg-yellow-100 text-yellow-800"
+                                : "bg-red-100 text-red-800"
                             }`}
                         >
                           {product.stock}
