@@ -1,8 +1,9 @@
+import CheckoutPageClient from '@/components/common/pages/CheckoutPageClient'
 import React from 'react'
 
 const CheckoutPage = () => {
   return (
-    <div>CheckoutPage</div>
+    <CheckoutPageClient/>
   )
 }
 
