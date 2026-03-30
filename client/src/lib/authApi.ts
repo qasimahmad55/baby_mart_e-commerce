@@ -71,7 +71,7 @@ const authApi = {
     put: async (url: string, body: unknown): Promise<ApiResponse<unknown>> => {
         try {
             const token = getAuthToken();
-            console.log("authApi: PUT", url, "Token:", !!token);
+            // console.log("authApi: PUT", url, "Token:", !!token);
             const response = await fetch(`${baseURL}${url}`, {
                 method: "PUT",
                 headers: {

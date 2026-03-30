@@ -109,12 +109,12 @@ const updateCartItem = asyncHandler(async (req, res) => {
         throw new Error("User not found");
     }
 
-    const itemIndex = user.cart.findIndex((item) => item.productId.toString === productId)
+    const itemIndex = user.cart.findIndex((item) => item.productId.toString() === productId)
     if (itemIndex > -1) {
         if (quantity === 0) {
             user.cart.splice(itemIndex, 1)
         } else {
-            user.cart[itemIndex].quantity += parseInt(quantity)
+            user.cart[itemIndex].quantity = parseInt(quantity)
         }
         await user.save()
 
@@ -136,7 +136,7 @@ const updateCartItem = asyncHandler(async (req, res) => {
 
 })
 const removeItemFromCart = asyncHandler(async (req, res) => {
-    const productId = req.params.id
+    const productId = req.params.productId
     if (!productId) {
         res.status(400);
         throw new Error("Product ID is required");
