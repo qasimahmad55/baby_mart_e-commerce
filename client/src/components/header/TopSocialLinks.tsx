@@ -4,10 +4,10 @@ import React from 'react'
 
 function TopSocialLinks() {
     const socialLinks = [
-        { title: "Facebook", icon: <Facebook size={16} />, href: "/" },
-        { title: "Instagram", icon: <Instagram size={16} />, href: "/" },
-        { title: "Linkedin", icon: <Linkedin size={16} />, href: "/" },
-        { title: "Twitter", icon: <Twitter size={16} />, href: "/" },
+        { title: "Facebook", icon: <Facebook size={16} />, href: "https://facebook.com" },
+        { title: "Instagram", icon: <Instagram size={16} />, href: "https://instagram.com" },
+        { title: "Linkedin", icon: <Linkedin size={16} />, href: "https://linkedin.com" },
+        { title: "Twitter", icon: <Twitter size={16} />, href: "https://twitter.com" },
     ];
     return (
         <div className='flex items-center gap-3'>
@@ -15,7 +15,9 @@ function TopSocialLinks() {
                 <Link
                     className='hover:text-babyshopWhite hoverEffect'
                     key={item?.title}
-                    href={item?.href}>
+                    href={item?.href}
+                    target="_blank"
+                    rel="noopener noreferrer">
                     {item?.icon}
                 </Link>
             ))}

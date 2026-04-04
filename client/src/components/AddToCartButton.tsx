@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button } from './ui/button'
 import { Loader2, ShoppingCart } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -17,7 +17,12 @@ const AddToCartButton = ({ product, className }: Props) => {
     const { addToCart } = useCartStore()
     const { isAuthenticated } = useUserStore()
     const [localLoading, setLocalLoading] = useState(false)
+    const [mounted, setMounted] = useState(false)
     const router = useRouter()
+
+    useEffect(() => {
+        setMounted(true)
+    }, [])
 
     const handleAddToCart = async (e: React.MouseEvent) => {
         e.preventDefault()
@@ -43,6 +48,20 @@ const AddToCartButton = ({ product, className }: Props) => {
         }
 
     }
+
+    if (!mounted) {
+        return (
+            <Button
+                variant="outline"
+                disabled
+                className={cn("rounded-full px-6 mt-1", className)}
+            >
+                <ShoppingCart className="w-4 h-4 mr-2" />
+                Add to cart
+            </Button>
+        )
+    }
+
     return (
         <Button
             onClick={handleAddToCart}
@@ -65,4 +84,4 @@ const AddToCartButton = ({ product, className }: Props) => {
     )
 }
 
-export default AddToCartButton 
+export default AddToCartButton

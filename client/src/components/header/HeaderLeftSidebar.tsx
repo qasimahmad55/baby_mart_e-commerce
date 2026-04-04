@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
@@ -31,6 +31,11 @@ interface SidebarProps {
 const HeaderLeftSideBar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     const sidebarRef = useOutsideClick<HTMLDivElement>(onClose);
     const { isAuthenticated, authUser, logoutUser } = useUserStore();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const handleLogout = () => {
         logoutUser();
@@ -136,7 +141,7 @@ const HeaderLeftSideBar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                                 </Link>
                             </div>
                         </div>
-                        {isAuthenticated && authUser ? (
+                        {mounted && isAuthenticated && authUser ? (
                             <div className="space-y-4 mb-6">
                                 <div className="pb-4 border-b">
                                     <p className="text-sm text-gray-600">Welcome back,</p>

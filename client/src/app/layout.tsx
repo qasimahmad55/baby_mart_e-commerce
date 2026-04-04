@@ -7,6 +7,9 @@ import Footer from "@/components/footer/Footer";
 export const metadata: Metadata = {
   title: "Babyshop | Online shopping places",
   description: "Babyshop for onlne shopping",
+  icons: {
+    icon: '/logo.png',
+  },
 };
 export default function RootLayout({
   children,

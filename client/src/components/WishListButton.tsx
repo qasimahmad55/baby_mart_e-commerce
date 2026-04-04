@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Heart, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Product } from '@/types/types'
@@ -17,9 +17,14 @@ const WishListButton = ({ product, className }: Props) => {
     const { addToWishlist: addToWishlistStore, removeFromWishlist: removeFromWishlistStore, isInWishlist } = useWishlistStore()
     const { isAuthenticated, auth_token } = useUserStore()
     const [localLoading, setLocalLoading] = useState(false)
+    const [mounted, setMounted] = useState(false)
     const router = useRouter()
 
-    const isWishlisted = isInWishlist(product._id)
+    useEffect(() => {
+        setMounted(true)
+    }, [])
+
+    const isWishlisted = mounted ? isInWishlist(product._id) : false
 
     const handleWishlistToggle = async (e: React.MouseEvent) => {
         e.preventDefault()

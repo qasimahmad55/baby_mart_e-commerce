@@ -2,11 +2,17 @@
 import { useWishlistStore } from '@/lib/store'
 import { Heart } from 'lucide-react'
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 function WishListIcon() {
     const { wishlistIds } = useWishlistStore()
-    const count = wishlistIds.length
+    const [mounted, setMounted] = useState(false)
+
+    useEffect(() => {
+        setMounted(true)
+    }, [])
+
+    const count = mounted ? wishlistIds.length : 0
 
     return (
         <Link href={"/user/wishlist"}

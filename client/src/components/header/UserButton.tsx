@@ -3,10 +3,31 @@ import { useUserStore } from "@/lib/store";
 import { User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const UserButton = () => {
     const { isAuthenticated, authUser } = useUserStore();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    // Show default state until mounted to prevent hydration mismatch
+    if (!mounted) {
+        return (
+            <Link
+                href="/auth/signin"
+                className="flex items-center gap-2 group hover:text-babyshopSky hoverEffect"
+            >
+                <User size={30} />
+                <div className="flex flex-col">
+                    <p className="text-xs font-medium">Welcome</p>
+                    <p className="font-semibold text-sm">Sign in / Register</p>
+                </div>
+            </Link>
+        );
+    }
 
     return (
         <Link
