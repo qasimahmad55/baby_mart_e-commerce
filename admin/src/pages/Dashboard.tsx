@@ -97,7 +97,7 @@ function Dashboard() {
                 className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6"
                 variants={containerVariants}
               >
-                <motion.div variants={cardVariants}>
+                <motion.div variants={cardVariants} className="h-full">
                   <StatsCard
                     title="Total Users"
                     value={stats.counts.users}
@@ -106,7 +106,7 @@ function Dashboard() {
                     className="bg-white/95 shadow-lg rounded-xl hover:shadow-xl transition-shadow duration-300"
                   />
                 </motion.div>
-                <motion.div variants={cardVariants}>
+                <motion.div variants={cardVariants} className="h-full">
                   <StatsCard
                     title="Total Products"
                     value={stats.counts.products}
@@ -115,7 +115,7 @@ function Dashboard() {
                     className="bg-white/95 shadow-lg rounded-xl hover:shadow-xl transition-shadow duration-300"
                   />
                 </motion.div>
-                <motion.div variants={cardVariants}>
+                <motion.div variants={cardVariants} className="h-full">
                   <StatsCard
                     title="Categories"
                     value={stats.counts.categories}
@@ -124,7 +124,7 @@ function Dashboard() {
                     className="bg-white/95 shadow-lg rounded-xl hover:shadow-xl transition-shadow duration-300"
                   />
                 </motion.div>
-                <motion.div variants={cardVariants}>
+                <motion.div variants={cardVariants} className="h-full">
                   <StatsCard
                     title="Brands"
                     value={stats.counts.brands}
@@ -133,7 +133,7 @@ function Dashboard() {
                     className="bg-white/95 shadow-lg rounded-xl hover:shadow-xl transition-shadow duration-300"
                   />
                 </motion.div>
-                <motion.div variants={cardVariants}>
+                <motion.div variants={cardVariants} className="h-full">
                   <StatsCard
                     title="Total Orders"
                     value={stats.counts.orders}
@@ -142,7 +142,7 @@ function Dashboard() {
                     className="bg-white/95 shadow-lg rounded-xl hover:shadow-xl transition-shadow duration-300"
                   />
                 </motion.div>
-                <motion.div variants={cardVariants}>
+                <motion.div variants={cardVariants} className="h-full">
                   <StatsCard
                     title="Total Revenue"
                     value={formatCurrency(stats.counts.totalRevenue)}

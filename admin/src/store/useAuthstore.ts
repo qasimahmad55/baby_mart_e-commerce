@@ -26,6 +26,7 @@ type AuthState = {
 
     logout: () => void;
     checkIsAdmin: () => boolean;
+    updateUser: (updatedUser: Partial<User>) => void;
 }
 
 const useAuthStore = create<AuthState>()(
@@ -67,6 +68,12 @@ const useAuthStore = create<AuthState>()(
             checkIsAdmin: () => {
                 const { user } = get();
                 return user?.role === "admin"
+            },
+            updateUser: (updatedUser) => {
+                const { user } = get();
+                if (user) {
+                    set({ user: { ...user, ...updatedUser } });
+                }
             }
         }),
         {

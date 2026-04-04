@@ -13,7 +13,7 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(true)
   // console.log(isAuthenticated);
   if (!isAuthenticated) {
-    return <Navigate to={"/login"} />
+    return <Navigate to={"/login"} replace />
   }
 
   return (

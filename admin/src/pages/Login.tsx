@@ -2,7 +2,7 @@ import { motion } from 'motion/react'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { loginSchema } from "@/lib/validation"
 import { useForm } from "react-hook-form"
-import { Link, useNavigate } from "react-router"
+import { Link, Navigate, useNavigate } from "react-router"
 import z from 'zod'
 import { zodResolver } from "@hookform/resolvers/zod";
 import useAuthStore from "@/store/useAuthstore"
@@ -17,7 +17,11 @@ function Login() {
 
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
-  const { login } = useAuthStore()
+  const { login, isAuthenticated } = useAuthStore()
+
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />
+  }
 
   type FormData = z.infer<typeof loginSchema>
   const form = useForm<FormData>({
@@ -33,8 +37,8 @@ function Login() {
     setIsLoading(true)
     try {
       await login(data)
-      toast("Weolcome to Dashboard")
-      navigate("/dashboard")
+      toast("Welcome to Dashboard")
+      navigate("/dashboard", { replace: true })
     } catch (error) {
       console.error("Failed to login", error)
       toast("Invalid credentials")

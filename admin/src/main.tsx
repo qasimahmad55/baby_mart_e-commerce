@@ -1,7 +1,8 @@
+
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
-import { createBrowserRouter, RouterProvider } from 'react-router'
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router'
 import Login from './pages/Login.tsx'
 import Register from './pages/Register.tsx'
 import Dashboard from './pages/Dashboard.tsx'
@@ -16,19 +17,20 @@ import UsersPage from './pages/Users.tsx'
 const router = createBrowserRouter([
   { path: "/login", element: < Login /> },
   { path: "/register", element: <Register /> },
+  { path: "/", element: <Navigate to="/dashboard" replace /> },
   {
-    path: "/",
+    path: "/dashboard",
     element: <App />,
     children: [
-      { index: true, path: "/dashboard", element: <Dashboard /> },
-      { path: "/dashboard/account", element: <Account /> },
-      { path: "/dashboard/users", element: <UsersPage /> },
-      { path: "/dashboard/orders", element: < Orders /> },
-      { path: "/dashboard/invoices", element: <Invoices /> },
-      { path: "/dashboard/products", element: <Products /> },
-      { path: "/dashboard/banners", element: <Banenrs /> },
-      { path: "/dashboard/categories", element: <Categories /> },
-      { path: "/dashboard/brands", element: <Brands /> },
+      { index: true, element: <Dashboard /> },
+      { path: "account", element: <Account /> },
+      { path: "users", element: <UsersPage /> },
+      { path: "orders", element: < Orders /> },
+      { path: "invoices", element: <Invoices /> },
+      { path: "products", element: <Products /> },
+      { path: "banners", element: <Banenrs /> },
+      { path: "categories", element: <Categories /> },
+      { path: "brands", element: <Brands /> },
     ],
   }
 ])
