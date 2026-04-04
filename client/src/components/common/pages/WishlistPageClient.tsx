@@ -16,7 +16,6 @@ import PageBreadcrumb from './PageBreadCrumb'
 
 const WishlistPageClient = () => {
     const wishlistItems = useWishlistStore((state) => state.wishlistItems)
-    const wishlistIds = useWishlistStore((state) => state.wishlistIds)
     const removeFromStore = useWishlistStore((state) => state.removeFromWishlist)
     const clearStore = useWishlistStore((state) => state.clearWishlist)
     const setWishlistItems = useWishlistStore((state) => state.setWishlistItems)
@@ -43,25 +42,28 @@ const WishlistPageClient = () => {
                 return
             }
 
-            // If we have product details already, no need to fetch
-            if (wishlistItems && wishlistItems.length > 0) {
-                setIsLoading(false)
-                setHasFetched(true)
-                return
-            }
-
-            // If no wishlist IDs, nothing to load
-            if (!wishlistIds || wishlistIds.length === 0) {
-                setIsLoading(false)
-                setHasFetched(true)
-                return
-            }
-
             try {
                 setHasFetched(true)
-                const response = await getWishlistProducts(wishlistIds, auth_token)
-                if (response.success && response.products) {
-                    setWishlistItems(response.products)
+                
+                // First, sync wishlist IDs from server to ensure we have the latest
+                const { getUserWishlist } = await import('@/lib/wishlistApi')
+                const wishlistResponse = await getUserWishlist(auth_token)
+                
+                if (wishlistResponse.success && wishlistResponse.wishlist) {
+                    const serverWishlistIds = wishlistResponse.wishlist
+                    
+                    // If server has no items, clear local and return
+                    if (!serverWishlistIds || serverWishlistIds.length === 0) {
+                        setWishlistItems([])
+                        setIsLoading(false)
+                        return
+                    }
+                    
+                    // Fetch product details for the server wishlist
+                    const response = await getWishlistProducts(serverWishlistIds, auth_token)
+                    if (response.success && response.products) {
+                        setWishlistItems(response.products)
+                    }
                 }
             } catch (error) {
                 console.error("Failed to load wishlist products:", error)
@@ -71,7 +73,7 @@ const WishlistPageClient = () => {
         }
 
         loadWishlistProducts()
-    }, [isAuthenticated, auth_token, wishlistItems, wishlistIds, setWishlistItems, hasFetched])
+    }, [isAuthenticated, auth_token, setWishlistItems, hasFetched])
 
     const handleRemoveItem = async (productId: string, productName: string) => {
         if (!auth_token) return

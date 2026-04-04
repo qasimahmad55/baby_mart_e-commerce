@@ -52,7 +52,7 @@ const updateUser = asyncHandler(async (req, res) => {
     const user = await User.findById(req.params.id)
     if (!user) {
         res.status(404)
-        throw new error("User not found")
+        throw new Error("User not found")
     }
     //allow updates by user or admin
     // if (user._id.toString() !== req.user._id && req.user.role !== "admin") {

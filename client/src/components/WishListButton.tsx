@@ -47,9 +47,26 @@ const WishListButton = ({ product, className }: Props) => {
                     description: product?.name,
                 });
             }
-        } catch (error) {
-            console.error("Wishlist error:", error);
-            toast.error("Failed to update wishlist. Please try again.");
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : "Unknown error"
+            console.error("Wishlist error:", errorMessage);
+            
+            // Handle "already in wishlist" error by syncing local state
+            if (errorMessage.toLowerCase().includes("already in wishlist")) {
+                addToWishlistStore(product)
+                toast.info("Product is already in your wishlist", {
+                    description: product?.name,
+                });
+            } 
+            // Handle "not in wishlist" error by syncing local state
+            else if (errorMessage.toLowerCase().includes("not in wishlist") || errorMessage.toLowerCase().includes("not found")) {
+                removeFromWishlistStore(product._id)
+                toast.info("Product was not in your wishlist", {
+                    description: product?.name,
+                });
+            } else {
+                toast.error("Failed to update wishlist. Please try again.");
+            }
         } finally {
             setLocalLoading(false)
         }

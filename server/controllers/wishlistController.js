@@ -9,7 +9,7 @@ const getUserWishList = asyncHandler(async (req, res) => {
         throw new Error("User not found");
     }
     res.json({
-        status: success,
+        success: true,
         wishlist: user.wishList || []
     })
 })
@@ -70,7 +70,7 @@ const removeFromWishlist = asyncHandler(async (req, res) => {
 })
 const getWishlistProducts = asyncHandler(async (req, res) => {
     const { productIds } = req.body
-    if (!productIds || Array.isArray(productIds)) {
+    if (!productIds || !Array.isArray(productIds) || productIds.length === 0) {
         res.status(400);
         throw new Error("Product IDs array is required");
     }
