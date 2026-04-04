@@ -6,5 +6,8 @@
   "/shop/page": "app/shop/page.js",
   "/success/page": "app/success/page.js",
   "/user/cart/page": "app/user/cart/page.js",
-  "/user/checkout/page": "app/user/checkout/page.js"
+  "/user/checkout/page": "app/user/checkout/page.js",
+  "/user/orders/page": "app/user/orders/page.js",
+  "/user/profile/page": "app/user/profile/page.js",
+  "/user/wishlist/page": "app/user/wishlist/page.js"
 }

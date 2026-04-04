@@ -1,4 +1,6 @@
+"use client"
 import DiscountBadge from "@/components/DiscountBadge";
+import WishListButton from "@/components/WishListButton";
 import { Product } from "@/types/types";
 import Image from "next/image";
 import Link from "next/link";
@@ -25,7 +27,7 @@ const ProductCard = ({ product }: { product: Product }) => {
                     className="absolute top-4 left-2"
                 />
             </Link>
-            {/* Wishlist button */}
+            <WishListButton product={product} />
             <hr />
             <div className="px-4 py-2 space-y-1">
                 <p className="uppercase text-xs font-medium text-babyshopTextLight">
