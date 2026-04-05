@@ -22,6 +22,7 @@ const WishlistPageClient = () => {
     
     const auth_token = useUserStore((state) => state.auth_token)
     const isAuthenticated = useUserStore((state) => state.isAuthenticated)
+    const hasHydrated = useUserStore((state) => state.hasHydrated)
     
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
     const [loadingItems, setLoadingItems] = useState<Set<string>>(new Set())
@@ -32,6 +33,10 @@ const WishlistPageClient = () => {
     // Load wishlist products on mount only if we have IDs but no product details
     useEffect(() => {
         const loadWishlistProducts = async () => {
+            if (!hasHydrated) {
+                return
+            }
+
             // Prevent multiple fetches
             if (hasFetched) {
                 return
@@ -73,7 +78,7 @@ const WishlistPageClient = () => {
         }
 
         loadWishlistProducts()
-    }, [isAuthenticated, auth_token, setWishlistItems, hasFetched])
+    }, [hasHydrated, isAuthenticated, auth_token, setWishlistItems, hasFetched])
 
     const handleRemoveItem = async (productId: string, productName: string) => {
         if (!auth_token) return
@@ -115,7 +120,21 @@ const WishlistPageClient = () => {
         }
     }
 
-    if (!isAuthenticated) {
+    if (!hasHydrated || isLoading) {
+        return (
+            <Container className="py-10">
+                <PageBreadcrumb
+                    items={[{ label: "User", href: "/user/profile" }]}
+                    currentPage="Wishlist"
+                />
+                <div className="flex items-center justify-center min-h-[400px]">
+                    <Loader2 className="w-8 h-8 animate-spin text-babyshopSky" />
+                </div>
+            </Container>
+        )
+    }
+
+    if (!isAuthenticated || !auth_token) {
         return (
             <Container className="py-10">
                 <PageBreadcrumb

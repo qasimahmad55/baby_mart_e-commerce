@@ -58,7 +58,7 @@ export default function AccountPage() {
 
     setLoading(true);
     try {
-      const response = await axiosPrivate.put(`/users/${user._id}`, {
+      await axiosPrivate.put(`/users/${user._id}`, {
         name: profileData.name,
         avatar: profileData.avatar,
       });

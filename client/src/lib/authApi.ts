@@ -22,7 +22,7 @@ const getAuthToken = (): string | undefined => {
 };
 
 const authApi = {
-    post: async (url: string, body: unknown): Promise<ApiResponse<unknown>> => {
+    post: async <T = unknown>(url: string, body: unknown): Promise<ApiResponse<T>> => {
         try {
             const token = getAuthToken();
             const response = await fetch(`${baseURL}${url}`, {
@@ -55,7 +55,7 @@ const authApi = {
             }
 
             const data = await response.json();
-            return { success: true, data };
+            return { success: true, data: data as T };
         } catch {
             return {
                 success: false,
@@ -68,7 +68,7 @@ const authApi = {
         }
     },
 
-    put: async (url: string, body: unknown): Promise<ApiResponse<unknown>> => {
+    put: async <T = unknown>(url: string, body: unknown): Promise<ApiResponse<T>> => {
         try {
             const token = getAuthToken();
             // console.log("authApi: PUT", url, "Token:", !!token);
@@ -107,7 +107,7 @@ const authApi = {
             }
 
             const data = await response.json();
-            return { success: true, data };
+            return { success: true, data: data as T };
         } catch (error: unknown) {
             console.error("authApi: Network Error:", url, error);
             return {
@@ -121,7 +121,7 @@ const authApi = {
         }
     },
 
-    get: async (url: string): Promise<ApiResponse<unknown>> => {
+    get: async <T = unknown>(url: string): Promise<ApiResponse<T>> => {
         try {
             const token = getAuthToken();
             console.log("authApi: GET", url, "Token:", !!token);
@@ -159,7 +159,7 @@ const authApi = {
             }
 
             const data = await response.json();
-            return { success: true, data };
+            return { success: true, data: data as T };
         } catch (error: unknown) {
             console.error("authApi: Network Error:", url, error);
             return {
@@ -173,7 +173,7 @@ const authApi = {
         }
     },
 
-    delete: async (url: string): Promise<ApiResponse<unknown>> => {
+    delete: async <T = unknown>(url: string): Promise<ApiResponse<T>> => {
         try {
             const token = getAuthToken();
             console.log("authApi: DELETE", url, "Token:", !!token);
@@ -211,7 +211,7 @@ const authApi = {
             }
 
             const data = await response.json();
-            return { success: true, data };
+            return { success: true, data: data as T };
         } catch (error: unknown) {
             console.error("authApi: Network Error:", url, error);
             return {

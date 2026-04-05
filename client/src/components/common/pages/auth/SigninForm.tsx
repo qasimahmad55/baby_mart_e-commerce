@@ -16,6 +16,15 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import authApi from '@/lib/authApi';
 
+interface LoginResponse {
+    token: string;
+    _id: string;
+    name: string;
+    email: string;
+    avatar?: string;
+    role: string;
+}
+
 const loginSchema = z.object({
     email: z.string().email("Invalid email address"),
     password: z.string().min(6, "Password must be at least 6 characters"),
@@ -45,7 +54,7 @@ const SigninForm = () => {
 
     const login = async (data: LoginFormData): Promise<boolean> => {
         try {
-            const response = await authApi.post("/auth/login", {
+            const response = await authApi.post<LoginResponse>("/auth/login", {
                 email: data.email,
                 password: data.password
             })

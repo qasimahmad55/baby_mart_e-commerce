@@ -91,6 +91,7 @@ interface User {
 interface UserState {
     authUser: User | null;
     authLoading: boolean;
+    hasHydrated: boolean;
     auth_token: string | null;
     isAuthenticated: boolean;
     updateUser: (user: User) => void;
@@ -165,6 +166,7 @@ export const useUserStore = create<UserState>()(
         (set, get) => ({
             authUser: null,
             authLoading: false,
+            hasHydrated: false,
             auth_token: Cookies.get("auth_token") ?? null,
             isAuthenticated: !!Cookies.get("auth_token"),
             updateUser: (user) => {
@@ -290,7 +292,17 @@ export const useUserStore = create<UserState>()(
         }),
         {
             name: "user_storage",
-            storage: createJSONStorage(() => localStorage)
+            storage: createJSONStorage(() => localStorage),
+            onRehydrateStorage: () => () => {
+                useUserStore.setState({ hasHydrated: true });
+                const token = Cookies.get("auth_token");
+                if (token) {
+                    useUserStore.setState({
+                        auth_token: token,
+                        isAuthenticated: true,
+                    });
+                }
+            }
         }
     )
 )

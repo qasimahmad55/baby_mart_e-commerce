@@ -76,7 +76,7 @@ const getStatusClasses = (status: Order["status"]) => {
 const OrderPageClient = () => {
   const router = useRouter();
 
-  const { auth_token, authUser, verifyAuth } = useUserStore();
+  const { auth_token, authUser, verifyAuth, hasHydrated } = useUserStore();
   const { orders, isLoading, loadOrders } = useOrderStore();
 
   const [isAuthenticating, setIsAuthenticating] = useState(true);
@@ -88,6 +88,10 @@ const OrderPageClient = () => {
   useEffect(() => {
     const checkAuth = async () => {
       setIsAuthenticating(true);
+
+      if (!hasHydrated) {
+        return;
+      }
 
       if (!auth_token) {
         router.push("/auth/signin");
@@ -103,7 +107,7 @@ const OrderPageClient = () => {
     };
 
     checkAuth();
-  }, [auth_token, authUser, router, verifyAuth]);
+  }, [hasHydrated, auth_token, authUser, router, verifyAuth]);
 
   useEffect(() => {
     if (!auth_token || isAuthenticating) return;

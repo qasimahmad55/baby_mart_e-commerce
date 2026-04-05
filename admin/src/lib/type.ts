@@ -27,7 +27,7 @@ export type Product = {
     name: string,
     description: string,
     price: number,
-    discountPrice: number,
+    discountPercentage: number,
     stock: number,
     averageRating: number,
     image: string,

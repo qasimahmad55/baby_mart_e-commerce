@@ -24,20 +24,19 @@ dotenv.config();
 connectDB()
 const app = express();
 
-// Enhanced CORS configuration
 const allowedOrigins = [
   process.env.ADMIN_URL,
   process.env.CLIENT_URL,
-  // Add production URLs
-
-  // Add localhost for development
+  ...(process.env.ALLOWED_ORIGINS?.split(",") ?? []),
+  process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null,
   "http://localhost:3000",
   "http://localhost:5173",
-  "http://localhost:8081", // iOS simulator
-  "http://10.0.2.2:8081", // Android emulator
-  "http://10.0.2.2:8000", // Android emulator direct access
-  // "http://192.168.1.100:8081", // Replace with your actual local IP for physical devices
-].filter(Boolean); // Remove any undefined values
+  "http://localhost:8081",
+  "http://10.0.2.2:8081",
+  "http://10.0.2.2:8000",
+]
+  .map((origin) => origin?.trim())
+  .filter(Boolean);
 
 app.use(
   cors({
@@ -50,7 +49,10 @@ app.use(
         return callback(null, true);
       }
 
-      if (allowedOrigins.indexOf(origin) !== -1) {
+      const isAllowedOrigin =
+        allowedOrigins.includes(origin) || origin.endsWith(".vercel.app");
+
+      if (isAllowedOrigin) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));
@@ -110,8 +112,11 @@ app.get("/health", (req, res) => {
 // Error handler
 app.use(errorHandler);
 
-// Start server
-const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => {
-  console.log(`API Server is running!`);
-});
+export default app;
+
+if (!process.env.VERCEL) {
+  const PORT = process.env.PORT || 8000;
+  app.listen(PORT, () => {
+    console.log(`API Server is running!`);
+  });
+}

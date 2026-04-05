@@ -20,7 +20,7 @@ const SingleProductPage = async ({ params }: { params: Promise<{ id: string }> }
     // console.log(product);
     if (!product) {
         return (<div>
-            <h2>No Products found with ""
+            <h2>No Products found with &quot;&quot;
                 <span>#id <span>{id}</span></span>
             </h2>
 

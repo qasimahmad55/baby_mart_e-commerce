@@ -27,7 +27,7 @@ const CheckoutPageClient = () => {
     const [isCreatingOrder, setIsCreatingOrder] = useState(false);
     const searchParams = useSearchParams();
     const router = useRouter();
-    const { auth_token, authUser, isAuthenticated, verifyAuth } = useUserStore();
+    const { auth_token, authUser, isAuthenticated, verifyAuth, hasHydrated } = useUserStore();
     const { cartItemsWithQuantities, clearCart } = useCartStore();
 
     const orderId = searchParams.get("orderId")
@@ -36,6 +36,9 @@ const CheckoutPageClient = () => {
     useEffect(() => {
         const checkAuth = async () => {
             setAuthLoading(true)
+            if (!hasHydrated) {
+                return
+            }
             if (auth_token && !authUser) {
                 await verifyAuth()
             }
@@ -45,11 +48,11 @@ const CheckoutPageClient = () => {
         }
 
         checkAuth()
-    }, [authUser, auth_token, verifyAuth])
+    }, [hasHydrated, authUser, auth_token, verifyAuth])
 
     useEffect(() => {
         // wait for auth to be check
-        if (authLoading) {
+        if (authLoading || !hasHydrated) {
             return
         }
         // check if user is authenticated
@@ -137,6 +140,7 @@ const CheckoutPageClient = () => {
         isAuthenticated,
         authUser,
         authLoading,
+        hasHydrated,
         cartItemsWithQuantities])
 
     const handleAddressesUpdate = async (updatedAddresses: Address[]) => {
