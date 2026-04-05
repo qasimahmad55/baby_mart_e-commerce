@@ -374,8 +374,8 @@ const CheckoutPageClient = () => {
                 </div>
 
                 {/* Order summary */}
-                <div className="lg:col-span-1">
-                    <div className="bg-babyshopWhite rounded-2xl border border-gray-100 shadow-sm p-6 sticky top-4">
+                <div className="lg:col-span-1 flex justify-center">
+                    <div className="bg-babyshopWhite rounded-2xl border border-gray-100 shadow-sm p-6 sticky top-4 w-full max-h-[calc(100vh-7rem)] overflow-y-auto">
                         <h2 className="text-xl font-bold text-gray-900 mb-6">
                             Order Summary
                         </h2>

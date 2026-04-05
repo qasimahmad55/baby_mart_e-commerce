@@ -1532,6 +1532,22 @@
     max-height: 70vh;
   }
 
+  .max-h-\[calc\(100vh-2rem\)\] {
+    max-height: calc(100vh - 2rem);
+  }
+
+  .max-h-\[calc\(100vh-4rem\)\] {
+    max-height: calc(100vh - 4rem);
+  }
+
+  .max-h-\[calc\(100vh-6rem\)\] {
+    max-height: calc(100vh - 6rem);
+  }
+
+  .max-h-\[calc\(100vh-7rem\)\] {
+    max-height: calc(100vh - 7rem);
+  }
+
   .min-h-0 {
     min-height: calc(var(--spacing) * 0);
   }
