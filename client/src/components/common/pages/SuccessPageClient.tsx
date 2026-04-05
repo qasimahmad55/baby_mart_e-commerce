@@ -31,7 +31,7 @@ const SuccessPageClient = () => {
   const [cartCleared, setCartCleared] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { auth_token, authUser, verifyAuth, hasHydrated } = useUserStore();
+  const { auth_token, authUser, verifyAuth } = useUserStore();
   const { clearCart } = useCartStore();
 
   const orderId = searchParams.get("orderId");
@@ -41,9 +41,6 @@ const SuccessPageClient = () => {
   useEffect(() => {
     const checkAuth = async () => {
       setAuthLoading(true);
-      if (!hasHydrated) {
-        return;
-      }
       if (auth_token && !authUser) {
         await verifyAuth();
       }
@@ -52,10 +49,10 @@ const SuccessPageClient = () => {
     };
 
     checkAuth();
-  }, [hasHydrated, auth_token, authUser, verifyAuth]);
+  }, [auth_token, authUser, verifyAuth]);
 
   useEffect(() => {
-    if (authLoading || !hasHydrated) {
+    if (authLoading) {
       return; // Wait for auth check
     }
 
@@ -143,7 +140,7 @@ const SuccessPageClient = () => {
     };
 
     fetchOrder();
-  }, [orderId, auth_token, router, authLoading, hasHydrated, sessionId, statusUpdated]);
+  }, [orderId, auth_token, router, authLoading, sessionId, statusUpdated]);
 
   useEffect(() => {
     // Show success toast and clear cart when component mounts

@@ -5,11 +5,9 @@ import { Toaster } from "sonner";
 import Footer from "@/components/footer/Footer";
 
 export const metadata: Metadata = {
-  title: "Babyshop | Online shopping places",
-  description: "Babyshop for onlne shopping",
-  icons: {
-    icon: '/logo.png',
-  },
+  title: "Babyshop - Premium Baby Products & Shopping",
+  description: "Shop the best baby products online. Discover premium quality items for your little ones at Babyshop.",
+  keywords: "baby products, online shopping, baby clothes, toys, gear",
 };
 export default function RootLayout({
   children,

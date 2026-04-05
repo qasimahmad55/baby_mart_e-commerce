@@ -33,16 +33,12 @@ const WishlistPageClient = () => {
     // Load wishlist products on mount only if we have IDs but no product details
     useEffect(() => {
         const loadWishlistProducts = async () => {
-            if (!hasHydrated) {
-                return
-            }
-
             // Prevent multiple fetches
             if (hasFetched) {
                 return
             }
             
-            if (!isAuthenticated || !auth_token) {
+            if (!auth_token) {
                 setIsLoading(false)
                 return
             }
@@ -78,7 +74,7 @@ const WishlistPageClient = () => {
         }
 
         loadWishlistProducts()
-    }, [hasHydrated, isAuthenticated, auth_token, setWishlistItems, hasFetched])
+    }, [auth_token, setWishlistItems, hasFetched])
 
     const handleRemoveItem = async (productId: string, productName: string) => {
         if (!auth_token) return
@@ -120,7 +116,7 @@ const WishlistPageClient = () => {
         }
     }
 
-    if (!hasHydrated || isLoading) {
+    if (isLoading) {
         return (
             <Container className="py-10">
                 <PageBreadcrumb
@@ -134,7 +130,7 @@ const WishlistPageClient = () => {
         )
     }
 
-    if (!isAuthenticated || !auth_token) {
+    if (!auth_token) {
         return (
             <Container className="py-10">
                 <PageBreadcrumb

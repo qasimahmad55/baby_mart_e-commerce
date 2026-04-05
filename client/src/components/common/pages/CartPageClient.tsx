@@ -27,10 +27,6 @@ const CartPageClient = () => {
 
   useEffect(() => {
     const initializeCart = async () => {
-      if (!hasHydrated) {
-        return
-      }
-
       if (auth_token) {
         try {
           await syncCartFromServer()
@@ -41,7 +37,7 @@ const CartPageClient = () => {
       setIsLoading(false)
     }
     initializeCart()
-  }, [hasHydrated, auth_token, syncCartFromServer])
+  }, [auth_token, syncCartFromServer])
 
   const calculateSubtotal = () => {
     return cartItemsWithQuantities.reduce((total, item) => total + item.product.price * item.quantity, 0)

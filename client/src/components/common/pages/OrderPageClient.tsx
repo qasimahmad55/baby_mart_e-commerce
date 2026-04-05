@@ -89,10 +89,6 @@ const OrderPageClient = () => {
     const checkAuth = async () => {
       setIsAuthenticating(true);
 
-      if (!hasHydrated) {
-        return;
-      }
-
       if (!auth_token) {
         router.push("/auth/signin");
         setIsAuthenticating(false);
@@ -107,7 +103,7 @@ const OrderPageClient = () => {
     };
 
     checkAuth();
-  }, [hasHydrated, auth_token, authUser, router, verifyAuth]);
+  }, [auth_token, authUser, router, verifyAuth]);
 
   useEffect(() => {
     if (!auth_token || isAuthenticating) return;
@@ -267,9 +263,9 @@ const OrderPageClient = () => {
                         {canPay && (
                           <Button
                             onClick={() => handlePayNow(order._id)}
-                            className="bg-cyan-500 text-white hover:bg-cyan-600"
+                            className="bg-babyshopSky text-white hover:bg-babyshopSky/90"
                           >
-                            <CreditCard className="h-4 w-4 bg-black text-white" />
+                            <CreditCard className="h-4 w-4" />
                             Pay Now
                           </Button>
                         )}

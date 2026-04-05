@@ -36,9 +36,6 @@ const CheckoutPageClient = () => {
     useEffect(() => {
         const checkAuth = async () => {
             setAuthLoading(true)
-            if (!hasHydrated) {
-                return
-            }
             if (auth_token && !authUser) {
                 await verifyAuth()
             }
@@ -48,11 +45,11 @@ const CheckoutPageClient = () => {
         }
 
         checkAuth()
-    }, [hasHydrated, authUser, auth_token, verifyAuth])
+    }, [authUser, auth_token, verifyAuth])
 
     useEffect(() => {
         // wait for auth to be check
-        if (authLoading || !hasHydrated) {
+        if (authLoading) {
             return
         }
         // check if user is authenticated
