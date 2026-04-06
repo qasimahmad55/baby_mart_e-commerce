@@ -245,15 +245,27 @@ const CheckoutPageClient = () => {
                 })
             })
 
-            const { url } = await response.json()
-            if (url) {
-                //redirect to stripe checkout using session url
-                window.location.href = url
+            const data = await response.json()
+            
+            if (!response.ok) {
+                // Handle server-side errors
+                const errorMessage = data.error || "Failed to initialize payment";
+                toast.error(errorMessage);
+                console.error("Stripe checkout error:", data);
+                return;
+            }
+            
+            if (data.url) {
+                // Redirect to stripe checkout using session url
+                window.location.href = data.url
+            } else {
+                toast.error("Unable to connect to payment service. Please try again.");
+                console.error("No checkout URL received from server");
             }
 
-
         } catch (error) {
-            console.log("Stripe payment error", error);
+            console.error("Stripe payment error:", error);
+            toast.error("Payment initialization failed. Please check your connection and try again.");
         } finally {
             setProcessing(false)
         }

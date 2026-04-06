@@ -4,22 +4,36 @@ import { fetchData } from '@/lib/api'
 import { Brand, Category } from '@/types/types'
 import { Suspense } from 'react'
 
+// Force dynamic rendering to avoid build-time API calls
+export const dynamic = 'force-dynamic';
+
 interface CategoriesResponse {
     categories: Category[];
 }
 
-const ShopPage = async () => {
-    const brands = await fetchData<Brand[]>("/brands")
-    let categories: Category[] = []
-    let error: string | null = null
+async function getShopData() {
+    let brands: Brand[] = [];
+    let categories: Category[] = [];
 
     try {
-        const data = await fetchData<CategoriesResponse>("/categories")
-        categories = data.categories
-    } catch (err) {
-        error = err instanceof Error ? err.message : "An unknown error occurred";
-        console.log("error", error);
+        brands = await fetchData<Brand[]>("/brands");
+    } catch (error) {
+        console.error("Failed to fetch brands:", error);
     }
+
+    try {
+        const data = await fetchData<CategoriesResponse>("/categories");
+        categories = data.categories;
+    } catch (error) {
+        console.error("Failed to fetch categories:", error);
+    }
+
+    return { brands, categories };
+}
+
+const ShopPage = async () => {
+    const { brands, categories } = await getShopData();
+
     return (
         <Suspense fallback={<ShopSkeleton />}>
             <ShopPageClient categories={categories} brands={brands} />

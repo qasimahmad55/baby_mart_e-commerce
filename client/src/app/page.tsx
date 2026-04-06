@@ -9,8 +9,20 @@ import ProductList from "@/components/home/ProductList";
 import { fetchData } from "@/lib/api";
 import { Brand } from "@/types/types";
 
+// Force dynamic rendering to avoid build-time API calls
+export const dynamic = 'force-dynamic';
+
+async function getBrands(): Promise<Brand[]> {
+  try {
+    return await fetchData<Brand[]>("/brands");
+  } catch (error) {
+    console.error("Failed to fetch brands:", error);
+    return [];
+  }
+}
+
 export default async function Home() {
-  const brands = await fetchData<Brand[]>("/brands")
+  const brands = await getBrands();
 
   return (
     <div>
