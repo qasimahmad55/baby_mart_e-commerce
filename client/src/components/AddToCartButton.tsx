@@ -54,10 +54,11 @@ const AddToCartButton = ({ product, className }: Props) => {
             <Button
                 variant="outline"
                 disabled
-                className={cn("rounded-full px-6 mt-1", className)}
+                className={cn("rounded-full px-3 sm:px-6 mt-1 text-xs sm:text-sm", className)}
             >
-                <ShoppingCart className="w-4 h-4 mr-2" />
-                Add to cart
+                <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Add to cart</span>
+                <span className="sm:hidden">Add</span>
             </Button>
         )
     }
@@ -67,17 +68,19 @@ const AddToCartButton = ({ product, className }: Props) => {
             onClick={handleAddToCart}
             variant="outline"
             disabled={localLoading} 
-            className={cn("rounded-full px-6 mt-1", className)}
+            className={cn("rounded-full px-3 sm:px-6 mt-1 text-xs sm:text-sm", className)}
         >
             {localLoading ? (
                 <>
-                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                    Adding...
+                    <Loader2 className="w-3 h-3 sm:w-4 sm:h-4 animate-spin mr-1 sm:mr-2" />
+                    <span className="hidden sm:inline">Adding...</span>
+                    <span className="sm:hidden">...</span>
                 </>
             ) : (
                 <>
-                    <ShoppingCart className="w-4 h-4 mr-2" />
-                    Add to cart
+                    <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                    <span className="hidden sm:inline">Add to cart</span>
+                    <span className="sm:hidden">Add</span>
                 </>
             )}
         </Button>

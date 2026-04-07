@@ -40,21 +40,21 @@ const BabyTravelSection = () => {
 
   if (loading) {
     return (
-      <div className="py-12 px-6">
-        <div className="flex items-center justify-between mb-8">
+      <div className="py-6 sm:py-8 md:py-12 px-3 sm:px-4 md:px-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 md:mb-8 gap-3">
           <div className="space-y-2">
-            <Skeleton className="h-8 w-64" />
-            <Skeleton className="h-4 w-80" />
+            <Skeleton className="h-6 sm:h-8 w-48 sm:w-64" />
+            <Skeleton className="h-3 sm:h-4 w-64 sm:w-80" />
           </div>
-          <Skeleton className="h-10 w-32" />
+          <Skeleton className="h-8 sm:h-10 w-24 sm:w-32" />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
           {[...Array(8)].map((_, index) => (
-            <div key={index} className="space-y-4">
-              <Skeleton className="h-48 w-full rounded-lg" />
-              <Skeleton className="h-4 w-3/4" />
-              <Skeleton className="h-4 w-1/2" />
-              <Skeleton className="h-8 w-1/4" />
+            <div key={index} className="space-y-2 sm:space-y-4">
+              <Skeleton className="h-32 sm:h-40 md:h-48 w-full rounded-lg" />
+              <Skeleton className="h-3 sm:h-4 w-3/4" />
+              <Skeleton className="h-3 sm:h-4 w-1/2" />
+              <Skeleton className="h-6 sm:h-8 w-1/4" />
             </div>
           ))}
         </div>
@@ -62,22 +62,22 @@ const BabyTravelSection = () => {
     );
   }
   return (
-    <div className="py-12 bg-babyshopWhite p-5 mt-5 rounded-md border">
-      <div className="flex items-center justify-between mb-8">
-        <div className="space-y-2">
+    <div className="py-6 sm:py-8 md:py-12 bg-babyshopWhite p-3 sm:p-4 md:p-5 mt-3 sm:mt-5 rounded-md border">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 md:mb-8 gap-3">
+        <div className="space-y-1 sm:space-y-2">
           <div className="flex items-center gap-2">
-            <Plane className="w-5 h-5 text-babyshopSky" />
+            <Plane className="w-4 h-4 sm:w-5 sm:h-5 text-babyshopSky" />
             <Badge
               variant={"outline"}
-              className="text-babyshopSky border-babyshopSky"
+              className="text-babyshopSky border-babyshopSky text-xs"
             >
               Travel Ready
             </Badge>
           </div>
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+          <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-900">
             Baby Travel Essentials
           </h2>
-          <p className="text-gray-600">
+          <p className="text-gray-600 text-sm sm:text-base">
             Everything you need for safe and comfortable travels with your
             little one
           </p>
@@ -85,7 +85,7 @@ const BabyTravelSection = () => {
         <Link href={"/shop?category=travel"}>
           <Button
             variant="outline"
-            className="hidden md:flex items-center gap-2 hover:bg-babyshopSky hover:text-white hover:border-babyshopSky transition-colors"
+            className="hidden sm:flex items-center gap-2 hover:bg-babyshopSky hover:text-white hover:border-babyshopSky transition-colors text-sm"
           >
             Shop All Items
           </Button>
@@ -93,7 +93,7 @@ const BabyTravelSection = () => {
       </div>
 
       {/* Proudcts */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-4 sm:mb-6 md:mb-8">
         {products?.length > 0 ? (
           products?.map((product) => (
             <ProductCard key={product?._id} product={product} />
@@ -171,11 +171,11 @@ const BabyTravelSection = () => {
       </div>
 
       {/* Promotional Banner */}
-      <div className="bg-gradient-to-r from-babyshopSky to-blue-600 rounded-2xl p-8 text-white">
-        <div className="flex flex-col md:flex-row items-center justify-between">
-          <div className="text-center md:text-left mb-4 md:mb-0">
-            <h3 className="text-2xl font-bold mb-2">Travel Smart</h3>
-            <p className="text-blue-100">
+      <div className="bg-gradient-to-r from-babyshopSky to-blue-600 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 text-white">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="text-center sm:text-left">
+            <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-1 sm:mb-2">Travel Smart</h3>
+            <p className="text-blue-100 text-sm sm:text-base">
               Discover our curated collection of travel essentials for
               stress-free adventures
             </p>
@@ -184,7 +184,7 @@ const BabyTravelSection = () => {
             <Button
               size="lg"
               variant="outline"
-              className="bg-white text-babyshopSky border-white hover:bg-gray-100"
+              className="bg-white text-babyshopSky border-white hover:bg-gray-100 text-sm sm:text-base"
             >
               Explore Collection
               <ArrowRight className="w-4 h-4 ml-2" />
@@ -192,7 +192,7 @@ const BabyTravelSection = () => {
           </Link>
         </div>
       </div>
-      <div className="mt-8 text-center md:hidden">
+      <div className="mt-4 sm:mt-6 md:mt-8 text-center sm:hidden">
         <Link href="/shop?category=travel">
           <Button className="w-full bg-babyshopSky hover:bg-babyshopSky/90">
             Shop All Travel Items

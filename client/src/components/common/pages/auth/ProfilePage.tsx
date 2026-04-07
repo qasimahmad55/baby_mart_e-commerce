@@ -229,36 +229,37 @@ const ProfilePage = () => {
     const recentOrders = orders.slice(0, 3)
 
     return (
-        <Container className="py-10">
+        <Container className="py-6 sm:py-8 md:py-10">
             {/* Page Header */}
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold">My Account</h1>
-                <p className="text-babyshopTextLight mt-1">Manage your account, orders, and preferences</p>
+            <div className="mb-4 sm:mb-6 md:mb-8">
+                <h1 className="text-2xl sm:text-3xl font-bold">My Account</h1>
+                <p className="text-babyshopTextLight mt-0.5 sm:mt-1 text-sm sm:text-base">Manage your account, orders, and preferences</p>
             </div>
 
             {/* Navigation Tabs */}
-            <div className="bg-white rounded-xl border p-2 mb-8 inline-flex gap-1">
+            <div className="bg-white rounded-lg sm:rounded-xl border p-1.5 sm:p-2 mb-4 sm:mb-6 md:mb-8 flex overflow-x-auto gap-1 scrollbar-hide">
                 {navTabs.map((tab) => (
                     <Link
                         key={tab.label}
                         href={tab.href}
-                        className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all ${tab.active
+                        className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 md:px-4 py-2 sm:py-2.5 rounded-lg font-medium transition-all whitespace-nowrap text-xs sm:text-sm md:text-base ${tab.active
                             ? 'bg-babyshopSky text-white'
                             : 'text-gray-600 hover:bg-gray-100'
                             }`}
                     >
-                        <tab.icon className="w-4 h-4" />
-                        {tab.label}
+                        <tab.icon className="w-3 h-3 sm:w-4 sm:h-4" />
+                        <span className="hidden sm:inline">{tab.label}</span>
+                        <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
                     </Link>
                 ))}
             </div>
 
             {/* Profile Header Card */}
-            <div className="bg-gradient-to-r from-cyan-400 via-teal-400 to-purple-500 rounded-2xl p-8 mb-8">
-                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+            <div className="bg-gradient-to-r from-cyan-400 via-teal-400 to-purple-500 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 mb-4 sm:mb-6 md:mb-8">
+                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-4 md:gap-6">
                     {/* Avatar */}
                     <div className="relative">
-                        <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg">
+                        <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-2 sm:border-4 border-white shadow-lg">
                             <Image
                                 src={authUser?.avatar || '/default-avatar.png'}
                                 alt={authUser?.name || 'User'}
@@ -267,39 +268,40 @@ const ProfilePage = () => {
                                 className="w-full h-full object-cover"
                             />
                         </div>
-                        <span className="absolute bottom-1 right-1 w-5 h-5 bg-green-500 border-2 border-white rounded-full"></span>
+                        <span className="absolute bottom-0.5 right-0.5 sm:bottom-1 sm:right-1 w-4 h-4 sm:w-5 sm:h-5 bg-green-500 border-2 border-white rounded-full"></span>
                     </div>
 
                     {/* User Info */}
                     <div className="flex-1 text-center sm:text-left text-white">
-                        <h2 className="text-2xl font-bold">{authUser?.name}</h2>
-                        <div className="flex items-center justify-center sm:justify-start gap-2 mt-1">
-                            <Mail className="w-4 h-4" />
-                            <span className="text-white/90">{authUser?.email}</span>
+                        <h2 className="text-xl sm:text-2xl font-bold truncate">{authUser?.name}</h2>
+                        <div className="flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 mt-0.5 sm:mt-1">
+                            <Mail className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                            <span className="text-white/90 text-xs sm:text-sm md:text-base truncate">{authUser?.email}</span>
                         </div>
-                        <span className="inline-block mt-2 px-3 py-1 bg-white/20 rounded-full text-sm capitalize">
+                        <span className="inline-block mt-1.5 sm:mt-2 px-2.5 sm:px-3 py-0.5 sm:py-1 bg-white/20 rounded-full text-xs sm:text-sm capitalize">
                             {authUser?.role}
                         </span>
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex gap-3">
+                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
                         <Button
                             onClick={scrollToUpdateProfile}
-                            className="bg-white/20 hover:bg-white/30 text-white border-0"
+                            className="bg-white/20 hover:bg-white/30 text-white border-0 text-xs sm:text-sm w-full sm:w-auto"
                         >
-                            <Edit3 className="w-4 h-4 mr-2" />
-                            Edit Profile
+                            <Edit3 className="w-3 h-3 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
+                            <span className="hidden sm:inline">Edit Profile</span>
+                            <span className="sm:hidden">Edit</span>
                         </Button>
                         <Button
                             onClick={handleLogout}
                             disabled={isLoading}
-                            className="bg-white/20 hover:bg-white/30 text-white border-0"
+                            className="bg-white/20 hover:bg-white/30 text-white border-0 text-xs sm:text-sm w-full sm:w-auto"
                         >
                             {isLoading ? (
-                                <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                                <Loader2 className="w-3 h-3 sm:w-4 sm:h-4 animate-spin mr-1.5 sm:mr-2" />
                             ) : (
-                                <LogOut className="w-4 h-4 mr-2" />
+                                <LogOut className="w-3 h-3 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
                             )}
                             Logout
                         </Button>
@@ -307,7 +309,7 @@ const ProfilePage = () => {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
                 {/* Main Content - Left Side */}
                 <div className="lg:col-span-2 space-y-6">
                     {/* Update Profile Section */}

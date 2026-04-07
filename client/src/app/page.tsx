@@ -26,9 +26,9 @@ export default async function Home() {
 
   return (
     <div>
-      <Container className="min-h-screen flex py-7 gap-3 bg-gray-50">
+      <Container className="min-h-screen flex flex-col md:flex-row py-4 md:py-7 gap-3 bg-gray-50">
         <CategoriesSection />
-        <div className="flex-1">
+        <div className="flex-1 w-full">
           <Banner />
           <ProductList />
           <HomeBrand brands={brands} />

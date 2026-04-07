@@ -42,21 +42,21 @@ const ComfyApparelSection = () => {
 
     if (loading) {
         return (
-            <div className="py-12 px-6">
-                <div className="flex items-center justify-between mb-8">
+            <div className="py-6 sm:py-8 md:py-12 px-3 sm:px-4 md:px-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 md:mb-8 gap-3">
                     <div className="space-y-2">
-                        <Skeleton className="h-8 w-64" />
-                        <Skeleton className="h-4 w-80" />
+                        <Skeleton className="h-6 sm:h-8 w-48 sm:w-64" />
+                        <Skeleton className="h-3 sm:h-4 w-64 sm:w-80" />
                     </div>
-                    <Skeleton className="h-10 w-32" />
+                    <Skeleton className="h-8 sm:h-10 w-24 sm:w-32" />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
                     {[...Array(8)].map((_, index) => (
-                        <div key={index} className="space-y-4">
-                            <Skeleton className="h-48 w-full rounded-lg" />
-                            <Skeleton className="h-4 w-3/4" />
-                            <Skeleton className="h-4 w-1/2" />
-                            <Skeleton className="h-8 w-1/4" />
+                        <div key={index} className="space-y-2 sm:space-y-4">
+                            <Skeleton className="h-32 sm:h-40 md:h-48 w-full rounded-lg" />
+                            <Skeleton className="h-3 sm:h-4 w-3/4" />
+                            <Skeleton className="h-3 sm:h-4 w-1/2" />
+                            <Skeleton className="h-6 sm:h-8 w-1/4" />
                         </div>
                     ))}
                 </div>
@@ -65,26 +65,26 @@ const ComfyApparelSection = () => {
     }
 
     return (
-        <div className="py-12 bg-babyshopWhite p-5 mt-5 rounded-md border">
-            <div className="flex items-center justify-between mb-8">
-                <div className="space-y-2">
+        <div className="py-6 sm:py-8 md:py-12 bg-babyshopWhite p-3 sm:p-4 md:p-5 mt-3 sm:mt-5 rounded-md border">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 md:mb-8 gap-3">
+                <div className="space-y-1 sm:space-y-2">
                     <div className="flex items-center gap-2">
-                        <Shirt className="w-5 h-5 text-pink-500" />
-                        <Badge variant="outline" className="text-pink-500 border-pink-500">
+                        <Shirt className="w-4 h-4 sm:w-5 sm:h-5 text-pink-500" />
+                        <Badge variant="outline" className="text-pink-500 border-pink-500 text-xs">
                             Trendy & Comfortable
                         </Badge>
                     </div>
-                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+                    <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-900">
                         Comfy & Cute Apparel
                     </h2>
-                    <p className="text-gray-600">
+                    <p className="text-gray-600 text-sm sm:text-base">
                         Adorable outfits that keep your little one comfortable all day
                     </p>
                 </div>
                 <Link href="/shop?category=apparel">
                     <Button
                         variant="outline"
-                        className="hidden md:flex items-center gap-2 hover:bg-pink-500 hover:text-white hover:border-pink-500 transition-colors"
+                        className="hidden sm:flex items-center gap-2 hover:bg-pink-500 hover:text-white hover:border-pink-500 transition-colors text-sm"
                     >
                         Shop All Items
                         <ArrowRight className="w-4 h-4" />
@@ -92,7 +92,7 @@ const ComfyApparelSection = () => {
                 </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-4 sm:mb-6 md:mb-8">
                 {products.length > 0 ? (
                     products.map((product) => (
                         <ProductCard key={product._id} product={product} />
@@ -172,47 +172,47 @@ const ComfyApparelSection = () => {
             </div>
 
             {/* Promotional Banners */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <div className="bg-gradient-to-r from-pink-400 to-rose-400 rounded-2xl p-6 text-white relative overflow-hidden">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6 md:mb-8">
+                <div className="bg-gradient-to-r from-pink-400 to-rose-400 rounded-xl sm:rounded-2xl p-4 sm:p-6 text-white relative overflow-hidden">
                     <div className="relative z-10">
-                        <h3 className="text-xl font-bold mb-2">Baby Sleep Essentials</h3>
-                        <p className="text-pink-100 mb-4">
+                        <h3 className="text-lg sm:text-xl font-bold mb-1 sm:mb-2">Baby Sleep Essentials</h3>
+                        <p className="text-pink-100 mb-3 sm:mb-4 text-sm sm:text-base">
                             Cozy pajamas and sleepwear for peaceful nights
                         </p>
                         <Link href="/shop?search=sleepwear">
                             <Button
                                 variant="outline"
-                                className="bg-white text-pink-500 border-white hover:bg-pink-50"
+                                className="bg-white text-pink-500 border-white hover:bg-pink-50 text-sm"
                             >
                                 Shop Sleepwear
                             </Button>
                         </Link>
                     </div>
-                    <div className="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full"></div>
-                    <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-white/10 rounded-full"></div>
+                    <div className="absolute -right-4 -top-4 w-16 sm:w-24 h-16 sm:h-24 bg-white/10 rounded-full"></div>
+                    <div className="absolute -right-8 -bottom-8 w-20 sm:w-32 h-20 sm:h-32 bg-white/10 rounded-full"></div>
                 </div>
 
-                <div className="bg-gradient-to-r from-orange-400 to-yellow-400 rounded-2xl p-6 text-white relative overflow-hidden">
+                <div className="bg-gradient-to-r from-orange-400 to-yellow-400 rounded-xl sm:rounded-2xl p-4 sm:p-6 text-white relative overflow-hidden">
                     <div className="relative z-10">
-                        <h3 className="text-xl font-bold mb-2">Summer Collection</h3>
-                        <p className="text-orange-100 mb-4">
+                        <h3 className="text-lg sm:text-xl font-bold mb-1 sm:mb-2">Summer Collection</h3>
+                        <p className="text-orange-100 mb-3 sm:mb-4 text-sm sm:text-base">
                             Light and breathable outfits for warm weather
                         </p>
                         <Link href="/shop?search=summer">
                             <Button
                                 variant="outline"
-                                className="bg-white text-orange-500 border-white hover:bg-orange-50"
+                                className="bg-white text-orange-500 border-white hover:bg-orange-50 text-sm"
                             >
                                 Shop Summer
                             </Button>
                         </Link>
                     </div>
-                    <div className="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full"></div>
-                    <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-white/10 rounded-full"></div>
+                    <div className="absolute -right-4 -top-4 w-16 sm:w-24 h-16 sm:h-24 bg-white/10 rounded-full"></div>
+                    <div className="absolute -right-8 -bottom-8 w-20 sm:w-32 h-20 sm:h-32 bg-white/10 rounded-full"></div>
                 </div>
             </div>
 
-            <div className="mt-8 text-center md:hidden">
+            <div className="mt-4 sm:mt-6 md:mt-8 text-center sm:hidden">
                 <Link href="/shop?category=apparel">
                     <Button className="w-full bg-pink-500 hover:bg-pink-600">
                         Shop All Apparel

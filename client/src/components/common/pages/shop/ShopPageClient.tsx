@@ -192,18 +192,18 @@ const ShopPageClient = ({ categories, brands }: Props) => {
 
     return (
 
-        <Container className="py-10">
-            <div className="flex items-center justify-between mb-5">
+        <Container className="py-4 sm:py-6 md:py-10">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-3 sm:mb-5 gap-2 sm:gap-4">
                 <div>
-                    <h2 className="text-2xl font-semibold">Shop Products</h2>
-                    <p className="text-babyshopBlack/70 fiont-medium">
+                    <h2 className="text-xl sm:text-2xl font-semibold">Shop Products</h2>
+                    <p className="text-babyshopBlack/70 font-medium text-sm sm:text-base">
                         {loading
                             ? "Loading"
                             : `Showing ${products?.length} of ${total} products`}
                     </p>
                     {invalidCategory && (
                         <div className="mt-2 bg-yellow-50 border border-yellow-200 rounded-md py-1 px-2">
-                            <p className="text-sm text-yellow-800">
+                            <p className="text-xs sm:text-sm text-yellow-800">
                                 Category &quot;{invalidCategory}&quot; not found. Showing all
                                 products instead.
                             </p>
@@ -213,7 +213,7 @@ const ShopPageClient = ({ categories, brands }: Props) => {
                 {(category || brand || search || priceRange || sortOrder !== "asc") && (
                     <Button
                         variant={"outline"}
-                        className="text-sm"
+                        className="text-xs sm:text-sm w-fit"
                         onClick={resetAllFilters}
                         disabled={loading}
                     >
@@ -221,20 +221,20 @@ const ShopPageClient = ({ categories, brands }: Props) => {
                     </Button>
                 )}
             </div>
-            <div className="flex flex-col md:flex-row gap-5">
-                <div className="p-5 bg-babyshopWhite w-full md:max-w-64 min-w-60 rounded-lg border">
+            <div className="flex flex-col md:flex-row gap-3 sm:gap-5">
+                <div className="p-3 sm:p-4 md:p-5 bg-babyshopWhite w-full md:max-w-64 md:min-w-60 rounded-lg border">
                     {/* Small devices */}
                     <div className="md:hidden">
                         <Button
                             variant="outline"
                             onClick={() => setIsFiltersOpen(!isFiltersOpen)}
-                            className="w-full mb-4 flex items-center justify-between"
+                            className="w-full mb-3 sm:mb-4 flex items-center justify-between"
                         >
-                            <span className="font-medium">Filters</span>
+                            <span className="font-medium text-sm sm:text-base">Filters</span>
                             {isFiltersOpen ? (
-                                <ChevronUp size={20} />
+                                <ChevronUp size={18} />
                             ) : (
-                                <ChevronDown size={20} />
+                                <ChevronDown size={18} />
                             )}
                         </Button>
                     </div>
@@ -427,12 +427,12 @@ const ShopPageClient = ({ categories, brands }: Props) => {
                         </div>
                     </div>
                 </div>
-                <div className="bg-babyshopWhite p-5 rounded-md w-full border">
+                <div className="bg-babyshopWhite p-3 sm:p-4 md:p-5 rounded-md w-full border">
                     {loading ? (
                         <ShopSkeleton />
                     ) : products?.length > 0 ? (
                         <div className="w-full">
-                            <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-3">
                                 {products?.map((product, index) => {
                                     const isNewlyLoaded = newlyLoadedProducts.some(
                                         (newProduct) => newProduct._id === product._id
@@ -456,15 +456,15 @@ const ShopPageClient = ({ categories, brands }: Props) => {
                                 })}
                             </div>
                             {hasMoreProducts && (
-                                <div className="mt-6 flex flex-col items-center gap-4">
+                                <div className="mt-4 sm:mt-6 flex flex-col items-center gap-4">
                                     <Button
                                         onClick={loadMoreProducts}
                                         disabled={loadingMore}
                                         variant={"outline"}
-                                        className="w-full rounded-sm hover:bg-babyshopSky hover:text-babyshopWhite hoverEffect py-5 mt-2"
+                                        className="w-full rounded-sm hover:bg-babyshopSky hover:text-babyshopWhite hoverEffect py-4 sm:py-5 mt-2 text-sm sm:text-base"
                                     >
                                         {loadingMore ? (
-                                            <Loader2 className="animate-spin" size={20} />
+                                            <Loader2 className="animate-spin" size={18} />
                                         ) : (
                                             "Load More Products"
                                         )}
@@ -475,11 +475,11 @@ const ShopPageClient = ({ categories, brands }: Props) => {
                                 products.length > 0 &&
                                 total > 0 &&
                                 !loadingMore && (
-                                    <div className="text-center py-6 mt-6">
-                                        <p className="text-gray-600 text-lg mb-2">
+                                    <div className="text-center py-4 sm:py-6 mt-4 sm:mt-6">
+                                        <p className="text-gray-600 text-sm sm:text-base md:text-lg mb-1 sm:mb-2">
                                             🎉 You&apos;ve seen it all! No more products to show.
                                         </p>
-                                        <p className="text-gray-500 text-sm">
+                                        <p className="text-gray-500 text-xs sm:text-sm">
                                             Showing all {products.length} products
                                         </p>
                                     </div>

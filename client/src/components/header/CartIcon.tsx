@@ -18,8 +18,8 @@ function CartIcon() {
                 href={"/user/cart"}
                 className="relative hover:text-babyshopSky hoverEffect"
             >
-                <ShoppingBag />
-                <span className="absolute -right-2 -top-2 bg-babyshopSky text-babyshopWhite text-[11px] font-medium w-4 h-4 rounded-full flex items-center justify-center">
+                <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6" />
+                <span className="absolute -right-1.5 sm:-right-2 -top-1.5 sm:-top-2 bg-babyshopSky text-babyshopWhite text-[9px] sm:text-[11px] font-medium w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full flex items-center justify-center">
                     0
                 </span>
             </Link>
@@ -31,8 +31,8 @@ function CartIcon() {
             href={"/user/cart"}
             className="relative hover:text-babyshopSky hoverEffect"
         >
-            <ShoppingBag size={24} />
-            <span className="absolute -right-2 -top-2 bg-babyshopSky text-babyshopWhite text-[11px] font-medium w-4 h-4 rounded-full flex items-center justify-center">
+            <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6" />
+            <span className="absolute -right-1.5 sm:-right-2 -top-1.5 sm:-top-2 bg-babyshopSky text-babyshopWhite text-[9px] sm:text-[11px] font-medium w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full flex items-center justify-center">
                 {totalItems > 99 ? "99+" : totalItems}
             </span>
         </Link>

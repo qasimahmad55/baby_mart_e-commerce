@@ -9,7 +9,7 @@ interface Props {
 const PriceContainer = ({ price, discountPercentage }: Props) => {
     const discountedPrice = price * (1 - discountPercentage / 100);
     return (
-        <div className="flex items-center gap-2 text-sm">
+        <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
             <PriceFormatter
                 amount={price}
                 className="text-babyshopTextLight line-through font-medium"

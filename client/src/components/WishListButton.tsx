@@ -82,18 +82,18 @@ const WishListButton = ({ product, className }: Props) => {
             onClick={handleWishlistToggle}
             disabled={localLoading}
             className={cn(
-                "absolute top-4 right-4 z-10 p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-200",
+                "absolute top-2 sm:top-4 right-2 sm:right-4 z-10 p-1.5 sm:p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-200",
                 "hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed",
                 className
             )}
             aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
         >
             {localLoading ? (
-                <Loader2 className="w-5 h-5 animate-spin text-babyshopSky" />
+                <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin text-babyshopSky" />
             ) : (
                 <Heart
                     className={cn(
-                        "w-5 h-5 transition-colors duration-200",
+                        "w-4 h-4 sm:w-5 sm:h-5 transition-colors duration-200",
                         isWishlisted
                             ? "fill-babyshopRed text-babyshopRed"
                             : "text-gray-400 hover:text-babyshopRed"

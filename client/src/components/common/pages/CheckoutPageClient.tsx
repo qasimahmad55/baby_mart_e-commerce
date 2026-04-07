@@ -296,18 +296,18 @@ const CheckoutPageClient = () => {
     }
 
     return (
-        <Container className="py-8">
+        <Container className="py-4 sm:py-6 md:py-8">
             <PageBreadcrumb
                 items={[{ label: "Cart", href: "/cart" }]}
                 currentPage="Checkout"
             />
-            <div className="mb-8">
-                <h1 className="text-4xl font-bold text-gray-900 mb-2">Checkout</h1>
-                <p className="text-gray-600">Complete your order</p>
+            <div className="mb-4 sm:mb-6 md:mb-8">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-1 sm:mb-2">Checkout</h1>
+                <p className="text-gray-600 text-sm sm:text-base">Complete your order</p>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
                 {/* Order details */}
-                <div className="lg:col-span-2 space-y-6">
+                <div className="lg:col-span-2 space-y-4 sm:space-y-6">
                     {/* Addresss */}
 
                     <AddressSelection
@@ -317,14 +317,14 @@ const CheckoutPageClient = () => {
                         onAddressesUpdate={handleAddressesUpdate}
                     />
                     {/* Order items */}
-                    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-                        <h2 className="text-xl font-bold text-gray-900 mb-6">
+                    <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6">
+                        <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">
                             Order Details
                         </h2>
-                        <div>
+                        <div className="space-y-4">
                             {order?.items.map((item, index) => (
-                                <div key={index.toString()}>
-                                    <div className="relative w-16 h-16 bg-gray-100 rounded-lg overflow-hidden shrink-0">
+                                <div key={index.toString()} className="flex items-start gap-3 sm:gap-4">
+                                    <div className="relative w-12 h-12 sm:w-16 sm:h-16 bg-gray-100 rounded-lg overflow-hidden shrink-0">
                                         {item.image ? (
                                             <Image
                                                 src={item.image}
@@ -334,25 +334,25 @@ const CheckoutPageClient = () => {
                                             />
                                         ) : (
                                             <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                                                <CreditCard className="w-6 h-6 text-gray-400" />
+                                                <CreditCard className="w-4 h-4 sm:w-6 sm:h-6 text-gray-400" />
                                             </div>
                                         )}
                                     </div>
 
                                     <div className="flex-1 min-w-0">
-                                        <h3 className="font-medium text-gray-900 mb-1">
+                                        <h3 className="font-medium text-gray-900 mb-0.5 sm:mb-1 text-sm sm:text-base line-clamp-2">
                                             {item.name}
                                         </h3>
-                                        <p className="text-sm text-gray-600">
+                                        <p className="text-xs sm:text-sm text-gray-600">
                                             Quantity: {item.quantity} ×{" "}
                                             <PriceFormatter amount={item.price} />
                                         </p>
                                     </div>
 
-                                    <div className="text-right">
+                                    <div className="text-right shrink-0">
                                         <PriceFormatter
                                             amount={item.price * item.quantity}
-                                            className="text-base font-semibold text-gray-900"
+                                            className="text-sm sm:text-base font-semibold text-gray-900"
                                         />
                                     </div>
                                 </div>
@@ -361,25 +361,25 @@ const CheckoutPageClient = () => {
                     </div>
 
                     {/* Payment Information */}
-                    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-                        <h2 className="text-xl font-bold text-gray-900 mb-6">
+                    <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6">
+                        <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">
                             Payment Information
                         </h2>
 
-                        <div className="space-y-4">
-                            <div className="flex items-center gap-3 p-4 border-2 border-blue-200 bg-blue-50 rounded-lg">
-                                <CreditCard className="w-5 h-5 text-blue-600" />
-                                <div className="flex-1">
-                                    <h3 className="font-medium text-gray-900">Stripe Checkout</h3>
-                                    <p className="text-sm text-gray-600">
+                        <div className="space-y-3 sm:space-y-4">
+                            <div className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 border-2 border-blue-200 bg-blue-50 rounded-lg">
+                                <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 shrink-0" />
+                                <div className="flex-1 min-w-0">
+                                    <h3 className="font-medium text-gray-900 text-sm sm:text-base">Stripe Checkout</h3>
+                                    <p className="text-xs sm:text-sm text-gray-600">
                                         Secure payment with Stripe
                                     </p>
                                 </div>
-                                <CheckCircle className="w-5 h-5 text-blue-600" />
+                                <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 shrink-0" />
                             </div>
 
-                            <div className="flex items-center gap-2 text-sm text-gray-600">
-                                <Lock className="w-4 h-4" />
+                            <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
+                                <Lock className="w-3 h-3 sm:w-4 sm:h-4 shrink-0" />
                                 <span>Your payment information is secure and encrypted</span>
                             </div>
                         </div>
@@ -388,80 +388,80 @@ const CheckoutPageClient = () => {
 
                 {/* Order summary */}
                 <div className="lg:col-span-1 flex justify-center">
-                    <div className="bg-babyshopWhite rounded-2xl border border-gray-100 shadow-sm p-6 sticky top-4 w-full max-h-[calc(100vh-7rem)] overflow-y-auto">
-                        <h2 className="text-xl font-bold text-gray-900 mb-6">
+                    <div className="bg-babyshopWhite rounded-xl sm:rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-6 sticky top-4 w-full max-h-[calc(100vh-7rem)] overflow-y-auto">
+                        <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">
                             Order Summary
                         </h2>
-                        <div className="space-y-4">
-                            <div className="flex items-center justify-between py-2">
-                                <span className="text-gray-600">Subtotal</span>
+                        <div className="space-y-3 sm:space-y-4">
+                            <div className="flex items-center justify-between py-1.5 sm:py-2">
+                                <span className="text-gray-600 text-sm sm:text-base">Subtotal</span>
                                 <PriceFormatter
                                     amount={calculateSubtotal()}
-                                    className="text-base font-medium text-gray-900"
+                                    className="text-sm sm:text-base font-medium text-gray-900"
                                 />
                             </div>
-                            <div className="flex justify-between items-center py-2">
-                                <span className="text-gray-600">Shipping</span>
-                                <span className="text-base font-medium">
+                            <div className="flex justify-between items-center py-1.5 sm:py-2">
+                                <span className="text-gray-600 text-sm sm:text-base">Shipping</span>
+                                <span className="text-sm sm:text-base font-medium">
                                     {calculateShipping() === 0 ? (
                                         <span className="text-green-600">Free shipping</span>
                                     ) : (
                                         <PriceFormatter
                                             amount={calculateShipping()}
-                                            className="text-base font-medium text-gray-900"
+                                            className="text-sm sm:text-base font-medium text-gray-900"
                                         />
                                     )}
                                 </span>
                             </div>
 
-                            <div className="flex justify-between items-center py-2">
-                                <span className="text-gray-600">Tax</span>
+                            <div className="flex justify-between items-center py-1.5 sm:py-2">
+                                <span className="text-gray-600 text-sm sm:text-base">Tax</span>
                                 <PriceFormatter
                                     amount={calculateTax()}
-                                    className="text-base font-medium text-gray-900"
+                                    className="text-sm sm:text-base font-medium text-gray-900"
                                 />
                             </div>
                             {calculateShipping() === 0 && (
-                                <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                                    <p className="text-green-700 text-sm font-medium">
+                                <div className="bg-green-50 border border-green-200 rounded-lg p-2 sm:p-3">
+                                    <p className="text-green-700 text-xs sm:text-sm font-medium">
                                         🎉 You are qualify for free shipping!
                                     </p>
                                 </div>
                             )}
 
-                            <Separator className="my-4" />
-                            <div className="flex justify-between items-center py-2">
-                                <span className="text-lg font-bold text-gray-900">Total</span>
+                            <Separator className="my-3 sm:my-4" />
+                            <div className="flex justify-between items-center py-1.5 sm:py-2">
+                                <span className="text-base sm:text-lg font-bold text-gray-900">Total</span>
                                 <PriceFormatter
                                     amount={calculateTotal()}
-                                    className="text-xl font-bold text-gray-900"
+                                    className="text-lg sm:text-xl font-bold text-gray-900"
                                 />
                             </div>
                         </div>
                         <Button
                             size={"lg"}
-                            className="w-full mt-6 font-semibold hover:text-babyshopWhite hoverEffect disabled:opacity-50"
+                            className="w-full mt-4 sm:mt-6 font-semibold hover:text-babyshopWhite hoverEffect disabled:opacity-50 text-sm sm:text-base"
                             disabled={processing || isCreatingOrder || !selectedAddress}
                             onClick={handleStripeCheckout}
                         >
                             {processing ? (
                                 <>
-                                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                                    <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
                                     Processing...
                                 </>
                             ) : isCreatingOrder ? (
                                 <>
-                                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                                    <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
                                     Creating Order...
                                 </>
                             ) : !selectedAddress ? (
                                 <>
-                                    <AlertCircle className="w-4 h-4 mr-2" />
+                                    <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
                                     Select Address to Continue
                                 </>
                             ) : (
                                 <>
-                                    <Lock className="w-4 h-4 mr-2" />
+                                    <Lock className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
                                     Pay with Stripe
                                 </>
                             )}

@@ -9,7 +9,7 @@ const DiscountBadge = ({ discountPercentage, className }: Props) => {
     return (
         <span
             className={cn(
-                "block bg-babyshopRed text-babyshopWhite text-xs px-3 py-1 rounded-full font-semibold",
+                "block bg-babyshopRed text-babyshopWhite text-[10px] sm:text-xs px-2 sm:px-3 py-0.5 sm:py-1 rounded-full font-semibold",
                 className
             )}
         >

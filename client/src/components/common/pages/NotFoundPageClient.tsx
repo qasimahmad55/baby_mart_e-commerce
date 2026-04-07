@@ -50,7 +50,7 @@ const NotFoundPageClient = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex items-center justify-center p-4">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex items-center justify-center p-3 sm:p-4">
             <div className="w-full max-w-4xl">
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
@@ -58,7 +58,7 @@ const NotFoundPageClient = () => {
                     transition={{ duration: 0.6, ease: "easeOut" }}
                 >
                     <Card className="shadow-2xl border-0 bg-white/90 backdrop-blur-sm overflow-hidden py-0">
-                        <CardHeader className="text-center space-y-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white pb-8">
+                        <CardHeader className="text-center space-y-4 sm:space-y-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white pb-6 sm:pb-8 px-4 sm:px-6">
                             <motion.div
                                 initial={{ scale: 0.5, rotate: -10 }}
                                 animate={{ scale: 1, rotate: 0 }}
@@ -66,51 +66,52 @@ const NotFoundPageClient = () => {
                                 className="mx-auto"
                             >
                                 <div className="relative">
-                                    <Baby className="mx-auto h-20 w-20 text-white drop-shadow-lg" />
-                                    <div className="absolute -top-2 -right-2 bg-yellow-400 text-yellow-900 rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold">
+                                    <Baby className="mx-auto h-14 w-14 sm:h-20 sm:w-20 text-white drop-shadow-lg" />
+                                    <div className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-yellow-400 text-yellow-900 rounded-full w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-sm sm:text-lg font-bold">
                                         ?
                                     </div>
                                 </div>
                             </motion.div>
                             <div>
-                                <CardTitle className="text-4xl font-bold mb-2">
+                                <CardTitle className="text-2xl sm:text-3xl md:text-4xl font-bold mb-1 sm:mb-2">
                                     Oops! Page Not Found
                                 </CardTitle>
-                                <CardDescription className="text-blue-100 text-lg">
+                                <CardDescription className="text-blue-100 text-sm sm:text-base md:text-lg">
                                     This little one seems to have wandered off to playtime!
-                                    <br />
+                                    <br className="hidden sm:block" />
+                                    <span className="sm:hidden"> </span>
                                     Don&apos;t worry, we&apos;ll help you find what you&apos;re
                                     looking for.
                                 </CardDescription>
                             </div>
                         </CardHeader>
 
-                        <CardContent className="p-8 space-y-8">
+                        <CardContent className="p-4 sm:p-6 md:p-8 space-y-6 sm:space-y-8">
                             {/* Main Navigation */}
-                            <div className="text-center space-y-4">
+                            <div className="text-center space-y-3 sm:space-y-4">
                                 <motion.div
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
                                 >
                                     <Button
                                         onClick={() => router.push("/")}
-                                        className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-8 py-3 rounded-xl text-lg shadow-lg transition-all duration-300"
+                                        className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-6 sm:px-8 py-2.5 sm:py-3 rounded-xl text-sm sm:text-lg shadow-lg transition-all duration-300"
                                     >
-                                        <Home className="mr-2 h-5 w-5" />
+                                        <Home className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                                         Return to Home
                                     </Button>
                                 </motion.div>
-                                <p className="text-gray-600">
+                                <p className="text-gray-600 text-sm sm:text-base">
                                     Or explore our amazing collection of baby products below
                                 </p>
                             </div>
 
                             {/* Quick Links */}
                             <div>
-                                <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">
+                                <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-3 sm:mb-4 text-center">
                                     Quick Links
                                 </h3>
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
                                     {quickLinks.map((link, index) => (
                                         <motion.div
                                             key={link.href}
@@ -122,10 +123,10 @@ const NotFoundPageClient = () => {
                                         >
                                             <Link
                                                 href={link.href}
-                                                className="flex flex-col items-center p-4 bg-gradient-to-br from-gray-50 to-gray-100 hover:from-blue-50 hover:to-purple-50 rounded-xl border border-gray-200 hover:border-blue-300 transition-all duration-300 group"
+                                                className="flex flex-col items-center p-3 sm:p-4 bg-gradient-to-br from-gray-50 to-gray-100 hover:from-blue-50 hover:to-purple-50 rounded-xl border border-gray-200 hover:border-blue-300 transition-all duration-300 group"
                                             >
-                                                <link.icon className="h-8 w-8 text-gray-600 group-hover:text-blue-600 mb-2 transition-colors" />
-                                                <span className="text-sm font-medium text-gray-700 group-hover:text-blue-700 text-center transition-colors">
+                                                <link.icon className="h-6 w-6 sm:h-8 sm:w-8 text-gray-600 group-hover:text-blue-600 mb-1.5 sm:mb-2 transition-colors" />
+                                                <span className="text-xs sm:text-sm font-medium text-gray-700 group-hover:text-blue-700 text-center transition-colors">
                                                     {link.label}
                                                 </span>
                                             </Link>
@@ -136,10 +137,10 @@ const NotFoundPageClient = () => {
 
                             {/* Popular Categories */}
                             <div>
-                                <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">
+                                <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-3 sm:mb-4 text-center">
                                     Popular Categories
                                 </h3>
-                                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
                                     {popularCategories.map((category, index) => (
                                         <motion.div
                                             key={category.href}
@@ -149,9 +150,9 @@ const NotFoundPageClient = () => {
                                         >
                                             <Link
                                                 href={category.href}
-                                                className="block p-3 bg-white hover:bg-blue-50 rounded-lg border border-gray-200 hover:border-blue-300 transition-all duration-200 group"
+                                                className="block p-2.5 sm:p-3 bg-white hover:bg-blue-50 rounded-lg border border-gray-200 hover:border-blue-300 transition-all duration-200 group"
                                             >
-                                                <span className="text-sm font-medium text-gray-700 group-hover:text-blue-700 transition-colors">
+                                                <span className="text-xs sm:text-sm font-medium text-gray-700 group-hover:text-blue-700 transition-colors">
                                                     {category.label}
                                                 </span>
                                             </Link>
@@ -162,10 +163,10 @@ const NotFoundPageClient = () => {
 
                             {/* Helpful Pages */}
                             <div>
-                                <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">
+                                <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-3 sm:mb-4 text-center">
                                     Need Help?
                                 </h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                                     {helpfulPages.map((page, index) => (
                                         <motion.div
                                             key={page.href}
@@ -175,10 +176,10 @@ const NotFoundPageClient = () => {
                                         >
                                             <Link
                                                 href={page.href}
-                                                className="flex items-center p-3 bg-gradient-to-r from-green-50 to-blue-50 hover:from-green-100 hover:to-blue-100 rounded-lg border border-green-200 hover:border-green-300 transition-all duration-200 group"
+                                                className="flex items-center p-2.5 sm:p-3 bg-gradient-to-r from-green-50 to-blue-50 hover:from-green-100 hover:to-blue-100 rounded-lg border border-green-200 hover:border-green-300 transition-all duration-200 group"
                                             >
-                                                <ArrowLeft className="h-4 w-4 text-green-600 mr-3 transform group-hover:translate-x-1 transition-transform" />
-                                                <span className="text-sm font-medium text-green-700">
+                                                <ArrowLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-green-600 mr-2 sm:mr-3 transform group-hover:translate-x-1 transition-transform" />
+                                                <span className="text-xs sm:text-sm font-medium text-green-700">
                                                     {page.label}
                                                 </span>
                                             </Link>
@@ -188,14 +189,14 @@ const NotFoundPageClient = () => {
                             </div>
                         </CardContent>
 
-                        <CardFooter className="bg-gray-50 p-6">
-                            <div className="w-full space-y-4">
+                        <CardFooter className="bg-gray-50 p-4 sm:p-6">
+                            <div className="w-full space-y-3 sm:space-y-4">
                                 {/* Store Info */}
-                                <div className="text-center space-y-2">
-                                    <h4 className="font-semibold text-gray-800">
+                                <div className="text-center space-y-1.5 sm:space-y-2">
+                                    <h4 className="font-semibold text-gray-800 text-sm sm:text-base">
                                         Welcome to Babyshop - Your Trusted Baby Store
                                     </h4>
-                                    <p className="text-sm text-gray-600 max-w-2xl mx-auto">
+                                    <p className="text-xs sm:text-sm text-gray-600 max-w-2xl mx-auto">
                                         We&apos;re your one-stop destination for everything your
                                         little one needs. From clothes and toys to safety gear and
                                         nursery essentials, we make shopping for your baby safe,
@@ -204,9 +205,9 @@ const NotFoundPageClient = () => {
                                 </div>
 
                                 {/* Contact Info */}
-                                <div className="flex flex-wrap justify-center items-center gap-6 text-sm text-gray-600">
+                                <div className="flex flex-wrap justify-center items-center gap-3 sm:gap-6 text-xs sm:text-sm text-gray-600">
                                     <div className="flex items-center">
-                                        <Phone className="h-4 w-4 mr-2 text-blue-600" />
+                                        <Phone className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 text-blue-600" />
                                         <Link
                                             href="/help/contact"
                                             className="hover:text-blue-600 transition-colors"
@@ -215,11 +216,11 @@ const NotFoundPageClient = () => {
                                         </Link>
                                     </div>
                                     <div className="flex items-center">
-                                        <Clock className="h-4 w-4 mr-2 text-green-600" />
+                                        <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 text-green-600" />
                                         <span>24/7 Available</span>
                                     </div>
                                     <div className="flex items-center">
-                                        <MapPin className="h-4 w-4 mr-2 text-purple-600" />
+                                        <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 text-purple-600" />
                                         <Link
                                             href="/help/shipping"
                                             className="hover:text-purple-600 transition-colors"
@@ -230,8 +231,8 @@ const NotFoundPageClient = () => {
                                 </div>
 
                                 {/* Privacy */}
-                                <div className="text-center pt-4 border-t border-gray-200">
-                                    <p className="text-xs text-gray-500">
+                                <div className="text-center pt-3 sm:pt-4 border-t border-gray-200">
+                                    <p className="text-[10px] sm:text-xs text-gray-500">
                                         Your privacy and security matter to us.
                                         <Link
                                             href="/privacy"
