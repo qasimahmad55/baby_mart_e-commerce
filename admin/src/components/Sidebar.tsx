@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils'
 import { AnimatePresence, motion } from 'motion/react'
 import { Button } from './ui/button'
-import { Bookmark, ChevronLeft, ChevronRight, FileText, Layers, LayoutDashboard, LogOut, Package, ShoppingBag, Tag, User, Users } from 'lucide-react'
+import { Bookmark, ChevronLeft, ChevronRight, FileText, Layers, LayoutDashboard, LogOut, Package, ShoppingBag, Tag, User, Users, X } from 'lucide-react'
 import useAuthStore from '@/store/useAuthstore'
 import type React from 'react'
 import { NavLink, useLocation } from 'react-router'
@@ -10,7 +10,9 @@ import { NavLink, useLocation } from 'react-router'
 
 type sidebarProps = {
   open: boolean,
-  setOpen: (open: boolean) => void
+  setOpen: (open: boolean) => void,
+  mobileOpen: boolean,
+  setMobileOpen: (open: boolean) => void
 }
 
 type navItemProps = {
@@ -19,7 +21,8 @@ type navItemProps = {
   label: string,
   open: boolean,
   end?: boolean,
-  pathName: string
+  pathName: string,
+  onClick?: () => void
 }
 
 const navigationItems = [
@@ -71,119 +74,193 @@ const navigationItems = [
   },
 ];
 
-function Sidebar({ open, setOpen }: sidebarProps) {
+function Sidebar({ open, setOpen, mobileOpen, setMobileOpen }: sidebarProps) {
   const { user, logout } = useAuthStore()
   const { pathname } = useLocation()
+
+  const handleNavClick = () => {
+    // Close mobile sidebar on navigation
+    setMobileOpen(false)
+  }
+
   return (
-    <motion.aside
-      initial={{ width: open ? 256 : 80 }}
-      animate={{ width: open ? 256 : 80 }}
-      transition={{ duration: 0.3, ease: "easeInOut" }}
-      className={cn(
-        "fixed inset-y-0 left-0 z-20 flex flex-col border-r border-slate-700/50 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 shadow-2xl transition-all duration-300",
-        open ? "w-64" : "w-20"
-      )}
-    >
-      <div className="flex items-center justify-between p-4 h-16 bg-gradient-to-r from-[#29beb3] via-slate-700 to-[#a96bde] border-b border-slate-600/50">
-        <motion.div
-          className={cn(
-            "flex items-center overflow-hidden",
-            open ? "w-auto opacity-100" : "w-0 opacity-0"
-          )}
-          initial={{ opacity: open ? 1 : 0, width: open ? "auto" : 0 }}
-          animate={{ opacity: open ? 1 : 0, width: open ? "auto" : 0 }}
-          transition={{ duration: 0.2 }}
-        >
-          <span className='font-bold text-xl text-white drop-shadow-lg'>BabyShop Admin</span>
-        </motion.div>
-
-        <motion.div
-          whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
-        >
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setOpen(!open)}
-            className="rounded-full bg-white/10 hover:bg-white/20 text-white/90 hover:text-white border border-white/20 hover:border-white/30 backdrop-blur-sm"
-          >
-            <motion.div
-              animate={{ rotate: open ? 0 : 180 }}
-              transition={{ duration: 0.3 }}
-            >
-              {open ? (<ChevronLeft size={20} />)
-                : (<ChevronRight size={20} className='rotate-180' />)}
-            </motion.div>
-          </Button>
-        </motion.div>
-      </div>
-
-      {/* Sidebar menu */}
-      <div className='flex flex-col gap-1 flex-1 p-3 bg-gradient-to-b text-white from-slate-900/50 to-slate-800/50 overflow-y-auto'>
-        {navigationItems?.map((item) => (
-          <NavItem
-            key={item?.to}
-            to={item.to}
-            icon={item.icon}
-            label={item.label}
-            open={open}
-            end={item.end}
-            pathName={pathname}
-          />
-        ))}
-      </div>
-      {/* Logout Button */}
-      <div className="p-4 border-t border-slate-600/50 bg-gradient-to-r from-slate-800 via-slate-700 to-slate-800">
-        <motion.div
-          className={cn(
-            "flex items-center gap-3 mb-4",
-            open ? "justify-start" : "justify-center"
-          )}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.2 }}
-        >
-          <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#29beb3] to-[#a96bde] flex items-center justify-center text-white font-semibold overflow-hidden shadow-lg ring-2 ring-white/20">
-            {user?.avatar ? (
-              <img src={user?.avatar} alt="UserImage" className="h-full w-full object-cover" />
-            ) : (user?.name?.charAt(0).toUpperCase())}
-          </div>
-          <AnimatePresence>
-            {open && (
-              <motion.div
-                className="flex flex-col"
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -10 }}
-                transition={{ duration: 0.2 }}
-              >
-                <span className="text-sm font-medium text-white truncate max-w-[150px]">{user?.name}</span>
-                <span className="text-xs text-[#29beb3] capitalize font-medium bg-slate-700/50 px-2 py-1 rounded-full backdrop-blur-sm">{user?.role}</span>
-              </motion.div>
+    <>
+      {/* Desktop Sidebar */}
+      <motion.aside
+        initial={{ width: open ? 256 : 80 }}
+        animate={{ width: open ? 256 : 80 }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+        className={cn(
+          "fixed inset-y-0 left-0 z-20 hidden md:flex flex-col border-r border-slate-700/50 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 shadow-2xl transition-all duration-300",
+          open ? "w-64" : "w-20"
+        )}
+      >
+        <div className="flex items-center justify-between p-4 h-16 bg-gradient-to-r from-[#29beb3] via-slate-700 to-[#a96bde] border-b border-slate-600/50">
+          <motion.div
+            className={cn(
+              "flex items-center overflow-hidden",
+              open ? "w-auto opacity-100" : "w-0 opacity-0"
             )}
-          </AnimatePresence>
-        </motion.div>
-        <motion.div>
-          <Button variant={"outline"} size={open ? "default" : "icon"}
-            className="w-full border-red-500/30 hover:bg-red-600/20 hover:border-red-400/50 text-red-400 hover:text-red-300 transition-colors bg-red-600/10 backdrop-blur-sm"
-            onClick={logout}
+            initial={{ opacity: open ? 1 : 0, width: open ? "auto" : 0 }}
+            animate={{ opacity: open ? 1 : 0, width: open ? "auto" : 0 }}
+            transition={{ duration: 0.2 }}
           >
-            <LogOut
-              size={16} className={cn("mr-2", !open && "mr-0")}
-            />
-            {open && "Logout"}
-          </Button>
-        </motion.div>
-      </div>
+            <span className='font-bold text-xl text-white drop-shadow-lg'>BabyShop Admin</span>
+          </motion.div>
 
-    </motion.aside>
+          <motion.div
+            whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
+          >
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setOpen(!open)}
+              className="rounded-full bg-white/10 hover:bg-white/20 text-white/90 hover:text-white border border-white/20 hover:border-white/30 backdrop-blur-sm"
+            >
+              <motion.div
+                animate={{ rotate: open ? 0 : 180 }}
+                transition={{ duration: 0.3 }}
+              >
+                {open ? (<ChevronLeft size={20} />)
+                  : (<ChevronRight size={20} className='rotate-180' />)}
+              </motion.div>
+            </Button>
+          </motion.div>
+        </div>
+
+        {/* Sidebar menu */}
+        <div className='flex flex-col gap-1 flex-1 p-3 bg-gradient-to-b text-white from-slate-900/50 to-slate-800/50 overflow-y-auto'>
+          {navigationItems?.map((item) => (
+            <NavItem
+              key={item?.to}
+              to={item.to}
+              icon={item.icon}
+              label={item.label}
+              open={open}
+              end={item.end}
+              pathName={pathname}
+            />
+          ))}
+        </div>
+        {/* Logout Button */}
+        <div className="p-4 border-t border-slate-600/50 bg-gradient-to-r from-slate-800 via-slate-700 to-slate-800">
+          <motion.div
+            className={cn(
+              "flex items-center gap-3 mb-4",
+              open ? "justify-start" : "justify-center"
+            )}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.2 }}
+          >
+            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#29beb3] to-[#a96bde] flex items-center justify-center text-white font-semibold overflow-hidden shadow-lg ring-2 ring-white/20 flex-shrink-0">
+              {user?.avatar ? (
+                <img src={user?.avatar} alt="UserImage" className="h-full w-full object-cover" />
+              ) : (user?.name?.charAt(0).toUpperCase())}
+            </div>
+            <AnimatePresence>
+              {open && (
+                <motion.div
+                  className="flex flex-col min-w-0"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -10 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <span className="text-sm font-medium text-white truncate max-w-[150px]">{user?.name}</span>
+                  <span className="text-xs text-[#29beb3] capitalize font-medium bg-slate-700/50 px-2 py-1 rounded-full backdrop-blur-sm">{user?.role}</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+          <motion.div>
+            <Button variant={"outline"} size={open ? "default" : "icon"}
+              className="w-full border-red-500/30 hover:bg-red-600/20 hover:border-red-400/50 text-red-400 hover:text-red-300 transition-colors bg-red-600/10 backdrop-blur-sm"
+              onClick={logout}
+            >
+              <LogOut
+                size={16} className={cn("mr-2", !open && "mr-0")}
+              />
+              {open && "Logout"}
+            </Button>
+          </motion.div>
+        </div>
+
+      </motion.aside>
+
+      {/* Mobile Sidebar */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.aside
+            initial={{ x: -280 }}
+            animate={{ x: 0 }}
+            exit={{ x: -280 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="fixed inset-y-0 left-0 z-30 w-[280px] flex md:hidden flex-col border-r border-slate-700/50 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 shadow-2xl"
+          >
+            <div className="flex items-center justify-between p-4 h-16 bg-gradient-to-r from-[#29beb3] via-slate-700 to-[#a96bde] border-b border-slate-600/50">
+              <span className='font-bold text-xl text-white drop-shadow-lg'>BabyShop Admin</span>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setMobileOpen(false)}
+                className="rounded-full bg-white/10 hover:bg-white/20 text-white/90 hover:text-white border border-white/20 hover:border-white/30 backdrop-blur-sm"
+              >
+                <X size={20} />
+              </Button>
+            </div>
+
+            {/* Mobile Sidebar menu */}
+            <div className='flex flex-col gap-1 flex-1 p-3 bg-gradient-to-b text-white from-slate-900/50 to-slate-800/50 overflow-y-auto'>
+              {navigationItems?.map((item) => (
+                <NavItem
+                  key={item?.to}
+                  to={item.to}
+                  icon={item.icon}
+                  label={item.label}
+                  open={true}
+                  end={item.end}
+                  pathName={pathname}
+                  onClick={handleNavClick}
+                />
+              ))}
+            </div>
+
+            {/* Mobile Logout Button */}
+            <div className="p-4 border-t border-slate-600/50 bg-gradient-to-r from-slate-800 via-slate-700 to-slate-800">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#29beb3] to-[#a96bde] flex items-center justify-center text-white font-semibold overflow-hidden shadow-lg ring-2 ring-white/20 flex-shrink-0">
+                  {user?.avatar ? (
+                    <img src={user?.avatar} alt="UserImage" className="h-full w-full object-cover" />
+                  ) : (user?.name?.charAt(0).toUpperCase())}
+                </div>
+                <div className="flex flex-col min-w-0">
+                  <span className="text-sm font-medium text-white truncate">{user?.name}</span>
+                  <span className="text-xs text-[#29beb3] capitalize font-medium bg-slate-700/50 px-2 py-1 rounded-full backdrop-blur-sm w-fit">{user?.role}</span>
+                </div>
+              </div>
+              <Button 
+                variant={"outline"} 
+                className="w-full border-red-500/30 hover:bg-red-600/20 hover:border-red-400/50 text-red-400 hover:text-red-300 transition-colors bg-red-600/10 backdrop-blur-sm"
+                onClick={logout}
+              >
+                <LogOut size={16} className="mr-2" />
+                Logout
+              </Button>
+            </div>
+          </motion.aside>
+        )}
+      </AnimatePresence>
+    </>
   )
 }
 
-function NavItem({ to, icon, label, open, end, pathName }: (navItemProps)) {
+function NavItem({ to, icon, label, open, end, pathName, onClick }: (navItemProps)) {
   return (
     <NavLink
       to={to}
       end={end}
+      onClick={onClick}
       className={cn(
         "flex items-center p-3 rounded-xl text-sm font-medium hoverEffect gap-3 overflow-hidden text-white/80 hover:bg-gradient-to-r hover:from-slate-700/50 hover:to-slate-600/50 hover:text-white hover:shadow-lg hover:backdrop-blur-sm",
         pathName === to
@@ -193,8 +270,8 @@ function NavItem({ to, icon, label, open, end, pathName }: (navItemProps)) {
           "text-slate-300 hover:scale-102"
       )}
     >
-      <span>{icon}</span>
-      {open && label}
+      <span className="flex-shrink-0">{icon}</span>
+      {open && <span className="truncate">{label}</span>}
     </NavLink>
   )
 }

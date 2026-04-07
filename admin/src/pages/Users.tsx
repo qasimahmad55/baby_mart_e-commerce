@@ -203,57 +203,59 @@ function UsersPage() {
   }
 
   return (
-    <div className='p-5 space-y-5'>
+    <div className='p-3 sm:p-5 space-y-4 sm:space-y-5'>
       {/* header */}
-      <div className='flex items-center justify-between'>
+      <div className='flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0'>
         <div className=''>
-          <h1 className='text-3xl font-bold text-gray-900'>Users Management</h1>
-          <p className='text-gray-600 mt-0.5'>View and manage all system users</p>
+          <h1 className='text-2xl sm:text-3xl font-bold text-gray-900'>Users Management</h1>
+          <p className='text-gray-600 mt-0.5 text-sm sm:text-base'>View and manage all system users</p>
         </div>
-        <div className='flex items-center gap-4'>
+        <div className='flex flex-wrap items-center gap-2 sm:gap-4 w-full sm:w-auto'>
           <div className='flex items-center gap-2'>
-            <Users className='h-8 w-8 text-blue-600' />
-            <span className='text-2xl font-bold text-blue-600'>{total}</span>
+            <Users className='h-6 w-6 sm:h-8 sm:w-8 text-blue-600' />
+            <span className='text-xl sm:text-2xl font-bold text-blue-600'>{total}</span>
           </div>
           <Button
             variant="outline"
             onClick={handleRefresh}
             disabled={refreshing}
             className="border-blue-600 text-blue-600 hover:bg-blue-50"
+            size="sm"
           >
             <RefreshCw
-              className={`mr-2 h-4 w-4 ${refreshing ? "animate-spin" : ""}`}
+              className={`mr-1 sm:mr-2 h-4 w-4 ${refreshing ? "animate-spin" : ""}`}
             />
-            {refreshing ? "Refreshing..." : "Refresh"}
+            <span className="hidden xs:inline">{refreshing ? "Refreshing..." : "Refresh"}</span>
           </Button>
           {isAdmin && (
             <Button
               onClick={() => setIsAddModalOpen(true)}
               className="bg-blue-600 hover:bg-blue-700"
+              size="sm"
             >
-              <Plus className="mr-2 h-4 w-4" />
-              Add User
+              <Plus className="mr-1 sm:mr-2 h-4 w-4" />
+              <span className="hidden xs:inline">Add User</span><span className="xs:hidden">Add</span>
             </Button>
           )}
         </div>
       </div>
       {/* filters */}
       <div>
-        <div className='flex items-center gap-4 flex-wrap'>
-          <div className='flex items-center gap-2'>
-            <Search className='h-4 w-4 text-gray-500' />
+        <div className='flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4'>
+          <div className='relative flex-1 sm:flex-none'>
+            <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500' />
             <Input
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder='Search users...'
-              className='w-64'
+              className='pl-9 w-full sm:w-64'
             />
           </div>
           <Select
             value={roleFilter}
             onValueChange={setRoleFilter}
           >
-            <SelectTrigger className='w-48'>
+            <SelectTrigger className='w-full sm:w-48'>
               <SelectValue placeholder="Filter by value" />
             </SelectTrigger>
             <SelectContent>
@@ -266,7 +268,7 @@ function UsersPage() {
         </div>
       </div>
       {/*users table  */}
-      <div className='bg-white rounded-lg shadow-sm border overflow-hidden'>
+      <div className='bg-white rounded-lg shadow-sm border overflow-hidden overflow-x-auto'>
         <Table>
           <TableHeader>
             <TableRow className='bg-gray-50'>

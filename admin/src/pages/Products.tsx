@@ -294,29 +294,30 @@ function Products() {
   };
 
   return (
-    <div className="p-5 space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="p-3 sm:p-5 space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
         <div className="flex items-end gap-3">
-          <h1 className="text-3xl font-bold">Products</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">Products</h1>
           <p className="text-sm font-medium">
             Total <span className="font-bold">{total}</span>
           </p>
         </div>
-        <div className="flex items-center gap-3 rounded-lg bg-muted/50 p-2 shadow-sm">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 rounded-lg bg-muted/50 p-2 shadow-sm w-full sm:w-auto">
           <Button
             variant="outline"
             onClick={handleRefresh}
             disabled={refreshing}
             className="bg-background text-sm shadow-sm hover:bg-muted/10 focus:ring-2 focus:ring-ring"
+            size="sm"
           >
             <RefreshCw
-              className={`mr-2 h-4 w-4 ${refreshing ? "animate-spin" : ""}`}
+              className={`mr-1 sm:mr-2 h-4 w-4 ${refreshing ? "animate-spin" : ""}`}
             />
-            {refreshing ? "Refreshing..." : "Refresh"}
+            <span className="hidden xs:inline">{refreshing ? "Refreshing..." : "Refresh"}</span>
           </Button>
           <Select value={sortOrder} onValueChange={handleSortChange}>
             <SelectTrigger
-              className="w-40 bg-background text-sm shadow-sm hover:bg-muted/10 focus:ring-2 focus:ring-ring"
+              className="w-[120px] sm:w-40 bg-background text-sm shadow-sm hover:bg-muted/10 focus:ring-2 focus:ring-ring"
               aria-label="Sort order"
             >
               <SelectValue placeholder="Sort Order" />
@@ -340,8 +341,9 @@ function Products() {
             <Button
               onClick={() => setIsAddModalOpen(true)}
               className="bg-primary text-primary-foreground shadow-sm hover:bg-primary/90"
+              size="sm"
             >
-              <Plus className="mr-2 h-4 w-4" /> Add Product
+              <Plus className="mr-1 sm:mr-2 h-4 w-4" /> <span className="hidden xs:inline">Add Product</span><span className="xs:hidden">Add</span>
             </Button>
           )}
         </div>

@@ -171,38 +171,45 @@ export default function InvoicesPage() {
   });
 
   return (
-    <div className="p-6 md:p-8 space-y-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold tracking-tight">Invoices</h1>
-        <p className="text-muted-foreground">
-          View and manage customer billing and invoices.
-        </p>
-      </div>
-
-      <div className="flex flex-col sm:flex-row justify-between gap-4 items-center mb-4">
-        <div className="relative w-full sm:w-72">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-          <Input
-            placeholder="Search by Invoice ID or Customer..."
-            className="pl-9 w-full"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+    <div className="p-3 sm:p-5 space-y-4 sm:space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Invoices</h1>
+          <p className="text-muted-foreground text-sm sm:text-base">
+            View and manage customer billing and invoices.
+          </p>
         </div>
-        <div className="flex gap-2 w-full sm:w-auto">
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+          <div className="flex items-center gap-2">
+            <FileText className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600" />
+            <span className="text-xl sm:text-2xl font-bold text-blue-600">{total}</span>
+          </div>
           <Button
             variant="outline"
-            size="icon"
+            size="sm"
             onClick={handleRefresh}
             disabled={refreshing || loading}
             title="Refresh Invoices"
           >
-            <RefreshCw className={cn("h-4 w-4", refreshing && "animate-spin")} />
+            <RefreshCw className={cn("mr-1 sm:mr-2 h-4 w-4", refreshing && "animate-spin")} />
+            <span className="hidden xs:inline">{refreshing ? "Refreshing..." : "Refresh"}</span>
           </Button>
         </div>
       </div>
 
-      <div className="rounded-md border bg-card">
+      {/* Search */}
+      <div className="relative w-full sm:w-72">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+        <Input
+          placeholder="Search by Invoice ID or Customer..."
+          className="pl-9 w-full"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+
+      <div className="rounded-md border bg-card overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
@@ -303,9 +310,9 @@ export default function InvoicesPage() {
 
       {/* Pagination controls */}
       {!loading && totalPages > 1 && (
-        <div className="flex items-center justify-between mt-4">
-          <div className="text-sm text-muted-foreground">
-            Showing Page {page} of {totalPages} ({total} total invoices)
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mt-4">
+          <div className="text-sm text-muted-foreground text-center sm:text-left">
+            Page {page} of {totalPages} ({total} invoices)
           </div>
           <div className="flex items-center space-x-2">
             <Button
@@ -315,7 +322,7 @@ export default function InvoicesPage() {
               disabled={page === 1}
             >
               <ChevronLeft className="h-4 w-4 mr-1" />
-              Previous
+              <span className="hidden xs:inline">Previous</span>
             </Button>
             <Button
               variant="outline"
@@ -323,7 +330,7 @@ export default function InvoicesPage() {
               onClick={handleNextPage}
               disabled={page === totalPages}
             >
-              Next
+              <span className="hidden xs:inline">Next</span>
               <ChevronRight className="h-4 w-4 ml-1" />
             </Button>
           </div>

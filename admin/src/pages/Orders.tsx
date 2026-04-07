@@ -351,22 +351,22 @@ export default function OrdersPage() {
   }
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-4 sm:space-y-6 p-3 sm:p-6">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex items-center justify-between"
+        className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0"
       >
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
             Orders Management
           </h1>
-          <p className="text-gray-600 mt-2">
+          <p className="text-gray-600 mt-1 sm:mt-2 text-sm sm:text-base">
             View and manage all customer orders
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
           <Button
             variant="outline"
             size="sm"
@@ -377,11 +377,11 @@ export default function OrdersPage() {
             <RefreshCw
               className={`h-4 w-4 ${refreshing ? "animate-spin" : ""}`}
             />
-            {refreshing ? "Refreshing..." : "Refresh"}
+            <span className="hidden xs:inline">{refreshing ? "Refreshing..." : "Refresh"}</span>
           </Button>
           <div className="flex items-center gap-2">
-            <Package className="h-8 w-8 text-blue-600" />
-            <span className="text-2xl font-bold text-blue-600">{total}</span>
+            <Package className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600" />
+            <span className="text-xl sm:text-2xl font-bold text-blue-600">{total}</span>
           </div>
         </div>
       </motion.div>
@@ -391,21 +391,21 @@ export default function OrdersPage() {
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="bg-white p-4 rounded-lg shadow-sm border space-y-4"
+        className="bg-white p-3 sm:p-4 rounded-lg shadow-sm border space-y-4"
       >
-        <div className="flex items-center gap-4 flex-wrap">
-          <div className="flex items-center gap-2">
-            <Search className="h-4 w-4 text-gray-500" />
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
+          <div className="relative flex-1 sm:flex-none">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
             <Input
               placeholder="Search orders..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-64"
+              className="pl-9 w-full sm:w-64"
             />
           </div>
 
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-48">
+            <SelectTrigger className="w-full sm:w-48">
               <SelectValue placeholder="Filter by status" />
             </SelectTrigger>
             <SelectContent>
@@ -418,7 +418,7 @@ export default function OrdersPage() {
           </Select>
 
           <Select value={paymentFilter} onValueChange={setPaymentFilter}>
-            <SelectTrigger className="w-48">
+            <SelectTrigger className="w-full sm:w-48">
               <SelectValue placeholder="Filter by payment" />
             </SelectTrigger>
             <SelectContent>
@@ -437,7 +437,7 @@ export default function OrdersPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="bg-white rounded-lg shadow-sm border overflow-hidden"
+        className="bg-white rounded-lg shadow-sm border overflow-hidden overflow-x-auto"
       >
         <Table>
           <TableHeader>
@@ -560,20 +560,18 @@ export default function OrdersPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white rounded-lg border border-gray-200 px-4 py-3 shadow-sm"
+          className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 bg-white rounded-lg border border-gray-200 px-3 sm:px-4 py-3 shadow-sm"
         >
-          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
-            <div className="text-sm text-gray-600">
-              Showing{" "}
-              <span className="font-medium">{(page - 1) * perPage + 1}</span> to{" "}
+          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
+            <div className="text-xs sm:text-sm text-gray-600">
+              <span className="font-medium">{(page - 1) * perPage + 1}</span> - {" "}
               <span className="font-medium">
                 {Math.min(page * perPage, total)}
               </span>{" "}
-              of <span className="font-medium">{total}</span> orders
+              of <span className="font-medium">{total}</span>
             </div>
-            <div className="text-sm text-gray-600">
-              Page <span className="font-medium">{page}</span> of{" "}
-              <span className="font-medium">{totalPages}</span>
+            <div className="text-xs sm:text-sm text-gray-600">
+              Page <span className="font-medium">{page}</span>/<span className="font-medium">{totalPages}</span>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -584,8 +582,8 @@ export default function OrdersPage() {
               disabled={page === 1}
               className="disabled:opacity-50"
             >
-              <ChevronLeft className="h-4 w-4 mr-2" />
-              Previous
+              <ChevronLeft className="h-4 w-4 mr-1 sm:mr-2" />
+              <span className="hidden xs:inline">Previous</span>
             </Button>
 
             <Button
@@ -595,8 +593,8 @@ export default function OrdersPage() {
               disabled={page >= totalPages}
               className="disabled:opacity-50"
             >
-              Next
-              <ChevronRight className="h-4 w-4 ml-2" />
+              <span className="hidden xs:inline">Next</span>
+              <ChevronRight className="h-4 w-4 ml-1 sm:ml-2" />
             </Button>
           </div>
         </motion.div>
@@ -608,7 +606,7 @@ export default function OrdersPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="text-center text-sm text-gray-600 bg-white rounded-lg border border-gray-200 px-4 py-3"
+          className="text-center text-xs sm:text-sm text-gray-600 bg-white rounded-lg border border-gray-200 px-3 sm:px-4 py-3"
         >
           Showing all <span className="font-medium">{total}</span> orders
         </motion.div>
@@ -616,51 +614,51 @@ export default function OrdersPage() {
 
       {/* View Order Dialog */}
       <Dialog open={isViewOpen} onOpenChange={setIsViewOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-[95vw] sm:max-w-2xl max-h-[90vh] overflow-y-auto p-4 sm:p-6">
           <DialogHeader>
-            <DialogTitle>Order Details</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-lg sm:text-xl">Order Details</DialogTitle>
+            <DialogDescription className="text-sm">
               View complete order information
             </DialogDescription>
           </DialogHeader>
           {selectedOrder && (
-            <div className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-4 sm:space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
-                  <Label className="text-sm font-medium text-gray-600">
+                  <Label className="text-xs sm:text-sm font-medium text-gray-600">
                     Order ID
                   </Label>
-                  <p className="text-lg font-semibold">
+                  <p className="text-base sm:text-lg font-semibold break-all">
                     {selectedOrder.orderId}
                   </p>
                 </div>
                 <div>
-                  <Label className="text-sm font-medium text-gray-600">
+                  <Label className="text-xs sm:text-sm font-medium text-gray-600">
                     Order Date
                   </Label>
-                  <p>
+                  <p className="text-sm sm:text-base">
                     {new Date(selectedOrder.createdAt).toLocaleDateString()}
                   </p>
                 </div>
               </div>
 
               <div>
-                <Label className="text-sm font-medium text-gray-600">
+                <Label className="text-xs sm:text-sm font-medium text-gray-600">
                   Customer Information
                 </Label>
-                <div className="mt-2 p-3 bg-gray-50 rounded-md">
-                  <p className="font-medium">{selectedOrder.user.name}</p>
-                  <p className="text-sm text-gray-600">
+                <div className="mt-2 p-2 sm:p-3 bg-gray-50 rounded-md">
+                  <p className="font-medium text-sm sm:text-base">{selectedOrder.user.name}</p>
+                  <p className="text-xs sm:text-sm text-gray-600 break-all">
                     {selectedOrder.user.email}
                   </p>
                 </div>
               </div>
 
               <div>
-                <Label className="text-sm font-medium text-gray-600">
+                <Label className="text-xs sm:text-sm font-medium text-gray-600">
                   Shipping Address
                 </Label>
-                <div className="mt-2 p-3 bg-gray-50 rounded-md">
+                <div className="mt-2 p-2 sm:p-3 bg-gray-50 rounded-md text-sm sm:text-base">
                   <p>{selectedOrder.shippingAddress.street}</p>
                   <p>
                     {selectedOrder.shippingAddress.city},{" "}
@@ -672,29 +670,29 @@ export default function OrdersPage() {
               </div>
 
               <div>
-                <Label className="text-sm font-medium text-gray-600">
+                <Label className="text-xs sm:text-sm font-medium text-gray-600">
                   Order Items
                 </Label>
                 <div className="mt-2 space-y-2 max-h-60 overflow-y-auto">
                   {selectedOrder.items.map((item, index) => (
                     <div
                       key={index}
-                      className="flex items-center justify-between p-3 bg-gray-50 rounded-md"
+                      className="flex items-center justify-between p-2 sm:p-3 bg-gray-50 rounded-md gap-2"
                     >
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2 sm:gap-3 min-w-0">
                         <img
                           src={item.product.image}
                           alt={item.product.name}
-                          className="w-12 h-12 object-cover rounded"
+                          className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded flex-shrink-0"
                         />
-                        <div>
-                          <p className="font-medium">{item.product.name}</p>
-                          <p className="text-sm text-gray-600">
+                        <div className="min-w-0">
+                          <p className="font-medium text-xs sm:text-sm truncate">{item.product.name}</p>
+                          <p className="text-xs sm:text-sm text-gray-600">
                             Qty: {item.quantity}
                           </p>
                         </div>
                       </div>
-                      <p className="font-medium">${item.price.toFixed(2)}</p>
+                      <p className="font-medium text-sm sm:text-base flex-shrink-0">${item.price.toFixed(2)}</p>
                     </div>
                   ))}
                 </div>

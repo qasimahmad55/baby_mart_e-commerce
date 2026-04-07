@@ -87,14 +87,14 @@ function Dashboard() {
       {loading ? (
         <DashboardSkeleton />
       ) : (
-        <div className="space-y-6 p-6 mx-auto">
-          <h1 className="text-4xl font-bold text-gray-800">
+        <div className="space-y-4 sm:space-y-6 p-3 sm:p-6 mx-auto">
+          <h1 className="text-2xl sm:text-4xl font-bold text-gray-800">
             Dashboard OverView
           </h1>
           {stats && (
             <>
               <motion.div
-                className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6"
+                className="grid gap-3 sm:gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-6"
                 variants={containerVariants}
               >
                 <motion.div variants={cardVariants} className="h-full">
@@ -154,28 +154,28 @@ function Dashboard() {
               </motion.div>
 
               <motion.div
-                className="grid gap-6 grid-cols-1 lg:grid-cols-2"
+                className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-2"
                 variants={containerVariants}
               >
                 <motion.div variants={cardVariants}>
                   <Card className="bg-white/95 shadow-lg rounded-xl hover:shadow-xl transition-shadow duration-300">
-                    <CardHeader>
-                      <CardTitle className="text-lg font-semibold text-gray-800">
+                    <CardHeader className="p-4 sm:p-6">
+                      <CardTitle className="text-base sm:text-lg font-semibold text-gray-800">
                         Categories Distribution
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="h-96">
+                    <CardContent className="h-64 sm:h-80 lg:h-96 p-2 sm:p-6 pt-0">
                       <ResponsiveContainer width="100%" height="100%">
                         <BarChart
                           data={stats.categories}
-                          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                          margin={{ top: 10, right: 10, left: 0, bottom: 5 }}
                         >
                           <CartesianGrid
                             strokeDasharray="3 3"
                             stroke="#e5e7eb"
                           />
-                          <XAxis dataKey="name" tick={{ fill: "#4b5563" }} />
-                          <YAxis tick={{ fill: "#4b5563" }} />
+                          <XAxis dataKey="name" tick={{ fill: "#4b5563", fontSize: 12 }} />
+                          <YAxis tick={{ fill: "#4b5563", fontSize: 12 }} />
                           <Tooltip
                             contentStyle={{
                               backgroundColor: "white",
@@ -183,7 +183,7 @@ function Dashboard() {
                               borderRadius: "8px",
                             }}
                           />
-                          <Legend />
+                          <Legend wrapperStyle={{ fontSize: 12 }} />
                           <Bar
                             dataKey="value"
                             name="Products"
@@ -205,12 +205,12 @@ function Dashboard() {
 
                 <motion.div variants={cardVariants}>
                   <Card className="bg-white/95 shadow-lg rounded-xl hover:shadow-xl transition-shadow duration-300">
-                    <CardHeader>
-                      <CardTitle className="text-lg font-semibold text-gray-800">
+                    <CardHeader className="p-4 sm:p-6">
+                      <CardTitle className="text-base sm:text-lg font-semibold text-gray-800">
                         User Roles Distribution
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="h-96">
+                    <CardContent className="h-64 sm:h-80 lg:h-96 p-2 sm:p-6 pt-0">
                       <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                           <Pie
@@ -223,7 +223,7 @@ function Dashboard() {
                                 ? `${name}: ${(percent * 100).toFixed(0)}%`
                                 : name
                             }
-                            outerRadius={100}
+                            outerRadius="70%"
                             animationDuration={1000}
                             dataKey="value"
                           >
@@ -241,7 +241,7 @@ function Dashboard() {
                               borderRadius: "8px",
                             }}
                           />
-                          <Legend />
+                          <Legend wrapperStyle={{ fontSize: 12 }} />
                         </PieChart>
                       </ResponsiveContainer>
                     </CardContent>
@@ -250,23 +250,23 @@ function Dashboard() {
 
                 <motion.div variants={cardVariants} className="lg:col-span-2">
                   <Card className="bg-white/95 shadow-lg rounded-xl hover:shadow-xl transition-shadow duration-300">
-                    <CardHeader>
-                      <CardTitle className="text-lg font-semibold text-gray-800">
+                    <CardHeader className="p-4 sm:p-6">
+                      <CardTitle className="text-base sm:text-lg font-semibold text-gray-800">
                         Brand Distribution
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="h-96">
+                    <CardContent className="h-64 sm:h-80 lg:h-96 p-2 sm:p-6 pt-0">
                       <ResponsiveContainer width="100%" height="100%">
                         <BarChart
                           data={stats.brands}
-                          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                          margin={{ top: 10, right: 10, left: 0, bottom: 5 }}
                         >
                           <CartesianGrid
                             strokeDasharray="3 3"
                             stroke="#e5e7eb"
                           />
-                          <XAxis dataKey="name" tick={{ fill: "#4b5563" }} />
-                          <YAxis tick={{ fill: "#4b5563" }} />
+                          <XAxis dataKey="name" tick={{ fill: "#4b5563", fontSize: 12 }} />
+                          <YAxis tick={{ fill: "#4b5563", fontSize: 12 }} />
                           <Tooltip
                             contentStyle={{
                               backgroundColor: "white",
@@ -274,7 +274,7 @@ function Dashboard() {
                               borderRadius: "8px",
                             }}
                           />
-                          <Legend />
+                          <Legend wrapperStyle={{ fontSize: 12 }} />
                           <Bar
                             dataKey="value"
                             name="Products"

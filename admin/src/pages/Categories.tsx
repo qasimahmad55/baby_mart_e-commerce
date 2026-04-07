@@ -204,27 +204,28 @@ function Categories() {
     setPage(1)
   }
   return (
-    <div className="p-5 space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="p-3 sm:p-5 space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
         <div className="flex items-end gap-3">
-          <h1 className="text-3xl font-bold">Categories</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">Categories</h1>
           <p className="text-sm font-medium">
             Total <span className="font-bold">{total}</span>
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto">
           <Button
             variant="outline"
             onClick={handleRefresh}
             disabled={refreshing}
+            size="sm"
           >
             <RefreshCw
-              className={`mr-2 h-4 w-4 ${refreshing ? "animate-spin" : ""}`}
+              className={`mr-1 sm:mr-2 h-4 w-4 ${refreshing ? "animate-spin" : ""}`}
             />
-            {refreshing ? "Refreshing..." : "Refresh"}
+            <span className="hidden xs:inline">{refreshing ? "Refreshing..." : "Refresh"}</span>
           </Button>
           <Select value={sortOrder} onValueChange={handleSortChange}>
-            <SelectTrigger className="w-40 bg-background text-sm shadow-sm hover:bg-muted/10 focus:ring-2 focus:ring-ring">
+            <SelectTrigger className="w-[120px] sm:w-40 bg-background text-sm shadow-sm hover:bg-muted/10 focus:ring-2 focus:ring-ring">
               <SelectValue placeholder="Sort Order" />
             </SelectTrigger>
             <SelectContent className="">
@@ -243,8 +244,8 @@ function Categories() {
             </SelectContent>
           </Select>
           {isAdmin && (
-            <Button onClick={() => setIsAddModalOpen(true)}>
-              <Plus className="mr-2 h-4 w-4" /> Add Category
+            <Button onClick={() => setIsAddModalOpen(true)} size="sm">
+              <Plus className="mr-1 sm:mr-2 h-4 w-4" /> <span className="hidden xs:inline">Add Category</span><span className="xs:hidden">Add</span>
             </Button>
           )}
         </div>
@@ -255,7 +256,7 @@ function Categories() {
         </div>
       ) : (
         <>
-          <div className="rounded-md border">
+          <div className="rounded-md border overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -329,10 +330,10 @@ function Categories() {
 
           {/* Pagination Controls */}
           {total > 0 && (
-            <div className="flex items-center justify-between">
-              <div className="text-sm text-muted-foreground">
-                Showing {(page - 1) * perPage + 1} to{" "}
-                {Math.min(page * perPage, total)} of {total} categories
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div className="text-sm text-muted-foreground text-center sm:text-left">
+                {(page - 1) * perPage + 1} to{" "}
+                {Math.min(page * perPage, total)} of {total}
               </div>
               <div className="flex items-center gap-2">
                 <Button
@@ -341,8 +342,8 @@ function Categories() {
                   onClick={handlePreviousPage}
                   disabled={page === 1}
                 >
-                  <ChevronLeft className="h-4 w-4 mr-2" />
-                  Previous
+                  <ChevronLeft className="h-4 w-4 mr-1 sm:mr-2" />
+                  <span className="hidden xs:inline">Previous</span>
                 </Button>
                 <Button
                   variant="outline"
@@ -350,8 +351,8 @@ function Categories() {
                   onClick={handleNextPage}
                   disabled={page === totalPages}
                 >
-                  Next
-                  <ChevronRight className="h-4 w-4 ml-2" />
+                  <span className="hidden xs:inline">Next</span>
+                  <ChevronRight className="h-4 w-4 ml-1 sm:ml-2" />
                 </Button>
               </div>
             </div>

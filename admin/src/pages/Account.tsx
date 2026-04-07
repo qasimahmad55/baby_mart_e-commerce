@@ -137,15 +137,15 @@ export default function AccountPage() {
   };
 
   return (
-    <div className="p-6 md:p-8 space-y-8 max-w-6xl mx-auto">
+    <div className="p-3 sm:p-6 md:p-8 space-y-6 sm:space-y-8 max-w-6xl mx-auto">
       <div className="flex flex-col gap-2">
-        <h1 className="text-4xl font-bold tracking-tight">Account Settings</h1>
-        <p className="text-muted-foreground text-base">
+        <h1 className="text-2xl sm:text-4xl font-bold tracking-tight">Account Settings</h1>
+        <p className="text-muted-foreground text-sm sm:text-base">
           Manage your account profile and security preferences.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
         {/* Profile Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

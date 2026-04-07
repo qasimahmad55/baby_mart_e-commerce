@@ -188,23 +188,24 @@ export default function BannersPage() {
   };
 
   return (
-    <div className="p-5 space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Banners</h1>
-        <div className="flex items-center gap-2">
+    <div className="p-3 sm:p-5 space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
+        <h1 className="text-2xl sm:text-3xl font-bold">Banners</h1>
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
           <Button
             variant="outline"
             onClick={handleRefresh}
             disabled={refreshing}
+            size="sm"
           >
             <RefreshCw
-              className={`mr-2 h-4 w-4 ${refreshing ? "animate-spin" : ""}`}
+              className={`mr-1 sm:mr-2 h-4 w-4 ${refreshing ? "animate-spin" : ""}`}
             />
-            {refreshing ? "Refreshing..." : "Refresh"}
+            <span className="hidden xs:inline">{refreshing ? "Refreshing..." : "Refresh"}</span>
           </Button>
           {isAdmin && (
-            <Button onClick={() => setIsAddModalOpen(true)}>
-              <Plus className="mr-2 h-4 w-4" /> Add Banner
+            <Button onClick={() => setIsAddModalOpen(true)} size="sm">
+              <Plus className="mr-1 sm:mr-2 h-4 w-4" /> <span className="hidden xs:inline">Add Banner</span><span className="xs:hidden">Add</span>
             </Button>
           )}
         </div>
@@ -215,7 +216,7 @@ export default function BannersPage() {
           <Loader2 className="h-8 w-8 animate-spin" />
         </div>
       ) : (
-        <div className="rounded-md border">
+        <div className="rounded-md border overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
