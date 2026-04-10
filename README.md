@@ -160,6 +160,7 @@ ADMIN_URL=http://localhost:5173
 
 ```bash
 NEXT_PUBLIC_API_URL=http://localhost:8000/api
+API_ENDPOINT=http://localhost:8000/api
 NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your-cloudinary-name
 ```
 

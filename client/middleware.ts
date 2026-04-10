@@ -1,4 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import { normalizeApiBaseUrl } from "@/lib/apiBaseUrl";
+
+const API_BASE_URL = normalizeApiBaseUrl(
+    process.env.API_ENDPOINT || process.env.NEXT_PUBLIC_API_URL
+);
 
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
@@ -14,7 +19,7 @@ export async function middleware(request: NextRequest) {
             const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
 
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/auth/profile`,
+                `${API_BASE_URL}/auth/profile`,
                 {
                     method: "GET",
                     headers: {

@@ -1,4 +1,6 @@
-const baseURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
+import { getClientApiBaseUrl } from "./apiBaseUrl";
+
+const baseURL = getClientApiBaseUrl();
 
 export interface Address {
     _id: string;

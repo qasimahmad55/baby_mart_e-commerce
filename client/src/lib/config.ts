@@ -1,3 +1,5 @@
+import { getClientApiBaseUrl, getServerApiBaseUrl } from "./apiBaseUrl";
+
 interface ApiConfig {
     baseUrl: string;
     isProduction: boolean;
@@ -8,15 +10,7 @@ export const getApiConfig = (): ApiConfig => {
     // Check if we're in browser or server environment
     const isClient = typeof window !== "undefined";
 
-    let baseUrl: string;
-
-    if (isClient) {
-        // Client-side: use NEXT_PUBLIC_API_URL
-        baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
-    } else {
-        // Server-side: use API_ENDPOINT
-        baseUrl = process.env.API_ENDPOINT || "http://localhost:8000/api";
-    }
+    const baseUrl = isClient ? getClientApiBaseUrl() : getServerApiBaseUrl();
 
     const isProduction =
         process.env.NODE_ENV === "production" ||
