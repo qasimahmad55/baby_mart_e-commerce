@@ -27,6 +27,14 @@ const SingleProductPage = async ({ params }: { params: Promise<{ id: string }> }
         </div>)
     }
     const discountedPrice = product?.price * (1 - product?.discountPercentage / 100)
+    const orderPlacedDate = new Date();
+    const estimatedDeliveryDate = new Date(orderPlacedDate);
+    estimatedDeliveryDate.setDate(orderPlacedDate.getDate() + 14);
+    const estimatedDeliveryLabel = estimatedDeliveryDate.toLocaleDateString("en-US", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+    });
 
     return (
         <div className="pt-3 sm:pt-5 mx-2 sm:mx-4">
@@ -92,7 +100,7 @@ const SingleProductPage = async ({ params }: { params: Promise<{ id: string }> }
                                     <p className="font-medium text-sm sm:text-base">
                                         Estimated Delivery:{" "}
                                         <span className="text-xs sm:text-sm text-babyshopBlack/70">
-                                            08 - 15 Jun, 2025
+                                            {estimatedDeliveryLabel}
                                         </span>
                                     </p>
                                 </div>

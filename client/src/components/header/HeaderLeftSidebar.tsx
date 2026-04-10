@@ -18,6 +18,7 @@ import {
     Truck,
     User,
     UserCircle,
+    X,
 } from "lucide-react";
 import { useUserStore } from "@/lib/store";
 import { Button } from "../ui/button";
@@ -52,11 +53,18 @@ const HeaderLeftSideBar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 ref={sidebarRef}
                 className="min-w-72 max-w-96 bg-babyshopWhite text-babyshopBlack z-50 h-screen border-r border-r-babyshopRed flex flex-col gap-6 relative"
             >
-                <div className="flex items-center justify-baseline border-b p-5">
+                <div className="flex items-center justify-between border-b p-5">
                     <Link href={"/"} className="flex items-end gap-2">
                         <Image src={smallLogo} alt="smallLogo" className="w-8" />
                         <p className="text-base font-medium">Ready to Deliver</p>
                     </Link>
+                    <button
+                        onClick={onClose}
+                        className="p-1 rounded-lg hover:bg-gray-100 transition-colors"
+                        aria-label="Close sidebar"
+                    >
+                        <X size={24} className="text-babyshopBlack" />
+                    </button>
                 </div>
                 <div className="flex flex-col justify-between flex-1 px-5 overflow-hidden">
                     <div className="overflow-y-auto flex-1 pr-2">
