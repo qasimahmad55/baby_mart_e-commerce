@@ -246,7 +246,7 @@ const CheckoutPageClient = () => {
             })
 
             const data = await response.json()
-            
+
             if (!response.ok) {
                 // Handle server-side errors
                 const errorMessage = data.error || "Failed to initialize payment";
@@ -254,7 +254,7 @@ const CheckoutPageClient = () => {
                 console.error("Stripe checkout error:", data);
                 return;
             }
-            
+
             if (data.url) {
                 // Redirect to stripe checkout using session url
                 window.location.href = data.url
