@@ -4,7 +4,7 @@ import { Button } from './ui/button'
 import { Bookmark, ChevronLeft, ChevronRight, FileText, Layers, LayoutDashboard, LogOut, Package, ShoppingBag, Tag, User, Users, X } from 'lucide-react'
 import useAuthStore from '@/store/useAuthstore'
 import type React from 'react'
-import { NavLink, useLocation } from 'react-router'
+import { NavLink } from 'react-router'
 
 
 
@@ -21,7 +21,6 @@ type navItemProps = {
   label: string,
   open: boolean,
   end?: boolean,
-  pathName: string,
   onClick?: () => void
 }
 
@@ -76,7 +75,6 @@ const navigationItems = [
 
 function Sidebar({ open, setOpen, mobileOpen, setMobileOpen }: sidebarProps) {
   const { user, logout } = useAuthStore()
-  const { pathname } = useLocation()
 
   const handleNavClick = () => {
     // Close mobile sidebar on navigation
