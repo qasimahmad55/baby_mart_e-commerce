@@ -5,6 +5,8 @@ export interface Category {
     categoryType: string;
 }
 
+
+
 export interface Brand {
     _id: string;
     name: string;
