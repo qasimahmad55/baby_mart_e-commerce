@@ -145,7 +145,6 @@ function Sidebar({ open, setOpen, mobileOpen, setMobileOpen }: sidebarProps) {
                 label={item.label}
                 open={open}
                 end={item.end}
-                pathName={pathname}
               />
             </motion.div>
           ))}
@@ -251,7 +250,6 @@ function Sidebar({ open, setOpen, mobileOpen, setMobileOpen }: sidebarProps) {
                     label={item.label}
                     open={true}
                     end={item.end}
-                    pathName={pathname}
                     onClick={handleNavClick}
                   />
                 </motion.div>
@@ -296,7 +294,7 @@ function Sidebar({ open, setOpen, mobileOpen, setMobileOpen }: sidebarProps) {
   )
 }
 
-function NavItem({ to, icon, label, open, end, pathName, onClick }: (navItemProps)) {
+function NavItem({ to, icon, label, open, end, onClick }: Omit<navItemProps, 'pathName'>) {
   return (
     <NavLink
       to={to}
