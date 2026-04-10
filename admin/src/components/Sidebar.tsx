@@ -297,8 +297,6 @@ function Sidebar({ open, setOpen, mobileOpen, setMobileOpen }: sidebarProps) {
 }
 
 function NavItem({ to, icon, label, open, end, pathName, onClick }: (navItemProps)) {
-  const isActive = pathName === to;
-
   return (
     <NavLink
       to={to}
