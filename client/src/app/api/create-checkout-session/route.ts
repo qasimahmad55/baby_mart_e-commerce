@@ -87,15 +87,15 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ success: true, url: session.url });
     } catch (error) {
         console.error("Error creating checkout session:", error);
-        
+
         // Provide more specific error messages
         const errorMessage = error instanceof Error ? error.message : "Unknown error";
         const isStripeError = error instanceof Stripe.errors.StripeError;
-        
+
         return NextResponse.json(
-            { 
-                error: isStripeError 
-                    ? "Payment processing error. Please try again." 
+            {
+                error: isStripeError
+                    ? "Payment processing error. Please try again."
                     : "Failed to create checkout session",
                 details: process.env.NODE_ENV === "development" ? errorMessage : undefined
             },
