@@ -1,7 +1,7 @@
 {
-  "/api/create-checkout-session/route": "app/api/create-checkout-session/route.js",
+  "/auth/signin/page": "app/auth/signin/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
   "/page": "app/page.js",
-  "/product/[id]/page": "app/product/[id]/page.js",
-  "/user/cart/page": "app/user/cart/page.js",
-  "/user/checkout/page": "app/user/checkout/page.js"
+  "/user/orders/page": "app/user/orders/page.js",
+  "/user/profile/page": "app/user/profile/page.js"
 }
