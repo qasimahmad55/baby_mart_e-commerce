@@ -13,7 +13,7 @@ interface Props {
 
 const ProductCard = ({ product }: Props) => {
     return (
-        <View className="border border-gray-200 bg-white rounded-md flex-1 m-1 overflow-hidden relative">
+        <View className="border border-gray-200 bg-white rounded-md overflow-hidden relative">
             <Link href={`/(tabs)/shop`} asChild>
                 <Pressable className="p-2 overflow-hidden relative block">
                     <RNImage

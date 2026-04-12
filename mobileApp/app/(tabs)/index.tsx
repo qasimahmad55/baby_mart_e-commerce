@@ -25,6 +25,7 @@ export default function Home() {
   const loadProducts = useCallback(async () => {
     try {
       const data = await fetchData<ProductsResponse>("/products?page=1&limit=6");
+      // console.log(data.products);
       if (data && data.products) {
         setProducts(data.products);
       }
@@ -36,14 +37,14 @@ export default function Home() {
     }
   }, []);
 
-  useEffect(() => {
-    loadProducts();
-  }, [loadProducts]);
+  // useEffect(() => {
+  //   loadProducts();
+  // }, []);
 
   useFocusEffect(
     useCallback(() => {
       loadProducts();
-    }, [loadProducts])
+    }, [])
   );
 
   const onRefresh = useCallback(() => {

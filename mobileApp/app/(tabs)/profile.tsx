@@ -233,7 +233,7 @@ export default function ProfileScreen() {
                 <Text className="text-sm text-gray-500 mt-1">Manage your account, orders, and preferences</Text>
             </View>
 
-            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1 }}>
+            <ScrollView showsVerticalScrollIndicator={false}>
                 <View className="p-4 gap-3">
                     {/* Hero Card */}
                     <View className="rounded-2xl p-6 bg-[#0ad4c7] shadow-xl relative overflow-hidden flex-col items-center justify-center">
