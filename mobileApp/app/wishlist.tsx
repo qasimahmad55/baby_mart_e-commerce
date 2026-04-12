@@ -14,12 +14,15 @@ export default function WishlistScreen() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
 
+    const wishlistIdsString = wishlistIds.join(',');
+
     const fetchWishlistProducts = useCallback(async () => {
-        if (!isAuthenticated || !auth_token || wishlistIds.length === 0) return;
+        if (!isAuthenticated || !auth_token || !wishlistIdsString) return;
 
         setLoading(true);
         try {
-            const response = await getWishlistProducts(wishlistIds, auth_token);
+            const idsList = wishlistIdsString.split(',');
+            const response = await getWishlistProducts(idsList, auth_token);
             if (response.success && response.products) {
                 setWishlistItems(response.products);
             }
@@ -28,7 +31,7 @@ export default function WishlistScreen() {
         } finally {
             setLoading(false);
         }
-    }, [isAuthenticated, auth_token, wishlistIds, setWishlistItems]);
+    }, [isAuthenticated, auth_token, wishlistIdsString, setWishlistItems]);
 
     useEffect(() => {
         fetchWishlistProducts();

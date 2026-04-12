@@ -56,12 +56,12 @@ export default function Banner() {
                             style={{ position: 'absolute' }}
                         />
                         <View className="absolute inset-0 bg-black/20 p-5 justify-center">
-                            <Text className="text-white text-xs font-bold uppercase tracking-widest">{banner.name}</Text>
-                            <Text className="text-white text-2xl font-bold mt-1 mb-3 leading-tight w-2/3">
+                            <Text className="text-white text-xs sm:text-sm font-bold">{banner.name}</Text>
+                            <Text className="text-white text-2xl font-bold mt-1 mb-3 leading-tight w-2/3 capitalize">
                                 {banner.title}
                             </Text>
                             <View className="bg-white self-start px-4 py-2 rounded-full shadow-sm">
-                                <Text className="text-babyshopBlack font-bold text-xs">SHOP NOW</Text>
+                                <Text className="text-babyshopBlack font-medium text-xs capitalize">Shop Now</Text>
                             </View>
                         </View>
                     </Pressable>

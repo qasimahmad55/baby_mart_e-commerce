@@ -63,7 +63,7 @@ export default function CategoriesSection() {
                     >
                         <View className="w-16 h-16 bg-white rounded-2xl p-3 border border-gray-100 shadow-sm items-center justify-center">
                             <Image
-                                source={{ uri: item.image }}
+                                source={{ uri: item.image?.replace('.svg', '.png') }}
                                 className="w-full h-full"
                                 resizeMode="contain"
                             />

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { View, Text, ScrollView, ActivityIndicator, Pressable, RefreshControl } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { fetchData } from "../../lib/api";
@@ -7,9 +7,9 @@ import ProductCard from "../../components/common/pages/ProductCard";
 import Banner from "../../components/home/Banner";
 import CategoriesSection from "../../components/home/CategoriesSection";
 import BabyTravelSection from "../../components/home/BabyTravelSection";
-import ComfyApparelSection from "../../components/home/ComfyApparelSection";
 import FeaturedServicesSection from "../../components/home/FeaturedServicesSection";
-import { useRouter } from "expo-router";
+import Footer from "../../components/common/Footer";
+import { useRouter, useFocusEffect } from "expo-router";
 
 interface ProductsResponse {
   products: Product[];
@@ -39,6 +39,12 @@ export default function Home() {
   useEffect(() => {
     loadProducts();
   }, [loadProducts]);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadProducts();
+    }, [loadProducts])
+  );
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -83,10 +89,10 @@ export default function Home() {
         </View>
 
         <BabyTravelSection />
-        <ComfyApparelSection />
         <FeaturedServicesSection />
 
         <View className="h-4" />
+        <Footer />
       </ScrollView>
     </SafeAreaView>
   );

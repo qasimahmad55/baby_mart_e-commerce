@@ -1,15 +1,13 @@
 import { Platform } from 'react-native';
+import { getClientApiBaseUrl } from './apiBaseUrl';
 
 interface ApiConfig {
     baseUrl: string;
     isProduction: boolean;
 }
 
-// Use the SAME LAN IP as apiBaseUrl.ts
-const LAN_IP = "192.168.0.105"; // <-- UPDATE THIS to your machine's LAN IP
-
 export const getApiConfig = (): ApiConfig => {
-    let baseUrl = `http://${LAN_IP}:8000/api`;
+    const baseUrl = getClientApiBaseUrl();
 
     const isProduction = false; // React Native doesn't have process.env.NODE_ENV reliably
 
