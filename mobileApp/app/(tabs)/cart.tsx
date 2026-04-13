@@ -103,7 +103,10 @@ export default function CartScreen() {
                         <Text className="text-gray-500 font-medium text-base">Subtotal</Text>
                         <PriceFormatter amount={total} className="font-bold text-2xl text-black" />
                     </View>
-                    <Pressable className="bg-babyshopBlack w-full py-4 rounded-xl items-center shadow-md">
+                    <Pressable 
+                        className="bg-babyshopBlack w-full py-4 rounded-xl items-center shadow-md active:opacity-80"
+                        onPress={() => router.push('/order/checkout')}
+                    >
                         <Text className="text-white font-bold text-lg">Proceed to Checkout</Text>
                     </Pressable>
                 </View>

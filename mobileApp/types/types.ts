@@ -5,7 +5,6 @@ export interface Category {
     categoryType: string;
 }
 
-
 export interface Brand {
     _id: string;
     name: string;
@@ -43,6 +42,7 @@ export interface AddressInput {
     postalCode: string;
     isDefault?: boolean;
 }
+
 export type Banners = {
     _id: string;
     name: string;

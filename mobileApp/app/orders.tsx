@@ -70,33 +70,35 @@ export default function OrdersScreen() {
                         <Text className="text-sm text-gray-400 mt-1 text-center">Your order history will appear here</Text>
                     </View>
                 ) : (
-                    orders.map((order) => (
-                        <Pressable
-                            key={order._id}
-                            onPress={() => router.push(`/order/${order._id}` as any)}
-                            className="bg-white rounded-xl mb-3 border border-gray-100 shadow-sm overflow-hidden active:opacity-70"
-                        >
-                            <View className="flex-row items-center justify-between px-4 py-3 border-b border-gray-100 bg-gray-50">
-                                <View>
-                                    <Text className="text-xs text-gray-500">Order #{order._id.slice(-8).toUpperCase()}</Text>
-                                    <Text className="text-[10px] text-gray-400 mt-0.5">
-                                        {new Date(order.createdAt).toLocaleDateString()}
-                                    </Text>
+                    [...orders]
+                        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                        .map((order) => (
+                            <Pressable
+                                key={order._id}
+                                onPress={() => router.push(`/order/${order._id}` as any)}
+                                className="bg-white rounded-xl mb-3 border border-gray-100 shadow-sm overflow-hidden active:opacity-70"
+                            >
+                                <View className="flex-row items-center justify-between px-4 py-3 border-b border-gray-100 bg-gray-50">
+                                    <View>
+                                        <Text className="text-xs text-gray-500">Order #{order._id.slice(-8).toUpperCase()}</Text>
+                                        <Text className="text-[10px] text-gray-400 mt-0.5">
+                                            {new Date(order.createdAt).toLocaleDateString()}
+                                        </Text>
+                                    </View>
+                                    <View className={`px-3 py-1 rounded-full ${getStatusColor(order.status)}`}>
+                                        <Text className="text-xs font-semibold capitalize">{order.status}</Text>
+                                    </View>
                                 </View>
-                                <View className={`px-3 py-1 rounded-full ${getStatusColor(order.status)}`}>
-                                    <Text className="text-xs font-semibold capitalize">{order.status}</Text>
-                                </View>
-                            </View>
 
-                            <View className="px-4 py-3">
-                                <Text className="text-xs text-gray-500">{order.items.length} item(s)</Text>
-                                <View className="flex-row items-center justify-between mt-2">
-                                    <PriceFormatter amount={order.total} className="text-lg font-bold text-babyshopBlack" />
-                                    <ChevronRight size={18} color="#999" />
+                                <View className="px-4 py-3">
+                                    <Text className="text-xs text-gray-500">{order.items.length} item(s)</Text>
+                                    <View className="flex-row items-center justify-between mt-2">
+                                        <PriceFormatter amount={order.total} className="text-lg font-bold text-babyshopBlack" />
+                                        <ChevronRight size={18} color="#999" />
+                                    </View>
                                 </View>
-                            </View>
-                        </Pressable>
-                    ))
+                            </Pressable>
+                        ))
                 )}
             </ScrollView>
         </SafeAreaView>

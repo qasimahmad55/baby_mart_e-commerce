@@ -1,9 +1,10 @@
 import express from 'express'
 import { protect } from '../middleware/authMiddleware.js'
-import { createPaymentIntent, handleStripeWebhook } from '../controllers/paymentController.js'
+import {  createCheckoutSession } from '../controllers/paymentController.js'
 
 const router = express.Router()
 
-router.post("/create-intent", protect, createPaymentIntent)
-router.post("/webhook", handleStripeWebhook)
+// router.post("/create-intent", protect, createPaymentIntent)
+router.post("/create-checkout-session", protect, createCheckoutSession)
+// router.post("/webhook", handleStripeWebhook)
 export default router

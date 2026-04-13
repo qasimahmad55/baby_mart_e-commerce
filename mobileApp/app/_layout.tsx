@@ -57,6 +57,18 @@ export default function RootLayout() {
           headerTintColor: "#29beb3",
         }}
       />
+      <Stack.Screen
+        name="order/checkout"
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="order/success"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }

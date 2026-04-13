@@ -205,3 +205,45 @@ export const updateOrderStatus = async (
         };
     }
 };
+
+// Create Stripe Checkout Session
+export const createStripeCheckoutSession = async (
+    token: string,
+    data: {
+        items: any[];
+        customerEmail: string;
+        successUrl: string;
+        cancelUrl: string;
+        metadata?: any;
+    }
+): Promise<{ success: boolean; url?: string; message?: string }> => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/payment/create-checkout-session`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || "Failed to create checkout session");
+        }
+
+        return {
+            success: true,
+            url: result.url,
+        };
+    } catch (error) {
+        console.error("Error creating checkout session:", error);
+        return {
+            success: false,
+            message:
+                error instanceof Error ? error.message : "Failed to create checkout session",
+        };
+    }
+};
+
