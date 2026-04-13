@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema(
         avatar:
         {
             type: String,
-            default: 'ttps://res.cloudinary.com/daebrujay/image/upload/v1769169289/avatar-profile-icon-in-flat-style-male-user-profile-illustration-on-isolated-background-man-profile-sign-business-concept-vector_ezagop.jpg'
+            default: 'https://res.cloudinary.com/daebrujay/image/upload/v1769169289/avatar-profile-icon-in-flat-style-male-user-profile-illustration-on-isolated-background-man-profile-sign-business-concept-vector_ezagop.jpg'
         },
         role:
         {

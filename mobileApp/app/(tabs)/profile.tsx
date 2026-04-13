@@ -23,9 +23,15 @@ export default function ProfileScreen() {
     const [isLoading, setIsLoading] = useState(false);
     const [isUpdating, setIsUpdating] = useState(false);
 
+    const formatAvatarUrl = (url?: string) => {
+        if (!url) return "";
+        if (url.startsWith('ttps://')) return url.replace('ttps://', 'https://');
+        return url;
+    };
+
     const [name, setName] = useState(authUser?.name || "");
-    const [avatar, setAvatar] = useState(authUser?.avatar || "");
-    const [avatarPreview, setAvatarPreview] = useState(authUser?.avatar || "");
+    const [avatar, setAvatar] = useState(formatAvatarUrl(authUser?.avatar));
+    const [avatarPreview, setAvatarPreview] = useState(formatAvatarUrl(authUser?.avatar));
 
     const [isAddressModalVisible, setAddressModalVisible] = useState(false);
     const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
@@ -60,8 +66,8 @@ export default function ProfileScreen() {
                 useUserStore.getState().verifyAuth();
                 if (authUser) {
                     setName(authUser.name || "");
-                    setAvatarPreview(authUser.avatar || "");
-                    setAvatar(authUser.avatar || "");
+                    setAvatarPreview(formatAvatarUrl(authUser.avatar));
+                    setAvatar(formatAvatarUrl(authUser.avatar));
                 }
             }
         }, [isAuthenticated, authUser, router])
@@ -71,8 +77,8 @@ export default function ProfileScreen() {
     useEffect(() => {
         if (authUser) {
             setName(authUser.name || "");
-            setAvatarPreview(authUser.avatar || "");
-            setAvatar(authUser.avatar || "");
+            setAvatarPreview(formatAvatarUrl(authUser.avatar));
+            setAvatar(formatAvatarUrl(authUser.avatar));
         }
     }, [authUser]);
 
