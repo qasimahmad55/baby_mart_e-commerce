@@ -3,7 +3,7 @@ import { View, Text, ScrollView, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Search, ArrowUpRight } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
-import Footer from '../components/common/Footer';
+import Footer from '../../components/common/Footer';
 
 export default function TopSearches() {
     const router = useRouter();

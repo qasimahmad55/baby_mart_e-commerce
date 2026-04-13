@@ -66,6 +66,13 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => <User color={color} size={size} />,
         }}
       />
+      {/* Hidden secondary pages that still need the tab bar layout */}
+      <Tabs.Screen name="about" options={{ href: null }} />
+      <Tabs.Screen name="search" options={{ href: null }} />
+      <Tabs.Screen name="privacy" options={{ href: null }} />
+      <Tabs.Screen name="terms" options={{ href: null }} />
+      <Tabs.Screen name="testimonials" options={{ href: null }} />
+      <Tabs.Screen name="returns" options={{ href: null }} />
     </Tabs>
   );
 }

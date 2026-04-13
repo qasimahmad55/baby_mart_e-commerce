@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, ScrollView, Pressable, Linking } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Footer from '../components/common/Footer';
+import Footer from '../../components/common/Footer';
 import { RefreshCcw, Mail, Box } from 'lucide-react-native';
 
 export default function ReturnsExchange() {

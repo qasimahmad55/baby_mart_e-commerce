@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, ScrollView, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Footer from '../components/common/Footer';
+import Footer from '../../components/common/Footer';
 import { Star } from 'lucide-react-native';
 
 const reviews = [
