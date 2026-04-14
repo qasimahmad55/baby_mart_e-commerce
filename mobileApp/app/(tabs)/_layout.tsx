@@ -3,8 +3,10 @@ import { Home, Store, ShoppingCart, User } from "lucide-react-native";
 import { useCartStore } from "../../lib/store";
 import { View, Text } from "react-native";
 import AppHeader from "../../components/header/AppHeader";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function TabLayout() {
+  const insets = useSafeAreaInsets();
   const cartCount = useCartStore((state) => state.cartItems.length);
 
   return (
@@ -17,8 +19,8 @@ export default function TabLayout() {
           backgroundColor: "#ffffff",
           borderTopWidth: 1,
           borderTopColor: "#ededed",
-          height: 60,
-          paddingBottom: 8,
+          height: 60 + Math.max(0, insets.bottom - 8),
+          paddingBottom: Math.max(8, insets.bottom),
           paddingTop: 8,
         },
         tabBarLabelStyle: {

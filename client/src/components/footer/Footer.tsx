@@ -149,7 +149,7 @@ const Footer = () => {
             </Container>
             <HrLine />
             <Container className="py-4 sm:py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-5 text-center sm:text-left">
-                <p className="text-xs sm:text-sm md:text-base">© 2025 Babymart Theme. All rights reserved.</p>
+                <p className="text-xs sm:text-sm md:text-base">© 2026 Babymart Theme. All rights reserved.</p>
                 <div className="flex items-center justify-center sm:justify-end gap-2">
                     <p className="text-xs sm:text-sm md:text-base">We using safe payment for</p>
                     <Image src={payment} alt="paymentImage" className="h-5 sm:h-6 md:h-auto w-auto" />

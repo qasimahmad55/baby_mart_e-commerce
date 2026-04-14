@@ -89,7 +89,7 @@ export default function Footer() {
             {/* Bottom Section */}
             <View className="items-center">
                 <Text className="text-gray-500 text-[10px] mb-1 text-center font-medium">
-                    © 2025 BabyMart Express. All rights reserved.
+                    © 2026 BabyMart Express. All rights reserved.
                 </Text>
                 <Text className="text-gray-400 text-[9px] font-bold text-center uppercase tracking-widest">
                     Safe Payments Guaranteed

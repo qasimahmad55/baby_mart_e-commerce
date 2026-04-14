@@ -5,16 +5,21 @@ import { useRouter } from 'expo-router';
 import { useWishlistStore, useOrderStore } from '../../lib/store';
 import SelectCurrency from './SelectCurrency';
 import SearchInput from './SearchInput';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const logo = require('../../assets/images/logo.png');
 
 export default function AppHeader() {
     const router = useRouter();
+    const insets = useSafeAreaInsets();
     const wishlistCount = useWishlistStore((state) => state.wishlistIds.length);
     const ordersCount = useOrderStore((state) => state.orders.length);
 
     return (
-        <View className="bg-white border-b border-gray-200 mt-8">
+        <View 
+            className="bg-white border-b border-gray-200"
+            style={{ paddingTop: Math.max(insets.top, 8) }}
+        >
             {/* Top bar with currency */}
             <View className="bg-babyshopPurple px-4 py-1.5 flex-row items-center justify-between">
                 <Text className="text-white text-[10px] font-medium flex-1">
