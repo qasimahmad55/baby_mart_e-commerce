@@ -110,30 +110,55 @@ export default function CheckoutScreen() {
 
     return (
         <SafeAreaView className="flex-1 bg-gray-50">
-            <View className="bg-white px-4 py-3 flex-row items-center border-b border-gray-200">
-                <Pressable onPress={() => router.back()} className="mr-3 p-1">
-                    <ChevronLeft size={24} color="#333" />
+            {/* Header */}
+            <View
+                className="bg-white px-5 py-3.5 flex-row items-center"
+                style={{
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.04,
+                    shadowRadius: 6,
+                    elevation: 3,
+                }}
+            >
+                <Pressable onPress={() => router.back()} className="w-9 h-9 rounded-xl bg-gray-50 items-center justify-center mr-3">
+                    <ChevronLeft size={20} color="#475569" />
                 </Pressable>
-                <Text className="text-lg font-bold text-gray-900">Checkout</Text>
+                <Text className="text-lg font-extrabold text-gray-900">Checkout</Text>
             </View>
 
-            <ScrollView className="flex-1 px-4 py-6" showsVerticalScrollIndicator={false}>
+            <ScrollView className="flex-1 px-5 py-6" showsVerticalScrollIndicator={false}>
                 {/* Shipping Address */}
                 <View className="mb-6">
-                    <Text className="text-xl font-bold text-gray-900 mb-4">Shipping Address</Text>
+                    <View className="flex-row items-center gap-2 mb-4">
+                        <View className="w-1 h-5 bg-babyshopSky rounded-full" />
+                        <Text className="text-base font-extrabold text-gray-900">Shipping Address</Text>
+                    </View>
                     {authUser?.addresses && authUser.addresses.length > 0 ? (
                         authUser.addresses.map((addr) => (
                             <Pressable 
                                 key={addr._id}
                                 onPress={() => setSelectedAddress(addr)}
-                                className={`p-4 rounded-xl border mb-3 flex-row items-center bg-white ${selectedAddress?._id === addr._id ? 'border-babyshopSky bg-cyan-50' : 'border-gray-200'}`}
+                                className="p-4 mb-3 flex-row items-center bg-white"
+                                style={{
+                                    borderRadius: 16,
+                                    borderWidth: 1.5,
+                                    borderColor: selectedAddress?._id === addr._id ? '#29beb3' : '#f1f5f9',
+                                    shadowColor: '#000',
+                                    shadowOffset: { width: 0, height: 1 },
+                                    shadowOpacity: 0.03,
+                                    shadowRadius: 4,
+                                    elevation: 1,
+                                }}
                             >
                                 <View className="mr-3">
-                                    <MapPin size={20} color={selectedAddress?._id === addr._id ? "#29beb3" : "#94a3b8"} />
+                                    <View className="w-10 h-10 rounded-xl items-center justify-center" style={{ backgroundColor: selectedAddress?._id === addr._id ? '#E8F8F5' : '#f9fafb' }}>
+                                        <MapPin size={18} color={selectedAddress?._id === addr._id ? "#29beb3" : "#94a3b8"} />
+                                    </View>
                                 </View>
                                 <View className="flex-1">
-                                    <Text className="font-semibold text-gray-800">{addr.street}</Text>
-                                    <Text className="text-gray-500 text-xs">{addr.city}, {addr.postalCode}, {addr.country}</Text>
+                                    <Text className="font-bold text-sm text-gray-800">{addr.street}</Text>
+                                    <Text className="text-gray-400 text-xs mt-0.5">{addr.city}, {addr.postalCode}, {addr.country}</Text>
                                 </View>
                                 {selectedAddress?._id === addr._id && (
                                     <CheckCircle size={20} color="#29beb3" />
@@ -141,63 +166,93 @@ export default function CheckoutScreen() {
                             </Pressable>
                         ))
                     ) : (
-                        <View className="p-4 bg-yellow-50 border border-yellow-200 rounded-xl flex-row items-center">
-                            <AlertCircle size={20} color="#eab308" className="mr-2" />
-                            <Text className="text-yellow-700 font-medium">Please add an address in your profile first</Text>
+                        <View className="p-4 bg-amber-50 rounded-2xl flex-row items-center" style={{ borderWidth: 1, borderColor: '#fde68a' }}>
+                            <AlertCircle size={18} color="#d97706" />
+                            <Text className="text-amber-700 font-medium text-sm ml-3">Please add an address in your profile first</Text>
                         </View>
                     )}
                 </View>
 
                 {/* Order Summary */}
-                <View className="mb-6 bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
-                    <Text className="text-lg font-bold text-gray-900 mb-4">Order Summary</Text>
-                    <View className="space-y-3">
-                        <View className="flex-row justify-between mb-2">
-                            <Text className="text-gray-500">Subtotal</Text>
-                            <PriceFormatter amount={subtotal} className="text-gray-800 font-medium" />
+                <View
+                    className="mb-6 bg-white p-5"
+                    style={{
+                        borderRadius: 20,
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.04,
+                        shadowRadius: 8,
+                        elevation: 2,
+                    }}
+                >
+                    <View className="flex-row items-center gap-2 mb-4">
+                        <View className="w-1 h-5 bg-babyshopPurple rounded-full" />
+                        <Text className="text-base font-extrabold text-gray-900">Order Summary</Text>
+                    </View>
+                    <View>
+                        <View className="flex-row justify-between mb-3">
+                            <Text className="text-gray-400 text-sm">Subtotal</Text>
+                            <PriceFormatter amount={subtotal} className="text-gray-800 font-semibold text-sm" />
                         </View>
-                        <View className="flex-row justify-between mb-2">
-                            <Text className="text-gray-500">Shipping</Text>
-                            <Text className={shipping === 0 ? "text-green-600 font-medium" : "text-gray-800 font-medium"}>
-                                {shipping === 0 ? "Free" : <PriceFormatter amount={shipping} />}
+                        <View className="flex-row justify-between mb-3">
+                            <Text className="text-gray-400 text-sm">Shipping</Text>
+                            <Text className={`font-semibold text-sm ${shipping === 0 ? "text-green-600" : "text-gray-800"}`}>
+                                {shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}
                             </Text>
                         </View>
-                        <View className="flex-row justify-between mb-2">
-                            <Text className="text-gray-500">Estimated Tax</Text>
-                            <PriceFormatter amount={tax} className="text-gray-800 font-medium" />
+                        <View className="flex-row justify-between mb-3">
+                            <Text className="text-gray-400 text-sm">Estimated Tax</Text>
+                            <PriceFormatter amount={tax} className="text-gray-800 font-semibold text-sm" />
                         </View>
-                        <View className="h-[1px] bg-gray-100 my-2" />
+                        <View className="h-[1px] bg-gray-100 my-3" />
                         <View className="flex-row justify-between items-center">
-                            <Text className="text-lg font-bold text-gray-900">Total</Text>
-                            <PriceFormatter amount={total} className="text-xl font-bold text-babyshopBlack" />
+                            <Text className="text-base font-extrabold text-gray-900">Total</Text>
+                            <PriceFormatter amount={total} className="text-xl font-extrabold text-gray-900" />
                         </View>
                     </View>
                 </View>
 
                 {/* Secure Payment Note */}
-                <View className="flex-row items-center justify-center space-x-2 mb-10">
-                    <Lock size={14} color="#64748b" />
-                    <Text className="text-gray-400 text-xs text-center">Your payment is secured with 256-bit SSL encryption</Text>
+                <View className="flex-row items-center justify-center gap-2 mb-10">
+                    <Lock size={12} color="#94a3b8" />
+                    <Text className="text-gray-300 text-[10px] text-center font-medium">Secured with 256-bit SSL encryption</Text>
                 </View>
             </ScrollView>
 
-            <View className="p-5 bg-white border-t border-gray-100 shadow-2xl">
+            <View
+                className="px-5 py-5 bg-white"
+                style={{
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: -4 },
+                    shadowOpacity: 0.08,
+                    shadowRadius: 12,
+                    elevation: 12,
+                }}
+            >
                 <Pressable 
                     onPress={handlePayment}
                     disabled={loading || !selectedAddress || cartItemsWithQuantities.length === 0}
-                    className={`flex-row justify-center items-center py-4 rounded-xl shadow-lg ${loading || !selectedAddress ? 'bg-gray-300' : 'bg-babyshopBlack'}`}
+                    className="flex-row justify-center items-center py-4 rounded-xl"
+                    style={{
+                        backgroundColor: loading || !selectedAddress ? '#d1d5db' : '#1e293b',
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 4 },
+                        shadowOpacity: loading || !selectedAddress ? 0 : 0.15,
+                        shadowRadius: 8,
+                        elevation: loading || !selectedAddress ? 0 : 6,
+                    }}
                 >
                     {loading ? (
                         <>
-                            <ActivityIndicator color="white" className="mr-2" />
-                            <Text className="text-white font-bold text-lg">
+                            <ActivityIndicator color="white" />
+                            <Text className="text-white font-bold text-base ml-2">
                                 {isCreatingOrder ? "Creating Order..." : "Processing..."}
                             </Text>
                         </>
                     ) : (
                         <>
-                            <CreditCard size={20} color="white"/>
-                            <Text className="text-white font-bold text-lg ml-2">Pay with Stripe</Text>
+                            <CreditCard size={18} color="white"/>
+                            <Text className="text-white font-bold text-base ml-2">Pay with Stripe</Text>
                         </>
                     )}
                 </Pressable>

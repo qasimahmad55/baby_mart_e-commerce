@@ -52,8 +52,10 @@ export default function SuccessScreen() {
     if (updating) {
         return (
             <SafeAreaView className="flex-1 bg-white justify-center items-center p-6">
-                <ActivityIndicator size="large" color="#29beb3" />
-                <Text className="mt-4 text-gray-500 font-medium">Confirming your payment...</Text>
+                <View className="w-20 h-20 rounded-full bg-babyshopSky/10 items-center justify-center mb-5">
+                    <ActivityIndicator size="large" color="#29beb3" />
+                </View>
+                <Text className="text-gray-500 font-semibold text-sm">Confirming your payment...</Text>
             </SafeAreaView>
         );
     }
@@ -63,41 +65,49 @@ export default function SuccessScreen() {
             <View className="flex-1 justify-center items-center px-8">
                 {error ? (
                     <>
-                        <View className="w-24 h-24 bg-red-50 rounded-full items-center justify-center mb-6">
-                            <AlertCircle size={48} color="#ef4444" />
+                        <View className="w-28 h-28 bg-red-50 rounded-full items-center justify-center mb-8">
+                            <AlertCircle size={52} color="#ef4444" />
                         </View>
-                        <Text className="text-2xl font-bold text-gray-900 text-center mb-2">Something went wrong</Text>
-                        <Text className="text-gray-500 text-center mb-10">
-                            {error}. However, if your payment was successful, your order will be updated shortly via our system.
+                        <Text className="text-2xl font-extrabold text-gray-900 text-center mb-3">Something went wrong</Text>
+                        <Text className="text-gray-400 text-center text-sm mb-10 leading-5">
+                            {error}. If your payment was successful, your order will be updated shortly.
                         </Text>
                     </>
                 ) : (
                     <>
-                        <View className="w-24 h-24 bg-cyan-50 rounded-full items-center justify-center mb-6">
-                            <CheckCircle size={48} color="#29beb3" />
+                        <View className="w-28 h-28 rounded-full items-center justify-center mb-8" style={{ backgroundColor: '#E8F8F5' }}>
+                            <CheckCircle size={52} color="#29beb3" />
                         </View>
-                        <Text className="text-3xl font-bold text-gray-900 text-center mb-3">Order Placed!</Text>
-                        <Text className="text-gray-500 text-center mb-10 text-lg">
+                        <Text className="text-3xl font-extrabold text-gray-900 text-center mb-3">Order Placed!</Text>
+                        <Text className="text-gray-400 text-center text-sm mb-10 leading-5">
                             Thank you for your purchase. Your payment was successful and your order is being processed.
                         </Text>
                     </>
                 )}
 
-                <View className="w-full space-y-4">
+                <View className="w-full gap-4">
                     <Pressable 
                         onPress={() => router.push('/(tabs)')}
-                        className="bg-babyshopBlack w-full py-4 rounded-xl flex-row justify-center items-center shadow-md active:opacity-90"
+                        className="bg-gray-900 w-full py-4 rounded-xl flex-row justify-center items-center"
+                        style={{
+                            shadowColor: '#000',
+                            shadowOffset: { width: 0, height: 4 },
+                            shadowOpacity: 0.15,
+                            shadowRadius: 8,
+                            elevation: 6,
+                        }}
                     >
-                        <Home size={20} color="white"/>
-                        <Text className="text-white font-bold text-lg ml-2">Return Home</Text>
+                        <Home size={18} color="white"/>
+                        <Text className="text-white font-bold text-base ml-2">Return Home</Text>
                     </Pressable>
                     
                     <Pressable 
                         onPress={() => router.push('/orders')}
-                        className="bg-white border border-gray-200 w-full py-4 rounded-xl flex-row justify-center items-center active:bg-gray-50"
+                        className="bg-white w-full py-4 rounded-xl flex-row justify-center items-center"
+                        style={{ borderWidth: 1.5, borderColor: '#e5e7eb' }}
                     >
-                        <ShoppingBag size={20} color="#334155" />
-                        <Text className="text-gray-700 font-bold text-lg ml-2">View My Orders</Text>
+                        <ShoppingBag size={18} color="#475569" />
+                        <Text className="text-gray-700 font-bold text-base ml-2">View My Orders</Text>
                     </Pressable>
                 </View>
             </View>

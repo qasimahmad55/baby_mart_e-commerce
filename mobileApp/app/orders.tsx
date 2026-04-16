@@ -3,7 +3,7 @@ import { View, Text, ScrollView, ActivityIndicator, Pressable } from 'react-nati
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useOrderStore, useUserStore } from '../lib/store';
 import { useRouter } from 'expo-router';
-import { Package, ChevronRight } from 'lucide-react-native';
+import { Package, ChevronRight, ShoppingBag } from 'lucide-react-native';
 import PriceFormatter from '../components/common/PriceFormatter';
 
 export default function OrdersScreen() {
@@ -21,24 +21,28 @@ export default function OrdersScreen() {
         fetchOrders();
     }, [fetchOrders]);
 
-    const getStatusColor = (status: string) => {
+    const getStatusStyle = (status: string) => {
         switch (status) {
-            case 'paid': return 'bg-green-100 text-green-700';
-            case 'pending': return 'bg-yellow-100 text-yellow-700';
-            case 'completed': return 'bg-blue-100 text-blue-700';
-            case 'cancelled': return 'bg-red-100 text-red-700';
-            default: return 'bg-gray-100 text-gray-700';
+            case 'paid': return { bg: '#ECFDF5', text: '#059669' };
+            case 'pending': return { bg: '#FFFBEB', text: '#D97706' };
+            case 'completed': return { bg: '#EFF6FF', text: '#2563EB' };
+            case 'cancelled': return { bg: '#FFF1F2', text: '#DC2626' };
+            default: return { bg: '#F9FAFB', text: '#6B7280' };
         }
     };
 
     if (!isAuthenticated) {
         return (
-            <SafeAreaView className="flex-1 bg-gray-50 justify-center items-center">
-                <Package size={48} color="#ccc" />
-                <Text className="text-lg text-gray-500 mt-4 mb-4">Please sign in to view your orders</Text>
+            <SafeAreaView className="flex-1 bg-gray-50 justify-center items-center px-6">
+                <View className="w-20 h-20 bg-gray-100 rounded-full items-center justify-center mb-5">
+                    <Package size={36} color="#d1d5db" />
+                </View>
+                <Text className="text-lg font-bold text-gray-700 mb-2">Sign In Required</Text>
+                <Text className="text-sm text-gray-400 mb-6 text-center">Please sign in to view your orders</Text>
                 <Pressable
-                    className="bg-babyshopSky px-8 py-3 rounded-full"
+                    className="bg-babyshopSky px-8 py-3.5 rounded-xl"
                     onPress={() => router.push('/auth/signin')}
+                    style={{ shadowColor: '#29beb3', shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.25, shadowRadius: 6, elevation: 4 }}
                 >
                     <Text className="text-white font-bold">Sign In</Text>
                 </Pressable>
@@ -49,56 +53,73 @@ export default function OrdersScreen() {
     if (isLoading) {
         return (
             <SafeAreaView className="flex-1 bg-gray-50 justify-center items-center">
-                <ActivityIndicator size="large" color="#29beb3" />
-                <Text className="text-gray-500 mt-3">Loading orders...</Text>
+                <View className="w-14 h-14 rounded-full bg-babyshopSky/10 items-center justify-center mb-3">
+                    <ActivityIndicator size="large" color="#29beb3" />
+                </View>
+                <Text className="text-gray-400 text-sm font-medium">Loading orders...</Text>
             </SafeAreaView>
         );
     }
 
     return (
         <SafeAreaView className="flex-1 bg-gray-50">
-            <View className="px-4 py-3 border-b border-gray-200 bg-white">
-                <Text className="text-xl font-bold text-gray-900">My Orders</Text>
-                <Text className="text-sm text-gray-500 mt-1">{orders.length} order(s)</Text>
-            </View>
-
-            <ScrollView className="flex-1 p-4" contentContainerStyle={{ paddingBottom: 20 }}>
+            <ScrollView className="flex-1 px-5 pt-5" contentContainerStyle={{ paddingBottom: 20 }}>
                 {orders.length === 0 ? (
-                    <View className="bg-white p-8 rounded-xl items-center mt-10 border border-gray-200">
-                        <Package size={48} color="#ccc" />
-                        <Text className="text-lg text-gray-500 mt-4">No orders yet</Text>
-                        <Text className="text-sm text-gray-400 mt-1 text-center">Your order history will appear here</Text>
+                    <View className="bg-white p-8 items-center mt-8" style={{
+                        borderRadius: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.06, shadowRadius: 10, elevation: 3
+                    }}>
+                        <View className="w-20 h-20 bg-gray-50 rounded-full items-center justify-center mb-4">
+                            <ShoppingBag size={36} color="#d1d5db" />
+                        </View>
+                        <Text className="text-lg font-bold text-gray-700 mb-1">No orders yet</Text>
+                        <Text className="text-sm text-gray-400 text-center">Your order history will appear here</Text>
                     </View>
                 ) : (
                     [...orders]
                         .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-                        .map((order) => (
-                            <Pressable
-                                key={order._id}
-                                onPress={() => router.push(`/order/${order._id}` as any)}
-                                className="bg-white rounded-xl mb-3 border border-gray-100 shadow-sm overflow-hidden active:opacity-70"
-                            >
-                                <View className="flex-row items-center justify-between px-4 py-3 border-b border-gray-100 bg-gray-50">
-                                    <View>
-                                        <Text className="text-xs text-gray-500">Order #{order._id.slice(-8).toUpperCase()}</Text>
-                                        <Text className="text-[10px] text-gray-400 mt-0.5">
-                                            {new Date(order.createdAt).toLocaleDateString()}
-                                        </Text>
+                        .map((order) => {
+                            const statusStyle = getStatusStyle(order.status);
+                            return (
+                                <Pressable
+                                    key={order._id}
+                                    onPress={() => router.push(`/order/${order._id}` as any)}
+                                    className="bg-white mb-4 overflow-hidden active:opacity-70"
+                                    style={{
+                                        borderRadius: 18,
+                                        shadowColor: '#000',
+                                        shadowOffset: { width: 0, height: 2 },
+                                        shadowOpacity: 0.05,
+                                        shadowRadius: 8,
+                                        elevation: 2,
+                                    }}
+                                >
+                                    {/* Status accent strip */}
+                                    <View style={{ height: 3, backgroundColor: statusStyle.text }} />
+                                    
+                                    <View className="px-4 py-3.5 flex-row items-center justify-between bg-gray-50/50">
+                                        <View>
+                                            <Text className="text-xs font-bold text-gray-700">Order #{order._id.slice(-8).toUpperCase()}</Text>
+                                            <Text className="text-[10px] text-gray-400 mt-0.5 font-medium">
+                                                {new Date(order.createdAt).toLocaleDateString()}
+                                            </Text>
+                                        </View>
+                                        <View className="px-3 py-1.5 rounded-lg" style={{ backgroundColor: statusStyle.bg }}>
+                                            <Text className="text-[10px] font-bold capitalize" style={{ color: statusStyle.text }}>{order.status}</Text>
+                                        </View>
                                     </View>
-                                    <View className={`px-3 py-1 rounded-full ${getStatusColor(order.status)}`}>
-                                        <Text className="text-xs font-semibold capitalize">{order.status}</Text>
-                                    </View>
-                                </View>
 
-                                <View className="px-4 py-3">
-                                    <Text className="text-xs text-gray-500">{order.items.length} item(s)</Text>
-                                    <View className="flex-row items-center justify-between mt-2">
-                                        <PriceFormatter amount={order.total} className="text-lg font-bold text-babyshopBlack" />
-                                        <ChevronRight size={18} color="#999" />
+                                    <View className="px-4 py-3.5 flex-row items-center justify-between">
+                                        <View>
+                                            <Text className="text-[11px] text-gray-400 font-medium">{order.items.length} item(s)</Text>
+                                            <PriceFormatter amount={order.total} className="text-lg font-extrabold text-gray-900 mt-0.5" />
+                                        </View>
+                                        <View className="w-8 h-8 rounded-lg bg-gray-50 items-center justify-center">
+                                            <ChevronRight size={16} color="#94a3b8" />
+                                        </View>
                                     </View>
-                                </View>
-                            </Pressable>
-                        ))
+                                </Pressable>
+                            );
+                        })
                 )}
             </ScrollView>
         </SafeAreaView>

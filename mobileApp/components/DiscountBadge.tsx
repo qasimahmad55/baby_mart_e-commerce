@@ -8,8 +8,11 @@ interface Props {
 const DiscountBadge = ({ discountPercentage, className = "" }: Props) => {
     if (!discountPercentage) return null;
     return (
-        <View className={`bg-babyshopRed px-2 py-1 rounded-full ${className}`}>
-             <Text className="text-babyshopWhite text-xs font-semibold">
+        <View
+            className={`px-2.5 py-1 rounded-lg ${className}`}
+            style={{ backgroundColor: '#ec2b04' }}
+        >
+             <Text className="text-white text-[10px] font-extrabold tracking-wide">
                 -{discountPercentage}%
              </Text>
         </View>

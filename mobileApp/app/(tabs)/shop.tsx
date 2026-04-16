@@ -6,7 +6,7 @@ import { Product, Category, Brand } from "../../types/types";
 import ProductCard from "../../components/common/pages/ProductCard";
 import Footer from "../../components/common/Footer";
 import FilterModal from "../../components/shop/FilterModal";
-import { SlidersHorizontal, Search, X } from "lucide-react-native";
+import { SlidersHorizontal, Search, ShoppingBag } from "lucide-react-native";
 
 interface ProductsResponse {
     products: Product[];
@@ -145,22 +145,36 @@ export default function ShopScreen() {
 
     return (
         <SafeAreaView className="flex-1 bg-gray-50" edges={['bottom']}>
-            <View className="px-4 py-3 bg-white border-b border-gray-200 flex-row items-center justify-between">
+            {/* Shop Header */}
+            <View
+                className="px-5 py-4 bg-white flex-row items-center justify-between"
+                style={{
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.04,
+                    shadowRadius: 6,
+                    elevation: 3,
+                }}
+            >
                 <View>
-                    <Text className="text-xl font-bold text-gray-900">Shop Products</Text>
-                    <Text className="text-sm text-gray-500 mt-1">
-                        {loading && !refreshing ? "Loading..." : `Showing ${products.length} of ${total} products`}
+                    <Text className="text-xl font-extrabold text-gray-900">Shop</Text>
+                    <Text className="text-xs text-gray-400 mt-0.5 font-medium">
+                        {loading && !refreshing ? "Loading..." : `${products.length} of ${total} products`}
                     </Text>
                 </View>
                 <Pressable 
                     onPress={() => setFilterModalVisible(true)}
-                    className="flex-row items-center px-4 py-2 bg-gray-100 rounded-full border border-gray-200"
+                    className="flex-row items-center px-4 py-2.5 bg-gray-50 rounded-xl"
+                    style={{
+                        borderWidth: 1,
+                        borderColor: activeFilterCount > 0 ? '#29beb3' : '#e5e7eb',
+                    }}
                 >
-                    <SlidersHorizontal size={16} color="#333" className="mr-2" />
-                    <Text className="font-bold text-gray-800">Filters</Text>
+                    <SlidersHorizontal size={16} color={activeFilterCount > 0 ? '#29beb3' : '#475569'} />
+                    <Text className={`font-bold text-sm ml-2 ${activeFilterCount > 0 ? 'text-babyshopSky' : 'text-gray-700'}`}>Filters</Text>
                     {activeFilterCount > 0 && (
                         <View className="ml-2 w-5 h-5 bg-babyshopSky rounded-full items-center justify-center">
-                            <Text className="text-white text-xs font-bold">{activeFilterCount}</Text>
+                            <Text className="text-white text-[10px] font-bold">{activeFilterCount}</Text>
                         </View>
                     )}
                 </Pressable>
@@ -169,17 +183,20 @@ export default function ShopScreen() {
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ flexGrow: 1 }}
-                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={["#29beb3"]} />}
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={["#29beb3"]} tintColor="#29beb3" />}
             >
                 {loading && !refreshing && products.length === 0 ? (
                     <View className="h-64 items-center justify-center">
-                        <ActivityIndicator size="large" color="#29beb3" />
+                        <View className="w-14 h-14 rounded-full bg-babyshopSky/10 items-center justify-center mb-3">
+                            <ActivityIndicator size="large" color="#29beb3" />
+                        </View>
+                        <Text className="text-gray-400 text-sm font-medium">Loading products...</Text>
                     </View>
                 ) : products.length > 0 ? (
-                    <View className="px-4 py-4">
+                    <View className="px-5 py-5">
                         <View className="flex-row flex-wrap justify-between">
                             {products.map((product, index) => (
-                                <View key={`${product._id}-${index}`} className="w-[48%] mb-4">
+                                <View key={`${product._id}-${index}`} className="w-[48%] mb-5">
                                     <ProductCard product={product} />
                                 </View>
                             ))}
@@ -189,33 +206,50 @@ export default function ShopScreen() {
                             <Pressable 
                                 onPress={() => setCurrentPage(prev => prev + 1)}
                                 disabled={loadingMore}
-                                className="w-full py-4 mt-2 border border-gray-300 items-center justify-center rounded-lg"
+                                className="w-full py-4 mt-2 bg-gray-900 items-center justify-center rounded-xl"
+                                style={{
+                                    shadowColor: '#000',
+                                    shadowOffset: { width: 0, height: 2 },
+                                    shadowOpacity: 0.1,
+                                    shadowRadius: 6,
+                                    elevation: 3,
+                                    opacity: loadingMore ? 0.7 : 1,
+                                }}
                             >
                                 {loadingMore ? (
-                                    <ActivityIndicator size="small" color="#29beb3" />
+                                    <ActivityIndicator size="small" color="#fff" />
                                 ) : (
-                                    <Text className="font-bold text-gray-700">Load More Products</Text>
+                                    <Text className="font-bold text-white text-sm uppercase tracking-wider">Load More</Text>
                                 )}
                             </Pressable>
                         )}
                         {!hasMoreProducts && products.length > 0 && total > 0 && (
                             <View className="items-center py-6">
-                                <Text className="text-gray-500 text-center mb-1">🎉 You've seen it all!</Text>
-                                <Text className="text-gray-400 text-xs">Showing all {products.length} products</Text>
+                                <Text className="text-gray-400 text-center text-sm font-medium">🎉 You've seen it all!</Text>
+                                <Text className="text-gray-300 text-xs mt-1">All {products.length} products shown</Text>
                             </View>
                         )}
                     </View>
                 ) : (
-                    <View className="flex-1 items-center justify-center py-16 px-4">
-                        <Search size={48} color="#ccc" />
-                        <Text className="text-lg font-bold text-gray-700 mt-4 text-center">No products found</Text>
-                        <Text className="text-gray-500 text-center mt-2 mb-6">Try adjusting your filters to find what you're looking for.</Text>
+                    <View className="flex-1 items-center justify-center py-20 px-6">
+                        <View className="w-20 h-20 bg-gray-100 rounded-full items-center justify-center mb-5">
+                            <ShoppingBag size={36} color="#d1d5db" />
+                        </View>
+                        <Text className="text-lg font-bold text-gray-700 mt-2 text-center">No products found</Text>
+                        <Text className="text-gray-400 text-center mt-2 mb-6 text-sm">Try adjusting your filters to find what you're looking for.</Text>
                         {activeFilterCount > 0 && (
                             <Pressable 
                                 onPress={handleResetFilters}
-                                className="px-6 py-3 bg-babyshopSky rounded-full"
+                                className="px-7 py-3.5 bg-babyshopSky rounded-xl"
+                                style={{
+                                    shadowColor: '#29beb3',
+                                    shadowOffset: { width: 0, height: 3 },
+                                    shadowOpacity: 0.25,
+                                    shadowRadius: 6,
+                                    elevation: 4,
+                                }}
                             >
-                                <Text className="font-bold text-white">Clear All Filters</Text>
+                                <Text className="font-bold text-white text-sm">Clear All Filters</Text>
                             </Pressable>
                         )}
                     </View>

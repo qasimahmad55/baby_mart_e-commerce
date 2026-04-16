@@ -8,7 +8,7 @@ import * as ImagePicker from 'expo-image-picker';
 import Footer from "../../components/common/Footer";
 import {
     LogOut, Edit3, MapPin, Plus, Trash2, Upload,
-    ShoppingCart, Package, Heart, User, ChevronRight, X
+    ShoppingCart, Package, Heart, User, ChevronRight, X, Camera
 } from "lucide-react-native";
 import { Address } from "../../types/types";
 
@@ -93,10 +93,8 @@ export default function ProfileScreen() {
     const handleLogout = async () => {
         setIsLoading(true);
         try {
-            // First clear local context so user feels immediate response
             logoutUser();
             router.replace("/(tabs)");
-            // Optional: tell server to invalidate token
             await authApi.post("/auth/logout", {}).catch(() => { });
         } catch (error) {
             console.error("Logout failed:", error);
@@ -234,22 +232,46 @@ export default function ProfileScreen() {
     return (
         <SafeAreaView className="flex-1 bg-gray-50" edges={['bottom']}>
             {/* Header */}
-            <View className="px-4 py-3 bg-white border-b border-gray-200">
-                <Text className="text-xl font-bold text-gray-900">My Account</Text>
-                <Text className="text-sm text-gray-500 mt-1">Manage your account, orders, and preferences</Text>
+            <View
+                className="px-5 py-4 bg-white"
+                style={{
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.04,
+                    shadowRadius: 6,
+                    elevation: 3,
+                }}
+            >
+                <Text className="text-xl font-extrabold text-gray-900">My Account</Text>
+                <Text className="text-xs text-gray-400 mt-0.5 font-medium">Manage your profile & preferences</Text>
             </View>
 
             <ScrollView showsVerticalScrollIndicator={false}>
-                <View className="p-4 gap-3">
+                <View className="px-5 pt-5 pb-2">
                     {/* Hero Card */}
-                    <View className="rounded-2xl p-6 bg-[#0ad4c7] shadow-xl relative overflow-hidden flex-col items-center justify-center">
-                        {/* Background Overlay (Mocking purple gradient manually using view opacity layering) */}
-                        <View className="absolute inset-0 bg-purple-500 opacity-40 rounded-2xl" />
+                    <View
+                        className="overflow-hidden mb-5"
+                        style={{
+                            borderRadius: 24,
+                            backgroundColor: '#29beb3',
+                            shadowColor: '#29beb3',
+                            shadowOffset: { width: 0, height: 6 },
+                            shadowOpacity: 0.3,
+                            shadowRadius: 14,
+                            elevation: 8,
+                        }}
+                    >
+                        {/* Decorative circles */}
+                        <View className="absolute -right-8 -top-8 w-32 h-32 rounded-full" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }} />
+                        <View className="absolute -left-6 -bottom-10 w-40 h-40 rounded-full" style={{ backgroundColor: 'rgba(255,255,255,0.06)' }} />
 
-                        <View className="relative z-10 flex-col items-center w-full">
+                        <View className="p-6 flex-row items-center">
                             {/* Avatar */}
-                            <View className="relative mb-3">
-                                <View className="w-24 h-24 rounded-full border-4 border-white overflow-hidden bg-white items-center justify-center">
+                            <View className="relative mr-4">
+                                <View
+                                    className="w-20 h-20 rounded-2xl overflow-hidden bg-white items-center justify-center"
+                                    style={{ borderWidth: 3, borderColor: 'rgba(255,255,255,0.4)' }}
+                                >
                                     {(avatarPreview && avatarPreview.trim() !== "") ? (
                                         <Image 
                                             source={{ uri: avatarPreview }} 
@@ -257,104 +279,121 @@ export default function ProfileScreen() {
                                             onError={() => setAvatarPreview("")}
                                         />
                                     ) : (
-                                        <Text className="text-4xl font-extrabold text-[#0ad4c7]">
+                                        <Text className="text-3xl font-extrabold text-babyshopSky">
                                             {authUser?.name ? authUser.name.trim().charAt(0).toUpperCase() : "U"}
                                         </Text>
                                     )}
                                 </View>
-                                {/* Online Status Dot */}
-                                <View className="absolute bottom-1 right-1 w-5 h-5 bg-green-400 border-[3px] border-white rounded-full" />
+                                {/* Online dot */}
+                                <View className="absolute -bottom-0.5 -right-0.5 w-5 h-5 bg-green-400 rounded-full" style={{ borderWidth: 3, borderColor: '#29beb3' }} />
                             </View>
 
                             {/* Info */}
-                            <Text className="text-2xl font-extrabold text-white mb-1 tracking-tight">{authUser?.name || "User Name"}</Text>
-                            <View className="flex-row items-center justify-center mb-2">
-                                <View className="mr-1 mt-0.5">
-                                    <Text className="text-white">✉</Text>
+                            <View className="flex-1">
+                                <Text className="text-xl font-extrabold text-white mb-0.5 tracking-tight">{authUser?.name || "User Name"}</Text>
+                                <Text className="text-xs text-white/80 font-medium mb-2">{authUser?.email || "user@example.com"}</Text>
+                                <View className="self-start px-3 py-1 rounded-full" style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}>
+                                    <Text className="text-[10px] text-white capitalize font-bold tracking-wider">{authUser?.role || "User"}</Text>
                                 </View>
-                                <Text className="text-sm text-white/90 font-medium">
-                                    {authUser?.email || "user@example.com"}
-                                </Text>
-                            </View>
-
-                            {/* Badge */}
-                            <View className="bg-white/30 px-4 py-1 rounded-full mb-6">
-                                <Text className="text-xs text-white capitalize font-bold tracking-wider">{authUser?.role || "User"}</Text>
-                            </View>
-
-                            {/* Action Buttons Stacked */}
-                            <View className="w-full mt-2">
-                                <Pressable
-                                    onPress={handleLogout}
-                                    disabled={isLoading}
-                                    className="w-full py-3 bg-white/20 rounded-xl flex-row justify-center items-center backdrop-blur-md border border-white/20"
-                                >
-                                    {isLoading ? (
-                                        <ActivityIndicator size="small" color="#fff" />
-                                    ) : (
-                                        <>
-                                            <LogOut size={18} color="#fff" className="mr-2" />
-                                            <Text className="text-white font-bold text-base">Logout</Text>
-                                        </>
-                                    )}
-                                </Pressable>
                             </View>
                         </View>
+
+                        {/* Logout Button */}
+                        <Pressable
+                            onPress={handleLogout}
+                            disabled={isLoading}
+                            className="mx-6 mb-5 py-3 rounded-xl flex-row justify-center items-center"
+                            style={{ backgroundColor: 'rgba(255,255,255,0.15)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.2)' }}
+                        >
+                            {isLoading ? (
+                                <ActivityIndicator size="small" color="#fff" />
+                            ) : (
+                                <>
+                                    <LogOut size={16} color="#fff" />
+                                    <Text className="text-white font-bold text-sm ml-2">Sign Out</Text>
+                                </>
+                            )}
+                        </Pressable>
                     </View>
 
                     {/* Stats Row */}
-                    <View className="flex-row justify-between gap-3">
-                        <Pressable onPress={() => router.push("/orders" as any)} className="flex-1 bg-white p-4 rounded-xl border border-gray-100 items-center shadow-sm">
-                            <Package size={24} color="#29beb3" className="mb-2" />
-                            <Text className="text-xl font-bold text-gray-900 mb-1">{orders.length}</Text>
-                            <Text className="text-xs text-gray-500 font-medium">Orders</Text>
-                        </Pressable>
-                        <Pressable onPress={() => router.push("/wishlist" as any)} className="flex-1 bg-white p-4 rounded-xl border border-gray-100 items-center shadow-sm">
-                            <Heart size={24} color="#ef4444" className="mb-2" />
-                            <Text className="text-xl font-bold text-gray-900 mb-1">{wishlistItems.length}</Text>
-                            <Text className="text-xs text-gray-500 font-medium">Wishlist</Text>
-                        </Pressable>
-                        <Pressable onPress={() => router.push("/cart" as any)} className="flex-1 bg-white p-4 rounded-xl border border-gray-100 items-center shadow-sm">
-                            <ShoppingCart size={24} color="#a96bde" className="mb-2" />
-                            <Text className="text-xl font-bold text-gray-900 mb-1">{cartItems.length}</Text>
-                            <Text className="text-xs text-gray-500 font-medium">Cart</Text>
-                        </Pressable>
+                    <View className="flex-row justify-between gap-3 mb-5">
+                        {[
+                            { label: "Orders", count: orders.length, icon: <Package size={20} color="#29beb3" />, bg: '#E8F8F5', onPress: () => router.push("/orders" as any) },
+                            { label: "Wishlist", count: wishlistItems.length, icon: <Heart size={20} color="#ef4444" />, bg: '#FFF1F2', onPress: () => router.push("/wishlist" as any) },
+                            { label: "Cart", count: cartItems.length, icon: <ShoppingCart size={20} color="#a96bde" />, bg: '#F3E8FF', onPress: () => router.push("/cart" as any) },
+                        ].map((stat) => (
+                            <Pressable
+                                key={stat.label}
+                                onPress={stat.onPress}
+                                className="flex-1 bg-white p-4 items-center"
+                                style={{
+                                    borderRadius: 18,
+                                    shadowColor: '#000',
+                                    shadowOffset: { width: 0, height: 2 },
+                                    shadowOpacity: 0.04,
+                                    shadowRadius: 8,
+                                    elevation: 2,
+                                }}
+                            >
+                                <View className="w-10 h-10 rounded-xl items-center justify-center mb-2" style={{ backgroundColor: stat.bg }}>
+                                    {stat.icon}
+                                </View>
+                                <Text className="text-xl font-extrabold text-gray-900">{stat.count}</Text>
+                                <Text className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider mt-0.5">{stat.label}</Text>
+                            </Pressable>
+                        ))}
                     </View>
 
                     {/* Update Profile Form */}
-                    <View className="bg-white rounded-xl border border-gray-100 p-5 shadow-sm border-l-4 border-l-babyshopSky">
-                        <View className="flex-row items-center gap-2 mb-4">
-                            <Edit3 size={20} color="#29beb3" />
-                            <Text className="text-lg font-bold text-gray-900">Update Profile</Text>
+                    <View
+                        className="bg-white p-5 mb-5"
+                        style={{
+                            borderRadius: 20,
+                            shadowColor: '#000',
+                            shadowOffset: { width: 0, height: 2 },
+                            shadowOpacity: 0.04,
+                            shadowRadius: 8,
+                            elevation: 2,
+                        }}
+                    >
+                        <View className="flex-row items-center gap-2 mb-5">
+                            <View className="w-8 h-8 rounded-lg bg-babyshopSky/10 items-center justify-center">
+                                <Edit3 size={16} color="#29beb3" />
+                            </View>
+                            <Text className="text-base font-bold text-gray-900">Update Profile</Text>
                         </View>
 
-                        <View className="mb-4">
-                            <Text className="text-sm font-medium text-gray-700 mb-2">Profile Picture</Text>
+                        <View className="mb-5">
+                            <Text className="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wider">Profile Picture</Text>
                             <View className="flex-row items-center gap-4">
                                 <Pressable
                                     onPress={handleImageUpload}
-                                    className="w-16 h-16 rounded-full bg-gray-100 items-center justify-center overflow-hidden border border-gray-200"
+                                    className="w-16 h-16 rounded-xl bg-gray-50 items-center justify-center overflow-hidden"
+                                    style={{ borderWidth: 1.5, borderColor: '#e5e7eb', borderStyle: 'dashed' }}
                                 >
                                     {avatarPreview ? (
                                         <Image source={{ uri: avatarPreview }} className="w-full h-full" />
                                     ) : (
-                                        <User size={24} color="#ccc" />
+                                        <Camera size={22} color="#94a3b8" />
                                     )}
                                 </Pressable>
                                 <Pressable
                                     onPress={handleImageUpload}
-                                    className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg flex-row items-center"
+                                    className="px-4 py-2.5 bg-gray-50 rounded-xl flex-row items-center"
+                                    style={{ borderWidth: 1, borderColor: '#e5e7eb' }}
                                 >
-                                    <Upload size={16} color="#29beb3" className="mr-2" />
-                                    <Text className="text-sm font-medium text-gray-700">Upload Photo</Text>
+                                    <Upload size={14} color="#29beb3" />
+                                    <Text className="text-xs font-bold text-gray-600 ml-2">Upload Photo</Text>
                                 </Pressable>
                             </View>
                         </View>
 
                         <View className="mb-5">
-                            <Text className="text-sm font-medium text-gray-700 mb-2">Full Name</Text>
+                            <Text className="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wider">Full Name</Text>
                             <TextInput
-                                className="border border-gray-300 rounded-lg p-3 text-gray-900 font-medium"
+                                className="bg-gray-50 rounded-xl p-3.5 text-gray-900 font-medium text-sm"
+                                style={{ borderWidth: 1, borderColor: '#e5e7eb' }}
                                 value={name}
                                 onChangeText={setName}
                                 placeholder="Enter your full name"
@@ -364,19 +403,39 @@ export default function ProfileScreen() {
                         <Pressable
                             onPress={handleUpdateProfile}
                             disabled={isUpdating}
-                            className={`w-full py-3 rounded-lg flex-row items-center justify-center ${isUpdating ? "bg-gray-300" : "bg-babyshopSky"}`}
+                            className="w-full py-3.5 rounded-xl flex-row items-center justify-center"
+                            style={{
+                                backgroundColor: isUpdating ? '#d1d5db' : '#29beb3',
+                                shadowColor: '#29beb3',
+                                shadowOffset: { width: 0, height: 3 },
+                                shadowOpacity: isUpdating ? 0 : 0.25,
+                                shadowRadius: 6,
+                                elevation: isUpdating ? 0 : 4,
+                            }}
                         >
-                            {isUpdating ? <ActivityIndicator size="small" color="#fff" /> : <Edit3 size={16} color="#fff" className="mr-2" />}
-                            <Text className="text-white font-bold">{isUpdating ? "Updating..." : "Save Changes"}</Text>
+                            {isUpdating ? <ActivityIndicator size="small" color="#fff" /> : <Edit3 size={14} color="#fff" />}
+                            <Text className="text-white font-bold text-sm ml-2">{isUpdating ? "Saving..." : "Save Changes"}</Text>
                         </Pressable>
                     </View>
 
                     {/* Delivery Addresses */}
-                    <View className="bg-white rounded-xl border border-gray-100 p-5 shadow-sm border-l-4 border-l-[#29beb3]">
+                    <View
+                        className="bg-white p-5 mb-5"
+                        style={{
+                            borderRadius: 20,
+                            shadowColor: '#000',
+                            shadowOffset: { width: 0, height: 2 },
+                            shadowOpacity: 0.04,
+                            shadowRadius: 8,
+                            elevation: 2,
+                        }}
+                    >
                         <View className="flex-row items-center justify-between mb-5">
                             <View className="flex-row items-center gap-2">
-                                <MapPin size={24} color="#000" />
-                                <Text className="text-xl font-extrabold text-black ml-1">Delivery{"\n"}Addresses</Text>
+                                <View className="w-8 h-8 rounded-lg bg-orange-50 items-center justify-center">
+                                    <MapPin size={16} color="#f97316" />
+                                </View>
+                                <Text className="text-base font-bold text-gray-900">Addresses</Text>
                             </View>
                             <Pressable
                                 onPress={() => {
@@ -384,87 +443,114 @@ export default function ProfileScreen() {
                                     setAddressForm({ street: "", city: "", country: "", postalCode: "", isDefault: false });
                                     setAddressModalVisible(true);
                                 }}
-                                className="flex-row items-center bg-[#29beb3] px-4 py-2.5 rounded-xl shadow-sm"
+                                className="flex-row items-center bg-babyshopSky px-4 py-2.5 rounded-xl"
+                                style={{
+                                    shadowColor: '#29beb3',
+                                    shadowOffset: { width: 0, height: 2 },
+                                    shadowOpacity: 0.2,
+                                    shadowRadius: 4,
+                                    elevation: 3,
+                                }}
                             >
-                                <Text className="mr-1 text-white font-bold text-lg leading-tight">+</Text>
-                                <Text className="text-sm font-bold text-white mt-0.5">Add New</Text>
+                                <Plus size={14} color="#fff" />
+                                <Text className="text-xs font-bold text-white ml-1">Add New</Text>
                             </Pressable>
                         </View>
 
                         {authUser?.addresses && authUser.addresses.length > 0 ? (
-                            <View className="space-y-4">
+                            <View className="gap-3">
                                 {authUser.addresses.map((addr) => (
-                                    <View key={addr._id} className="border border-gray-200 rounded-2xl p-4 bg-white shadow-sm flex-col relative overflow-hidden">
-                                        <View className="flex-row justify-between items-start mb-2 pr-[90px]">
-                                            <Text className="text-base font-bold text-black" numberOfLines={1}>{addr.street}</Text>
+                                    <View
+                                        key={addr._id}
+                                        className="bg-gray-50 p-4 flex-row items-start"
+                                        style={{ borderRadius: 16, borderWidth: 1, borderColor: '#f1f5f9' }}
+                                    >
+                                        <View className="w-9 h-9 rounded-xl bg-orange-50 items-center justify-center mt-0.5 mr-3">
+                                            <MapPin size={16} color="#f97316" />
                                         </View>
-                                        <Text className="text-sm text-gray-400 mb-1 font-medium">{addr.city}, {addr.country}</Text>
-                                        <Text className="text-sm font-medium text-[#29beb3]">{addr.postalCode}</Text>
-
-                                        <View className="absolute right-4 top-4 bottom-4 flex-row items-center gap-3">
-                                            {addr.isDefault && (
-                                                <View className="px-3 py-1 bg-white rounded-full border border-[#29beb3]">
-                                                    <Text className="text-xs font-medium text-[#29beb3]">Default</Text>
-                                                </View>
-                                            )}
-                                            <Pressable onPress={() => startEditAddress(addr)} className="p-1.5 active:opacity-50">
-                                                <Edit3 size={18} color="#9ca3af" />
+                                        <View className="flex-1">
+                                            <View className="flex-row items-center gap-2 mb-1">
+                                                <Text className="text-sm font-bold text-gray-800 flex-1" numberOfLines={1}>{addr.street}</Text>
+                                                {addr.isDefault && (
+                                                    <View className="px-2 py-0.5 bg-babyshopSky/10 rounded-full">
+                                                        <Text className="text-[9px] font-bold text-babyshopSky uppercase">Default</Text>
+                                                    </View>
+                                                )}
+                                            </View>
+                                            <Text className="text-xs text-gray-400 font-medium">{addr.city}, {addr.country}</Text>
+                                            <Text className="text-xs font-semibold text-babyshopSky mt-0.5">{addr.postalCode}</Text>
+                                        </View>
+                                        <View className="flex-row items-center gap-1 ml-2">
+                                            <Pressable onPress={() => startEditAddress(addr)} className="w-8 h-8 items-center justify-center rounded-lg bg-white">
+                                                <Edit3 size={14} color="#94a3b8" />
                                             </Pressable>
-                                            <Pressable onPress={() => handleDeleteAddress(addr._id)} className="p-1.5 active:opacity-50">
-                                                <Trash2 size={18} color="#9ca3af" />
+                                            <Pressable onPress={() => handleDeleteAddress(addr._id)} className="w-8 h-8 items-center justify-center rounded-lg bg-white">
+                                                <Trash2 size={14} color="#94a3b8" />
                                             </Pressable>
                                         </View>
                                     </View>
                                 ))}
                             </View>
                         ) : (
-                            <View className="py-6 items-center border border-dashed border-gray-300 rounded-xl bg-gray-50">
-                                <MapPin size={32} color="#ccc" className="mb-2" />
-                                <Text className="text-gray-500 font-medium">No addresses saved yet</Text>
+                            <View className="py-8 items-center bg-gray-50" style={{ borderRadius: 16, borderWidth: 1.5, borderColor: '#e5e7eb', borderStyle: 'dashed' }}>
+                                <MapPin size={28} color="#d1d5db" />
+                                <Text className="text-gray-400 font-medium text-sm mt-2">No addresses saved yet</Text>
                             </View>
                         )}
                     </View>
 
                     {/* Recent Orders Overview */}
-                    <View className="bg-white rounded-xl border border-gray-100 p-5 shadow-sm border-l-4 border-l-gray-800">
-                        <View className="flex-row items-center justify-between">
-                            <View className="flex-row items-center gap-2">
-                                <Package size={20} color="#333" />
-                                <Text className="text-lg font-bold text-gray-900">Recent Orders</Text>
+                    <View
+                        className="bg-white p-5 mb-5"
+                        style={{
+                            borderRadius: 20,
+                            shadowColor: '#000',
+                            shadowOffset: { width: 0, height: 2 },
+                            shadowOpacity: 0.04,
+                            shadowRadius: 8,
+                            elevation: 2,
+                        }}
+                    >
+                        <View className="flex-row items-center gap-2 mb-4">
+                            <View className="w-8 h-8 rounded-lg bg-blue-50 items-center justify-center">
+                                <Package size={16} color="#3b82f6" />
                             </View>
+                            <Text className="text-base font-bold text-gray-900">Recent Orders</Text>
                         </View>
 
                         {recentOrders.length > 0 ? (
                             <View>
                                 {recentOrders.map((order, idx) => (
-                                    <View key={order._id} className={`flex-row justify-between items-center py-3 ${idx !== recentOrders.length - 1 ? 'border-b border-gray-100' : ''}`}>
+                                    <View key={order._id} className={`flex-row justify-between items-center py-3.5 ${idx !== recentOrders.length - 1 ? 'border-b border-gray-100' : ''}`}>
                                         <View>
                                             <Text className="text-sm font-bold text-gray-800 mb-1">#{order._id.slice(-6).toUpperCase()}</Text>
-                                            <Text className="text-xs text-gray-500">{new Date(order.createdAt).toLocaleDateString()}</Text>
+                                            <Text className="text-[11px] text-gray-400">{new Date(order.createdAt).toLocaleDateString()}</Text>
                                         </View>
-                                        <View className={`px-3 py-1 rounded-full ${order.status === 'completed' ? 'bg-green-100 text-green-600' :
-                                                order.status === 'pending' ? 'bg-yellow-100 text-yellow-600' : 'bg-blue-100 text-blue-600'
+                                        <View className={`px-3 py-1.5 rounded-lg ${order.status === 'completed' ? 'bg-green-50' :
+                                                order.status === 'pending' ? 'bg-amber-50' : 'bg-blue-50'
                                             }`}>
-                                            <Text className="text-xs font-bold capitalize">{order.status}</Text>
+                                            <Text className={`text-[10px] font-bold capitalize ${order.status === 'completed' ? 'text-green-600' :
+                                                    order.status === 'pending' ? 'text-amber-600' : 'text-blue-600'
+                                                }`}>{order.status}</Text>
                                         </View>
                                     </View>
                                 ))}
                                 <Pressable
                                     onPress={() => router.push("/orders" as any)}
-                                    className="mt-3 flex-row items-center justify-center p-2"
+                                    className="mt-4 flex-row items-center justify-center py-2.5 bg-gray-50 rounded-xl"
                                 >
-                                    <Text className="text-babyshopSky font-bold mr-1">View All Orders</Text>
-                                    <ChevronRight size={16} color="#29beb3" />
+                                    <Text className="text-babyshopSky font-bold text-xs mr-1">View All Orders</Text>
+                                    <ChevronRight size={14} color="#29beb3" />
                                 </Pressable>
                             </View>
                         ) : (
                             <View className="py-6 items-center">
-                                <Text className="text-gray-500 font-medium">No recent orders</Text>
+                                <Text className="text-gray-400 font-medium text-sm">No recent orders</Text>
                             </View>
                         )}
                     </View>
 
-                    <View className="h-6" />
+                    <View className="h-4" />
                 </View>
 
                 {/* Shared Footer component matching Client context */}
@@ -474,37 +560,49 @@ export default function ProfileScreen() {
             {/* Address Modal */}
             <Modal visible={isAddressModalVisible} animationType="slide" presentationStyle="pageSheet" onRequestClose={() => setAddressModalVisible(false)}>
                 <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} className="flex-1 bg-gray-50">
-                    <View className="px-4 py-4 bg-white border-b border-gray-200 flex-row justify-between items-center">
-                        <Text className="text-xl font-bold text-gray-900">{editingAddressId ? 'Edit Address' : 'Add New Address'}</Text>
-                        <Pressable onPress={() => setAddressModalVisible(false)} className="p-2 -mr-2">
-                            <X size={24} color="#333" />
+                    <View
+                        className="px-5 py-4 bg-white flex-row justify-between items-center"
+                        style={{
+                            shadowColor: '#000',
+                            shadowOffset: { width: 0, height: 2 },
+                            shadowOpacity: 0.04,
+                            shadowRadius: 6,
+                            elevation: 3,
+                        }}
+                    >
+                        <Text className="text-lg font-extrabold text-gray-900">{editingAddressId ? 'Edit Address' : 'Add New Address'}</Text>
+                        <Pressable onPress={() => setAddressModalVisible(false)} className="w-9 h-9 bg-gray-100 rounded-xl items-center justify-center">
+                            <X size={18} color="#475569" />
                         </Pressable>
                     </View>
-                    <ScrollView className="p-4" contentContainerStyle={{ paddingBottom: 40 }}>
-                        <View className="space-y-4">
+                    <ScrollView className="px-5 pt-5" contentContainerStyle={{ paddingBottom: 40 }}>
+                        <View className="gap-4">
                             <View>
-                                <Text className="text-sm font-medium text-gray-700 mb-2">Street</Text>
+                                <Text className="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wider">Street</Text>
                                 <TextInput
-                                    className="border border-gray-300 rounded-lg p-3 text-gray-900 bg-white"
+                                    className="bg-white rounded-xl p-3.5 text-gray-900 text-sm"
+                                    style={{ borderWidth: 1, borderColor: '#e5e7eb' }}
                                     value={addressForm.street}
                                     onChangeText={(val) => setAddressForm({ ...addressForm, street: val })}
                                     placeholder="Street address"
                                 />
                             </View>
-                            <View className="flex-row gap-4">
+                            <View className="flex-row gap-3">
                                 <View className="flex-1">
-                                    <Text className="text-sm font-medium text-gray-700 mb-2">City</Text>
+                                    <Text className="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wider">City</Text>
                                     <TextInput
-                                        className="border border-gray-300 rounded-lg p-3 text-gray-900 bg-white"
+                                        className="bg-white rounded-xl p-3.5 text-gray-900 text-sm"
+                                        style={{ borderWidth: 1, borderColor: '#e5e7eb' }}
                                         value={addressForm.city}
                                         onChangeText={(val) => setAddressForm({ ...addressForm, city: val })}
                                         placeholder="City"
                                     />
                                 </View>
                                 <View className="flex-1">
-                                    <Text className="text-sm font-medium text-gray-700 mb-2">Country</Text>
+                                    <Text className="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wider">Country</Text>
                                     <TextInput
-                                        className="border border-gray-300 rounded-lg p-3 text-gray-900 bg-white"
+                                        className="bg-white rounded-xl p-3.5 text-gray-900 text-sm"
+                                        style={{ borderWidth: 1, borderColor: '#e5e7eb' }}
                                         value={addressForm.country}
                                         onChangeText={(val) => setAddressForm({ ...addressForm, country: val })}
                                         placeholder="Country"
@@ -512,9 +610,10 @@ export default function ProfileScreen() {
                                 </View>
                             </View>
                             <View>
-                                <Text className="text-sm font-medium text-gray-700 mb-2">Postal Code</Text>
+                                <Text className="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wider">Postal Code</Text>
                                 <TextInput
-                                    className="border border-gray-300 rounded-lg p-3 text-gray-900 bg-white"
+                                    className="bg-white rounded-xl p-3.5 text-gray-900 text-sm"
+                                    style={{ borderWidth: 1, borderColor: '#e5e7eb' }}
                                     value={addressForm.postalCode}
                                     onChangeText={(val) => setAddressForm({ ...addressForm, postalCode: val })}
                                     placeholder="Postal code"
@@ -522,20 +621,35 @@ export default function ProfileScreen() {
                             </View>
                             <Pressable
                                 onPress={() => setAddressForm({ ...addressForm, isDefault: !addressForm.isDefault })}
-                                className="flex-row items-center mt-2 py-2"
+                                className="flex-row items-center mt-1 py-2"
                             >
-                                <View className={`w-6 h-6 rounded-md mr-3 items-center justify-center border ${addressForm.isDefault ? 'bg-babyshopSky border-babyshopSky' : 'border-gray-300 bg-white'}`}>
+                                <View
+                                    className="w-6 h-6 rounded-lg mr-3 items-center justify-center"
+                                    style={{
+                                        backgroundColor: addressForm.isDefault ? '#29beb3' : '#fff',
+                                        borderWidth: 1.5,
+                                        borderColor: addressForm.isDefault ? '#29beb3' : '#d1d5db',
+                                    }}
+                                >
                                     {addressForm.isDefault && <Text className="text-white text-xs font-bold">✓</Text>}
                                 </View>
-                                <Text className="text-gray-700 font-medium">Set as default address</Text>
+                                <Text className="text-gray-700 font-medium text-sm">Set as default address</Text>
                             </Pressable>
 
                             <Pressable
                                 onPress={handleSaveAddress}
                                 disabled={isUpdating}
-                                className={`w-full py-4 mt-6 rounded-lg items-center justify-center ${isUpdating ? "bg-gray-300" : "bg-babyshopSky"}`}
+                                className="w-full py-4 mt-4 rounded-xl items-center justify-center"
+                                style={{
+                                    backgroundColor: isUpdating ? '#d1d5db' : '#29beb3',
+                                    shadowColor: '#29beb3',
+                                    shadowOffset: { width: 0, height: 3 },
+                                    shadowOpacity: isUpdating ? 0 : 0.25,
+                                    shadowRadius: 6,
+                                    elevation: isUpdating ? 0 : 4,
+                                }}
                             >
-                                {isUpdating ? <ActivityIndicator color="#fff" /> : <Text className="text-white font-bold text-lg">Save Address</Text>}
+                                {isUpdating ? <ActivityIndicator color="#fff" /> : <Text className="text-white font-bold text-base">Save Address</Text>}
                             </Pressable>
                         </View>
                     </ScrollView>

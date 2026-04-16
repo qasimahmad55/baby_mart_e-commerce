@@ -47,125 +47,164 @@ export default function FilterModal({
             onRequestClose={onClose}
         >
             <SafeAreaView className="flex-1 bg-gray-50 flex-col">
-                <View className="flex-row justify-between items-center px-4 py-4 bg-white border-b border-gray-200 shadow-sm">
-                    <Text className="text-xl font-bold text-gray-900">Filters</Text>
-                    <Pressable onPress={onClose} className="p-2 -mr-2">
-                        <X size={24} color="#333" />
+                {/* Header */}
+                <View
+                    className="flex-row justify-between items-center px-5 py-4 bg-white"
+                    style={{
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.04,
+                        shadowRadius: 6,
+                        elevation: 3,
+                    }}
+                >
+                    <Text className="text-xl font-extrabold text-gray-900">Filters</Text>
+                    <Pressable onPress={onClose} className="w-9 h-9 bg-gray-100 rounded-xl items-center justify-center">
+                        <X size={18} color="#475569" />
                     </Pressable>
                 </View>
 
-                <ScrollView className="flex-1 p-4">
+                <ScrollView className="flex-1 px-5 pt-5">
                     {/* Sort Order */}
-                    <View className="mb-6">
-                        <Text className="text-base font-bold text-gray-800 mb-3">Sort By</Text>
+                    <View className="mb-7">
+                        <Text className="text-xs font-bold text-gray-400 mb-3 uppercase tracking-wider">Sort By</Text>
                         <View className="flex-row flex-wrap gap-2">
-                            <Pressable
-                                onPress={() => setFilters({ ...filters, sortOrder: "asc" })}
-                                className={`px-4 py-2 rounded-full border ${
-                                    filters.sortOrder === "asc"
-                                        ? "bg-babyshopSky border-babyshopSky"
-                                        : "bg-white border-gray-300"
-                                }`}
-                            >
-                                <Text className={`${filters.sortOrder === "asc" ? "text-white font-bold" : "text-gray-600"}`}>
-                                    Newest First
-                                </Text>
-                            </Pressable>
-                            <Pressable
-                                onPress={() => setFilters({ ...filters, sortOrder: "desc" })}
-                                className={`px-4 py-2 rounded-full border ${
-                                    filters.sortOrder === "desc"
-                                        ? "bg-babyshopSky border-babyshopSky"
-                                        : "bg-white border-gray-300"
-                                }`}
-                            >
-                                <Text className={`${filters.sortOrder === "desc" ? "text-white font-bold" : "text-gray-600"}`}>
-                                    Oldest First
-                                </Text>
-                            </Pressable>
+                            {[
+                                { label: "Newest First", value: "asc" as const },
+                                { label: "Oldest First", value: "desc" as const },
+                            ].map((item) => {
+                                const isSelected = filters.sortOrder === item.value;
+                                return (
+                                    <Pressable
+                                        key={item.value}
+                                        onPress={() => setFilters({ ...filters, sortOrder: item.value })}
+                                        className="flex-row items-center px-4 py-2.5 rounded-xl"
+                                        style={{
+                                            backgroundColor: isSelected ? '#29beb3' : '#fff',
+                                            borderWidth: 1,
+                                            borderColor: isSelected ? '#29beb3' : '#e5e7eb',
+                                        }}
+                                    >
+                                        {isSelected && <Check size={14} color="#fff" style={{ marginRight: 4 }} />}
+                                        <Text className={isSelected ? "text-white font-bold text-sm" : "text-gray-600 text-sm"}>
+                                            {item.label}
+                                        </Text>
+                                    </Pressable>
+                                );
+                            })}
                         </View>
                     </View>
 
+                    {/* Divider */}
+                    <View className="h-[1px] bg-gray-100 mb-7" />
+
                     {/* Category */}
-                    <View className="mb-6">
-                        <Text className="text-base font-bold text-gray-800 mb-3">Category</Text>
+                    <View className="mb-7">
+                        <Text className="text-xs font-bold text-gray-400 mb-3 uppercase tracking-wider">Category</Text>
                         <View className="flex-row flex-wrap gap-2">
                             <Pressable
                                 onPress={() => setFilters({ ...filters, category: "" })}
-                                className={`px-4 py-2 rounded-full border ${
-                                    filters.category === ""
-                                        ? "bg-babyshopSky border-babyshopSky"
-                                        : "bg-white border-gray-300"
-                                }`}
+                                className="flex-row items-center px-4 py-2.5 rounded-xl"
+                                style={{
+                                    backgroundColor: filters.category === "" ? '#29beb3' : '#fff',
+                                    borderWidth: 1,
+                                    borderColor: filters.category === "" ? '#29beb3' : '#e5e7eb',
+                                }}
                             >
-                                <Text className={`${filters.category === "" ? "text-white font-bold" : "text-gray-600"}`}>
-                                    All Categories
+                                {filters.category === "" && <Check size={14} color="#fff" style={{ marginRight: 4 }} />}
+                                <Text className={filters.category === "" ? "text-white font-bold text-sm" : "text-gray-600 text-sm"}>
+                                    All
                                 </Text>
                             </Pressable>
-                            {categories.map((cat) => (
-                                <Pressable
-                                    key={cat._id}
-                                    onPress={() => setFilters({ ...filters, category: cat._id })}
-                                    className={`px-4 py-2 rounded-full border ${
-                                        filters.category === cat._id
-                                            ? "bg-babyshopSky border-babyshopSky"
-                                            : "bg-white border-gray-300"
-                                    }`}
-                                >
-                                    <Text className={`${filters.category === cat._id ? "text-white font-bold" : "text-gray-600"}`}>
-                                        {cat.name}
-                                    </Text>
-                                </Pressable>
-                            ))}
+                            {categories.map((cat) => {
+                                const isSelected = filters.category === cat._id;
+                                return (
+                                    <Pressable
+                                        key={cat._id}
+                                        onPress={() => setFilters({ ...filters, category: cat._id })}
+                                        className="flex-row items-center px-4 py-2.5 rounded-xl"
+                                        style={{
+                                            backgroundColor: isSelected ? '#29beb3' : '#fff',
+                                            borderWidth: 1,
+                                            borderColor: isSelected ? '#29beb3' : '#e5e7eb',
+                                        }}
+                                    >
+                                        {isSelected && <Check size={14} color="#fff" style={{ marginRight: 4 }} />}
+                                        <Text className={isSelected ? "text-white font-bold text-sm" : "text-gray-600 text-sm"}>
+                                            {cat.name}
+                                        </Text>
+                                    </Pressable>
+                                );
+                            })}
                         </View>
                     </View>
 
+                    {/* Divider */}
+                    <View className="h-[1px] bg-gray-100 mb-7" />
+
                     {/* Brand */}
-                    <View className="mb-6">
-                        <Text className="text-base font-bold text-gray-800 mb-3">Brand</Text>
+                    <View className="mb-7">
+                        <Text className="text-xs font-bold text-gray-400 mb-3 uppercase tracking-wider">Brand</Text>
                         <View className="flex-row flex-wrap gap-2">
                             <Pressable
                                 onPress={() => setFilters({ ...filters, brand: "" })}
-                                className={`px-4 py-2 rounded-full border ${
-                                    filters.brand === ""
-                                        ? "bg-babyshopSky border-babyshopSky"
-                                        : "bg-white border-gray-300"
-                                }`}
+                                className="flex-row items-center px-4 py-2.5 rounded-xl"
+                                style={{
+                                    backgroundColor: filters.brand === "" ? '#29beb3' : '#fff',
+                                    borderWidth: 1,
+                                    borderColor: filters.brand === "" ? '#29beb3' : '#e5e7eb',
+                                }}
                             >
-                                <Text className={`${filters.brand === "" ? "text-white font-bold" : "text-gray-600"}`}>
-                                    All Brands
+                                {filters.brand === "" && <Check size={14} color="#fff" style={{ marginRight: 4 }} />}
+                                <Text className={filters.brand === "" ? "text-white font-bold text-sm" : "text-gray-600 text-sm"}>
+                                    All
                                 </Text>
                             </Pressable>
-                            {brands.map((brd) => (
-                                <Pressable
-                                    key={brd._id}
-                                    onPress={() => setFilters({ ...filters, brand: brd._id })}
-                                    className={`px-4 py-2 rounded-full border ${
-                                        filters.brand === brd._id
-                                            ? "bg-babyshopSky border-babyshopSky"
-                                            : "bg-white border-gray-300"
-                                    }`}
-                                >
-                                    <Text className={`${filters.brand === brd._id ? "text-white font-bold" : "text-gray-600"}`}>
-                                        {brd.name}
-                                    </Text>
-                                </Pressable>
-                            ))}
+                            {brands.map((brd) => {
+                                const isSelected = filters.brand === brd._id;
+                                return (
+                                    <Pressable
+                                        key={brd._id}
+                                        onPress={() => setFilters({ ...filters, brand: brd._id })}
+                                        className="flex-row items-center px-4 py-2.5 rounded-xl"
+                                        style={{
+                                            backgroundColor: isSelected ? '#29beb3' : '#fff',
+                                            borderWidth: 1,
+                                            borderColor: isSelected ? '#29beb3' : '#e5e7eb',
+                                        }}
+                                    >
+                                        {isSelected && <Check size={14} color="#fff" style={{ marginRight: 4 }} />}
+                                        <Text className={isSelected ? "text-white font-bold text-sm" : "text-gray-600 text-sm"}>
+                                            {brd.name}
+                                        </Text>
+                                    </Pressable>
+                                );
+                            })}
                         </View>
                     </View>
 
+                    {/* Divider */}
+                    <View className="h-[1px] bg-gray-100 mb-7" />
+
                     {/* Price Range */}
                     <View className="mb-6">
-                        <Text className="text-base font-bold text-gray-800 mb-3">Price Range</Text>
-                        <View className="flex-col gap-2">
+                        <Text className="text-xs font-bold text-gray-400 mb-3 uppercase tracking-wider">Price Range</Text>
+                        <View className="gap-1">
                             <Pressable
                                 onPress={() => setFilters({ ...filters, priceRange: null })}
-                                className="flex-row items-center py-2"
+                                className="flex-row items-center py-3"
                             >
-                                <View className={`w-5 h-5 rounded-full border flex items-center justify-center mr-3 ${filters.priceRange === null ? 'border-babyshopSky bg-babyshopSky' : 'border-gray-300 bg-white'}`}>
-                                    {filters.priceRange === null && <View className="w-2.5 h-2.5 bg-white rounded-full" />}
+                                <View
+                                    className="w-5 h-5 rounded-full items-center justify-center mr-3"
+                                    style={{
+                                        backgroundColor: filters.priceRange === null ? '#29beb3' : '#fff',
+                                        borderWidth: 1.5,
+                                        borderColor: filters.priceRange === null ? '#29beb3' : '#d1d5db',
+                                    }}
+                                >
+                                    {filters.priceRange === null && <View className="w-2 h-2 bg-white rounded-full" />}
                                 </View>
-                                <Text className="text-gray-700">All Prices</Text>
+                                <Text className="text-gray-700 text-sm font-medium">All Prices</Text>
                             </Pressable>
                             {priceRanges.map((range) => {
                                 const isSelected = filters.priceRange?.[0] === range.value[0] && filters.priceRange?.[1] === range.value[1];
@@ -173,12 +212,19 @@ export default function FilterModal({
                                     <Pressable
                                         key={range.label}
                                         onPress={() => setFilters({ ...filters, priceRange: range.value })}
-                                        className="flex-row items-center py-2"
+                                        className="flex-row items-center py-3"
                                     >
-                                        <View className={`w-5 h-5 rounded-full border flex items-center justify-center mr-3 ${isSelected ? 'border-babyshopSky bg-babyshopSky' : 'border-gray-300 bg-white'}`}>
-                                            {isSelected && <View className="w-2.5 h-2.5 bg-white rounded-full" />}
+                                        <View
+                                            className="w-5 h-5 rounded-full items-center justify-center mr-3"
+                                            style={{
+                                                backgroundColor: isSelected ? '#29beb3' : '#fff',
+                                                borderWidth: 1.5,
+                                                borderColor: isSelected ? '#29beb3' : '#d1d5db',
+                                            }}
+                                        >
+                                            {isSelected && <View className="w-2 h-2 bg-white rounded-full" />}
                                         </View>
-                                        <Text className="text-gray-700">{range.label}</Text>
+                                        <Text className="text-gray-700 text-sm font-medium">{range.label}</Text>
                                     </Pressable>
                                 );
                             })}
@@ -188,18 +234,36 @@ export default function FilterModal({
                     <View className="h-10" />
                 </ScrollView>
 
-                <View className="p-4 bg-white border-t border-gray-200 flex-row gap-3">
+                {/* Bottom Actions */}
+                <View
+                    className="px-5 py-4 bg-white flex-row gap-3"
+                    style={{
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: -4 },
+                        shadowOpacity: 0.06,
+                        shadowRadius: 10,
+                        elevation: 8,
+                    }}
+                >
                     <Pressable
                         onPress={onReset}
-                        className="flex-1 py-3 rounded-full border border-gray-300 items-center justify-center"
+                        className="flex-1 py-3.5 rounded-xl items-center justify-center"
+                        style={{ borderWidth: 1.5, borderColor: '#e5e7eb' }}
                     >
-                        <Text className="font-bold text-gray-700">Reset</Text>
+                        <Text className="font-bold text-gray-600 text-sm">Reset</Text>
                     </Pressable>
                     <Pressable
                         onPress={onApply}
-                        className="flex-1 py-3 rounded-full bg-babyshopSky items-center justify-center"
+                        className="flex-1 py-3.5 rounded-xl bg-babyshopSky items-center justify-center"
+                        style={{
+                            shadowColor: '#29beb3',
+                            shadowOffset: { width: 0, height: 3 },
+                            shadowOpacity: 0.25,
+                            shadowRadius: 6,
+                            elevation: 4,
+                        }}
                     >
-                        <Text className="font-bold text-white">Apply Filters</Text>
+                        <Text className="font-bold text-white text-sm">Apply Filters</Text>
                     </Pressable>
                 </View>
             </SafeAreaView>

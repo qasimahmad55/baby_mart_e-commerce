@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, Image, ScrollView, Dimensions, Pressable, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { fetchData } from '../../lib/api';
@@ -9,6 +9,8 @@ const { width } = Dimensions.get('window');
 export default function Banner() {
     const [banners, setBanners] = useState<Banners[]>([]);
     const [loading, setLoading] = useState(true);
+    const [activeIndex, setActiveIndex] = useState(0);
+    const scrollRef = useRef<ScrollView>(null);
     const router = useRouter();
 
     useEffect(() => {
@@ -25,6 +27,25 @@ export default function Banner() {
         loadBanners();
     }, []);
 
+    // Auto-scroll logic
+    useEffect(() => {
+        if (banners.length <= 1) return;
+        const timer = setInterval(() => {
+            setActiveIndex((prev) => {
+                const next = (prev + 1) % banners.length;
+                scrollRef.current?.scrollTo({ x: next * width, animated: true });
+                return next;
+            });
+        }, 4000);
+        return () => clearInterval(timer);
+    }, [banners.length]);
+
+    const handleScroll = (event: any) => {
+        const offsetX = event.nativeEvent.contentOffset.x;
+        const index = Math.round(offsetX / width);
+        setActiveIndex(index);
+    };
+
     if (loading) {
         return (
             <View className="h-48 w-full items-center justify-center bg-gray-50 rounded-xl mx-4 my-2">
@@ -38,9 +59,12 @@ export default function Banner() {
     return (
         <View className="my-3">
             <ScrollView
+                ref={scrollRef}
                 horizontal
                 pagingEnabled
                 showsHorizontalScrollIndicator={false}
+                onMomentumScrollEnd={handleScroll}
+                decelerationRate="fast"
             >
                 {banners.map((banner, index) => (
                     <View key={banner._id || index} style={{ width }} className="items-center px-4">

@@ -39,15 +39,20 @@ const AddToCartButton = ({ product, className = "" }: Props) => {
     return (
         <Pressable
             onPress={handleAddToCart}
-            disabled={localLoading} 
-            className={`flex-row items-center justify-center border border-gray-300 bg-white rounded-full px-4 py-2 mt-2 ${className}`}
+            disabled={localLoading}
+            className={`flex-row items-center justify-center bg-gray-900 rounded-xl px-4 py-2.5 mt-2.5 ${className}`}
+            style={{
+                opacity: localLoading ? 0.7 : 1,
+            }}
         >
             {localLoading ? (
-                <ActivityIndicator size="small" color="#000" style={{ marginRight: 8 }} />
+                <ActivityIndicator size="small" color="#fff" style={{ marginRight: 8 }} />
             ) : (
-                <ShoppingCart size={16} color="#000" style={{ marginRight: 8 }} />
+                <ShoppingCart size={15} color="#fff" style={{ marginRight: 8 }} />
             )}
-            <Text className="text-sm font-semibold">{localLoading ? "Adding..." : "Add to cart"}</Text>
+            <Text className="text-[12px] font-bold text-white uppercase tracking-wider">
+                {localLoading ? "Adding..." : "Add to Cart"}
+            </Text>
         </Pressable>
     )
 }

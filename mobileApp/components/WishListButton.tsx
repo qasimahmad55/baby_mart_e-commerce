@@ -50,21 +50,22 @@ const WishListButton = ({ product, className = "" }: Props) => {
         <Pressable
             onPress={handleWishlistToggle}
             disabled={localLoading}
-            className={`absolute top-2 right-2 z-10 p-2 rounded-full bg-white shadow-md ${className}`}
+            className={`absolute top-3 right-3 z-10 w-9 h-9 rounded-full items-center justify-center ${className}`}
             style={{
+                backgroundColor: 'rgba(255,255,255,0.92)',
                 shadowColor: "#000",
                 shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.2,
-                shadowRadius: 2,
-                elevation: 4,
+                shadowOpacity: 0.15,
+                shadowRadius: 4,
+                elevation: 5,
             }}
         >
             {localLoading ? (
                 <ActivityIndicator size="small" color="#29beb3" />
             ) : (
                 <Heart
-                    size={20}
-                    color={isWishlisted ? "#ec2b04" : "#999999"}
+                    size={18}
+                    color={isWishlisted ? "#ec2b04" : "#94a3b8"}
                     fill={isWishlisted ? "#ec2b04" : "transparent"}
                 />
             )}

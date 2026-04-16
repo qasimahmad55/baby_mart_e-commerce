@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Pressable, ActivityIndicator, Alert, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, Link } from 'expo-router';
-import { UserPlus } from 'lucide-react-native';
+import { UserPlus, Mail, Lock, User } from 'lucide-react-native';
 import { useUserStore } from '../../lib/store';
 
 export default function SignUpScreen() {
@@ -39,68 +39,96 @@ export default function SignUpScreen() {
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
                 className="flex-1"
             >
-                <ScrollView contentContainerStyle={{ flexGrow: 1, padding: 20, justifyContent: 'center' }}>
-                    <View className="items-center mb-8">
-                        <View className="bg-babyshopPurple/10 p-4 rounded-full mb-4">
-                            <UserPlus size={40} color="#a96bde" />
-                        </View>
-                        <Text className="text-2xl font-bold text-gray-900 mb-2">Create Account</Text>
-                        <Text className="text-sm text-gray-500 text-center">Sign up to get started with BabyMart.</Text>
-                    </View>
+                <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
+                    {/* Top accent */}
+                    <View className="absolute top-0 left-0 right-0 h-1 bg-babyshopPurple" />
 
-                    <View className="space-y-4">
+                    <View className="px-6">
+                        <View className="items-center mb-10">
+                            <View
+                                className="w-20 h-20 rounded-3xl items-center justify-center mb-5"
+                                style={{ backgroundColor: '#F3E8FF' }}
+                            >
+                                <UserPlus size={36} color="#a96bde" />
+                            </View>
+                            <Text className="text-2xl font-extrabold text-gray-900 mb-2">Create Account</Text>
+                            <Text className="text-sm text-gray-400 text-center leading-5">Sign up to get started with BabyMart</Text>
+                        </View>
+
                         <View>
-                            <Text className="mb-2 text-sm font-medium text-gray-700">Full Name</Text>
-                            <TextInput
-                                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-black"
-                                placeholder="John Doe"
-                                value={name}
-                                onChangeText={setName}
-                            />
-                        </View>
+                            <View className="mb-4">
+                                <Text className="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wider">Full Name</Text>
+                                <View className="flex-row items-center bg-gray-50 rounded-xl px-4" style={{ borderWidth: 1, borderColor: '#e5e7eb' }}>
+                                    <User size={16} color="#94a3b8" />
+                                    <TextInput
+                                        className="flex-1 py-3.5 ml-3 text-gray-900 text-sm"
+                                        placeholder="John Doe"
+                                        placeholderTextColor="#c0c0c0"
+                                        value={name}
+                                        onChangeText={setName}
+                                    />
+                                </View>
+                            </View>
 
-                        <View className="mt-4">
-                            <Text className="mb-2 text-sm font-medium text-gray-700">Email Address</Text>
-                            <TextInput
-                                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-black"
-                                placeholder="you@example.com"
-                                keyboardType="email-address"
-                                autoCapitalize="none"
-                                value={email}
-                                onChangeText={setEmail}
-                            />
-                        </View>
+                            <View className="mb-4">
+                                <Text className="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wider">Email Address</Text>
+                                <View className="flex-row items-center bg-gray-50 rounded-xl px-4" style={{ borderWidth: 1, borderColor: '#e5e7eb' }}>
+                                    <Mail size={16} color="#94a3b8" />
+                                    <TextInput
+                                        className="flex-1 py-3.5 ml-3 text-gray-900 text-sm"
+                                        placeholder="you@example.com"
+                                        placeholderTextColor="#c0c0c0"
+                                        keyboardType="email-address"
+                                        autoCapitalize="none"
+                                        value={email}
+                                        onChangeText={setEmail}
+                                    />
+                                </View>
+                            </View>
 
-                        <View className="mt-4">
-                            <Text className="mb-2 text-sm font-medium text-gray-700">Password</Text>
-                            <TextInput
-                                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-black"
-                                placeholder="••••••••"
-                                secureTextEntry
-                                value={password}
-                                onChangeText={setPassword}
-                            />
-                        </View>
+                            <View className="mb-6">
+                                <Text className="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wider">Password</Text>
+                                <View className="flex-row items-center bg-gray-50 rounded-xl px-4" style={{ borderWidth: 1, borderColor: '#e5e7eb' }}>
+                                    <Lock size={16} color="#94a3b8" />
+                                    <TextInput
+                                        className="flex-1 py-3.5 ml-3 text-gray-900 text-sm"
+                                        placeholder="••••••••"
+                                        placeholderTextColor="#c0c0c0"
+                                        secureTextEntry
+                                        value={password}
+                                        onChangeText={setPassword}
+                                    />
+                                </View>
+                            </View>
 
-                        <Pressable 
-                            className="w-full py-4 mt-8 bg-babyshopPurple rounded-lg items-center justify-center flex-row"
-                            onPress={handleRegister}
-                            disabled={loading}
-                        >
-                            {loading ? (
-                                <ActivityIndicator color="#fff" />
-                            ) : (
-                                <Text className="text-white font-bold text-base">Sign Up</Text>
-                            )}
-                        </Pressable>
+                            <Pressable 
+                                className="w-full py-4 rounded-xl items-center justify-center flex-row"
+                                onPress={handleRegister}
+                                disabled={loading}
+                                style={{
+                                    backgroundColor: loading ? '#c9a8e6' : '#a96bde',
+                                    shadowColor: '#a96bde',
+                                    shadowOffset: { width: 0, height: 4 },
+                                    shadowOpacity: loading ? 0 : 0.3,
+                                    shadowRadius: 8,
+                                    elevation: loading ? 0 : 5,
+                                }}
+                            >
+                                {loading ? (
+                                    <ActivityIndicator color="#fff" />
+                                ) : (
+                                    <Text className="text-white font-bold text-base">Sign Up</Text>
+                                )}
+                            </Pressable>
 
-                        <View className="flex-row justify-center items-center mt-6">
-                            <Text className="text-gray-500">Already have an account? </Text>
-                            <Link href="/auth/signin" asChild>
-                                <Pressable>
-                                    <Text className="text-babyshopPurple font-bold">Sign In</Text>
-                                </Pressable>
-                            </Link>
+                            <View className="flex-row justify-center items-center mt-8">
+                                <Text className="text-gray-400 text-sm">Already have an account? </Text>
+                                <Link href="/auth/signin" asChild>
+                                    <Pressable>
+                                        <Text className="text-babyshopPurple font-bold text-sm">Sign In</Text>
+                                    </Pressable>
+                                </Link>
+                            </View>
                         </View>
                     </View>
                 </ScrollView>

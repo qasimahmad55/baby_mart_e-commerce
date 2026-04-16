@@ -50,12 +50,16 @@ export default function WishlistScreen() {
 
     if (!isAuthenticated) {
         return (
-            <SafeAreaView className="flex-1 bg-gray-50 justify-center items-center">
-                <Heart size={48} color="#ccc" />
-                <Text className="text-lg text-gray-500 mt-4 mb-4">Please sign in to view your wishlist</Text>
+            <SafeAreaView className="flex-1 bg-gray-50 justify-center items-center px-6">
+                <View className="w-20 h-20 bg-red-50 rounded-full items-center justify-center mb-5">
+                    <Heart size={36} color="#fca5a5" />
+                </View>
+                <Text className="text-lg font-bold text-gray-700 mb-2">Sign In Required</Text>
+                <Text className="text-sm text-gray-400 mb-6 text-center">Please sign in to view your wishlist</Text>
                 <Pressable
-                    className="bg-babyshopSky px-8 py-3 rounded-full"
+                    className="bg-babyshopSky px-8 py-3.5 rounded-xl"
                     onPress={() => router.push('/auth/signin')}
+                    style={{ shadowColor: '#29beb3', shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.25, shadowRadius: 6, elevation: 4 }}
                 >
                     <Text className="text-white font-bold">Sign In</Text>
                 </Pressable>
@@ -66,46 +70,58 @@ export default function WishlistScreen() {
     if (loading) {
         return (
             <SafeAreaView className="flex-1 bg-gray-50 justify-center items-center">
-                <ActivityIndicator size="large" color="#29beb3" />
-                <Text className="text-gray-500 mt-3">Loading wishlist...</Text>
+                <View className="w-14 h-14 rounded-full bg-babyshopSky/10 items-center justify-center mb-3">
+                    <ActivityIndicator size="large" color="#29beb3" />
+                </View>
+                <Text className="text-gray-400 text-sm font-medium">Loading wishlist...</Text>
             </SafeAreaView>
         );
     }
 
     return (
         <SafeAreaView className="flex-1 bg-gray-50">
-            <View className="px-4 py-3 border-b border-gray-200 bg-white">
-                <Text className="text-xl font-bold text-gray-900">My Wishlist</Text>
-                <Text className="text-sm text-gray-500 mt-1">{wishlistIds.length} item(s)</Text>
-            </View>
-
-            <ScrollView className="flex-1 p-4" contentContainerStyle={{ paddingBottom: 20 }}>
+            <ScrollView className="flex-1 px-5 pt-5" contentContainerStyle={{ paddingBottom: 20 }}>
                 {wishlistItems.length === 0 ? (
-                    <View className="bg-white p-8 rounded-xl items-center mt-10 border border-gray-200">
-                        <Heart size={48} color="#ccc" />
-                        <Text className="text-lg text-gray-500 mt-4">Your wishlist is empty</Text>
-                        <Text className="text-sm text-gray-400 mt-1 text-center">Items you add to your wishlist will appear here</Text>
+                    <View className="bg-white p-8 items-center mt-8" style={{
+                        borderRadius: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.06, shadowRadius: 10, elevation: 3
+                    }}>
+                        <View className="w-20 h-20 bg-red-50 rounded-full items-center justify-center mb-4">
+                            <Heart size={36} color="#fca5a5" />
+                        </View>
+                        <Text className="text-lg font-bold text-gray-700 mb-1">Your wishlist is empty</Text>
+                        <Text className="text-sm text-gray-400 text-center mb-5">Items you love will appear here</Text>
                         <Pressable
-                            className="bg-babyshopSky px-6 py-3 rounded-full mt-5"
+                            className="bg-gray-900 px-6 py-3 rounded-xl"
                             onPress={() => router.push('/(tabs)/shop')}
                         >
-                            <Text className="text-white font-bold">Browse Products</Text>
+                            <Text className="text-white font-bold text-sm">Browse Products</Text>
                         </Pressable>
                     </View>
                 ) : (
                     wishlistItems.map((product: Product) => (
-                        <View key={product._id} className="bg-white rounded-xl mb-3 border border-gray-100 shadow-sm flex-row overflow-hidden">
+                        <View
+                            key={product._id}
+                            className="bg-white mb-4 flex-row overflow-hidden"
+                            style={{
+                                borderRadius: 18,
+                                shadowColor: '#000',
+                                shadowOffset: { width: 0, height: 2 },
+                                shadowOpacity: 0.05,
+                                shadowRadius: 8,
+                                elevation: 2,
+                            }}
+                        >
                             <RNImage
                                 source={{ uri: product.image }}
-                                className="w-28 h-28"
+                                style={{ width: 110, height: 110, borderTopLeftRadius: 18, borderBottomLeftRadius: 18 }}
                                 resizeMode="cover"
                             />
-                            <View className="flex-1 p-3 justify-between">
+                            <View className="flex-1 p-4 justify-between">
                                 <View>
-                                    <Text className="text-sm font-medium text-gray-800" numberOfLines={2}>
+                                    <Text className="text-sm font-semibold text-gray-800 leading-[18px]" numberOfLines={2}>
                                         {product.name}
                                     </Text>
-                                    <View className="mt-1">
+                                    <View className="mt-2">
                                         <PriceContainer
                                             price={product.price}
                                             discountPercentage={product.discountPercentage ?? 0}
@@ -115,10 +131,10 @@ export default function WishlistScreen() {
                                 <View className="flex-row items-center justify-end mt-2">
                                     <Pressable
                                         onPress={() => handleRemove(product._id)}
-                                        className="flex-row items-center gap-1 bg-red-50 px-3 py-1.5 rounded-full"
+                                        className="flex-row items-center gap-1.5 bg-red-50 px-3.5 py-2 rounded-xl"
                                     >
-                                        <Trash2 size={14} color="#ef4444" />
-                                        <Text className="text-red-500 text-xs font-medium">Remove</Text>
+                                        <Trash2 size={13} color="#ef4444" />
+                                        <Text className="text-red-500 text-xs font-bold">Remove</Text>
                                     </Pressable>
                                 </View>
                             </View>
