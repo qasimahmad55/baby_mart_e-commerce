@@ -10,7 +10,7 @@ const getOrders = asyncHandler(async (req, res) => {
 const getOrderById = asyncHandler(async (req, res) => {
     const order = await Order.findById(req.params.id).populate("items.productId")
 
-    if (order && (req.user.role === "admin") || order.userId.toString() === req.user._id.toString()) {
+    if (order && (req.user.role === "admin") || order.userId?.toString() === req.user._id.toString()) {
         res.json(order)
     } else {
         res.status(404);
@@ -97,7 +97,7 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
     }
 
     if (req.user) {
-        const isOwner = order.userId.toString() === req.user._id.toString()
+        const isOwner = order.userId?.toString() === req.user._id.toString()
         const isAdmin = req.user.role === "admin"
         const isPending = order.status === "pending"
 
