@@ -93,6 +93,9 @@ app.use("/api/docs",
     customSiteTitle: "BabyMart API Documentation",
   })
 )
+app.get("/api-docs", (req, res) => {
+  res.redirect(301, "/api/docs");
+});
 // Home route
 app.get("/", (req, res) => {
   res.send({ message: "Server is Ok" })

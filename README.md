@@ -134,7 +134,7 @@ npm start  # Follow React Native CLI instructions
 - **Access**: `http://localhost:8000`
 - **Start Command**: `npm run dev`
 
-**API Documentation**: Visit `http://localhost:8000/api-docs` for Swagger documentation
+**API Documentation**: Visit `http://localhost:8000/api/docs` for Swagger documentation
 
 ## 🔧 Configuration
 
@@ -244,7 +244,7 @@ Ready for deployment on:
 - **Setup Guide**: See `setup.md` for detailed installation instructions
 - **Configuration**: See `configuration.md` for environment variables
 - **Architecture**: See `baseContext.md` for detailed project structure
-- **API Docs**: Available at `http://localhost:8000/api-docs` when server is running
+- **API Docs**: Available at `http://localhost:8000/api/docs` when server is running (`/api-docs` also redirects)
 
 ## 🔮 Upcoming Features
 
