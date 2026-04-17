@@ -193,18 +193,31 @@ const getAllOrdersAdmin = asyncHandler(async (req, res) => {
     const transformedOrders = orders.map((order) => ({
         _id: order._id,
         orderId: `ORD-${order._id.toString().slice(-6).toUpperCase()}`,
-        user: {
-            _id: order.userId._id,
-            name: order.userId.name,
-            email: order.userId.email,
-        },
+        user: order.userId
+            ? {
+                  _id: order.userId._id,
+                  name: order.userId.name,
+                  email: order.userId.email,
+              }
+            : {
+                  _id: order._id,
+                  name: "Deleted User",
+                  email: "N/A",
+              },
         items: order.items.map((item) => ({
-            product: {
-                _id: item.productId._id,
-                name: item.productId.name,
-                price: item.productId.price,
-                image: item.productId.image,
-            },
+            product: item.productId
+                ? {
+                      _id: item.productId._id,
+                      name: item.productId.name,
+                      price: item.productId.price,
+                      image: item.productId.image,
+                  }
+                : {
+                      _id: item._id,
+                      name: item.name || "Deleted Product",
+                      price: item.price,
+                      image: item.image || "",
+                  },
             quantity: item.quantity,
             price: item.price,
         })),
@@ -225,7 +238,6 @@ const getAllOrdersAdmin = asyncHandler(async (req, res) => {
         },
         createdAt: order.createdAt,
         updatedAt: order.updatedAt,
-
     }));
 
     res.json({
