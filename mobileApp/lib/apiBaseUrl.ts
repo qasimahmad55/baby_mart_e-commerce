@@ -1,5 +1,5 @@
 import Constants from 'expo-constants';
-import { Platform } from "react-native";
+// import { Platform } from "react-native";
 
 /**
  * Returns the correct API base URL depending on the runtime environment.
